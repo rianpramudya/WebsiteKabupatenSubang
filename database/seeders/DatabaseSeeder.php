@@ -14,8 +14,15 @@ class DatabaseSeeder extends Seeder
             KategoriBeritaSeeder::class,
             BeritaSeeder::class,
             LaporanKeuanganSeeder::class,
-            PeranDanProgramSeeder::class,
             PerangkatDaerahSeeder::class,
+            BudayaSeeder::class,
+            ObjekWisataSeeder::class,
+            SejarahSeeder::class,
+            PeranDanProgramSeeder::class,
+            InfografisSeeder::class,
+            HotelSeeder::class,
+            VisiMisiSeeder::class,
+            RumahMakanSeeder::class,
         ]);
     }
 }

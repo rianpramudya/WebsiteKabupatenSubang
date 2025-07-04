@@ -4,13 +4,67 @@
 {{-- Menetapkan judul halaman secara dinamis sesuai nama kecamatan yang diklik --}}
 @section('title', 'Kecamatan ' . $kecamatan->name . ' - Portal Kabupaten Subang')
 
+@push('styles')
+<style>
+/* === DEFINISI ANIMASI (dapat disatukan di app.blade.php jika sering digunakan) === */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* === KELAS HELPER ANIMASI === */
+.anim-fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+.anim-fade-in-down {
+    opacity: 0;
+    animation: fadeInDown 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+.anim-fade-in-left {
+    opacity: 0;
+    animation: fadeInLeft 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+.anim-fade-in-right {
+    opacity: 0;
+    animation: fadeInRight 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+.anim-scale-in {
+    opacity: 0;
+    animation: scaleIn 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+</style>
+@endpush
+
+
 {{-- Memulai bagian konten yang akan disisipkan ke dalam layout --}}
 @section('content')
 
 <div class="container mx-auto px-4 sm:px-6 py-10">
     
     {{-- Banner Judul Halaman Kecamatan --}}
-    <div class="bg-white rounded-lg shadow-lg p-6 text-center mb-10 border-t-4 border-green-500">
+    <div class="bg-white rounded-lg shadow-lg p-6 text-center mb-10 border-t-4 border-green-500 anim-fade-in-down" style="--anim-delay: 200ms;">
         <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">Kecamatan {{ $kecamatan->name }}</h1>
         <p class="text-gray-500 mt-2">Informasi, Layanan, dan Berita Terkini</p>
     </div>
@@ -18,7 +72,7 @@
     {{-- Grid untuk Populer & Berita Terkini --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         {{-- Kolom Populer --}}
-        <div class="lg:col-span-1">
+        <div class="lg:col-span-1 anim-fade-in-left" style="--anim-delay: 400ms;">
             <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 h-full">
                 <h3 class="font-bold mb-4 text-gray-700">POPULER</h3>
                 <ul class="space-y-4 text-sm">
@@ -39,7 +93,7 @@
         </div>
 
         {{-- Kolom Berita Terkini --}}
-        <div class="lg:col-span-2">
+        <div class="lg:col-span-2 anim-fade-in-right" style="--anim-delay: 550ms;">
             <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 h-full group">
                 <h3 class="font-bold mb-4 text-gray-700">BERITA TERKINI</h3>
                 <a href="#" class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-5">
@@ -58,7 +112,7 @@
     {{-- Grid untuk Kalender Acara --}}
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
         {{-- Kolom Kalender Acara --}}
-        <div class="lg:col-span-2 bg-gray-50 border border-gray-200 rounded-lg p-5 group">
+        <div class="lg:col-span-2 bg-gray-50 border border-gray-200 rounded-lg p-5 group anim-fade-in-left" style="--anim-delay: 700ms;">
             <h3 class="font-bold mb-4 text-gray-700">KALENDER ACARA</h3>
             <a href="#" class="block">
                 <div class="overflow-hidden rounded-md mb-4">
@@ -70,7 +124,7 @@
         </div>
         
         {{-- Kolom Widget Kalender & Agenda --}}
-        <div class="lg:col-span-1 bg-cyan-50 border border-cyan-200 rounded-lg p-5 flex flex-col">
+        <div class="lg:col-span-1 bg-cyan-50 border border-cyan-200 rounded-lg p-5 flex flex-col anim-fade-in-right" style="--anim-delay: 850ms;">
             <div class="bg-white rounded-lg shadow-md p-4 transition-shadow duration-300 hover:shadow-xl">
                 <div class="flex justify-between items-center mb-3">
                     <button id="prev-month-btn" class="p-2 rounded-full hover:bg-gray-100 transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
@@ -79,7 +133,7 @@
                 </div>
                 <hr>
                 <div class="grid grid-cols-7 text-center text-xs font-semibold text-gray-400 mt-3 mb-2">
-                    <div class="py-1">Mo</div><div class="py-1">Tu</div><div class="py-1">We</div><div class="py-1">Th</div><div class="py-1">Fr</div><div class="py-1">Sa</div><div class="py-1">Su</div>
+                    <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
                 </div>
                 <div id="calendar-dates" class="grid grid-cols-7 text-center text-sm -mx-1">
                     {{-- Tanggal akan di-generate oleh JavaScript --}}
@@ -95,12 +149,12 @@
     {{-- ====================================================================== --}}
     {{-- =                 BAGIAN LAYANAN (DIMASUKKAN KEMBALI)                = --}}
     {{-- ====================================================================== --}}
-    <div class="mb-10">
+    <div class="mb-10 anim-fade-in-up" style="--anim-delay: 1000ms;">
         <h3 class="font-bold text-xl text-center mb-6 text-gray-700">LAYANAN</h3>
         <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-6 text-center">
             {{-- Loop untuk 7 ikon layanan sesuai gambar --}}
             @for ($i = 0; $i < 7; $i++)
-            <a href="#" class="block group">
+            <a href="#" class="block group anim-scale-in" style="--anim-delay: {{ 1100 + ($i * 100) }}ms;">
                 <div class="bg-gray-100 rounded-full w-20 h-20 mx-auto flex items-center justify-center border-2 border-gray-200 group-hover:border-green-400 group-hover:bg-white transition duration-300 transform group-hover:-translate-y-1">
                     <svg class="w-10 h-10 text-gray-400 group-hover:text-green-500 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 </div>
@@ -112,10 +166,10 @@
     
     {{-- Placeholder untuk bagian Berita dan Galeri --}}
     <div class="space-y-8 mt-12">
-        <div class="bg-white rounded-lg shadow-md p-6 text-center text-gray-400 h-64 flex items-center justify-center border-t-4 border-green-500">BERITA</div>
+        <div class="bg-white rounded-lg shadow-md p-6 text-center text-gray-400 h-64 flex items-center justify-center border-t-4 border-green-500 anim-fade-in-up" style="--anim-delay: 1400ms;">BERITA</div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="md:col-span-2 bg-white rounded-lg shadow-md p-6 text-center text-gray-400 h-64 flex items-center justify-center border-t-4 border-green-500">GALERI VIDEO</div>
-            <div class="md:col-span-1 bg-white rounded-lg shadow-md p-6 text-center text-gray-400 h-64 flex items-center justify-center border-t-4 border-green-500">GALERI FOTO</div>
+            <div class="md:col-span-2 bg-white rounded-lg shadow-md p-6 text-center text-gray-400 h-64 flex items-center justify-center border-t-4 border-green-500 anim-fade-in-left" style="--anim-delay: 1500ms;">GALERI VIDEO</div>
+            <div class="md:col-span-1 bg-white rounded-lg shadow-md p-6 text-center text-gray-400 h-64 flex items-center justify-center border-t-4 border-green-500 anim-fade-in-right" style="--anim-delay: 1600ms;">GALERI FOTO</div>
         </div>
     </div>
 
@@ -134,13 +188,16 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentDate = new Date();
     currentDate.setDate(1);
 
+    // Menggunakan tanggal saat ini (Juli 2025) untuk dummy data
+    const currentYear = 2025;
+    const currentMonth = 6; // 0-based index untuk Juli adalah 6
     const dummyAgenda = {
-        '2025-06-16': [
-            { time: '16 Jun', description: 'menghadiri undangan dari PT Meiloon' },
-            { time: '16 Jun - 17 Jun', description: 'menghadiri undangan dari Yayasan Dana Sejahtera Mandiri (DAMANDIRI)' },
+        '2025-07-16': [
+            { time: '16 Jul', description: 'Menghadiri undangan dari PT Meiloon' },
+            { time: '16 Jul - 17 Jul', description: 'Menghadiri undangan dari Yayasan Dana Sejahtera Mandiri (DAMANDIRI)' },
         ],
-        '2025-07-01': [
-            { time: '1 Jul', description: 'menghadiri undangan dari PERPAMSI' }
+        '2025-08-01': [
+            { time: '1 Aug', description: 'Menghadiri undangan dari PERPAMSI' }
         ]
     };
 
@@ -153,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         let dayOffset = (firstDayOfMonth === 0) ? 6 : firstDayOfMonth - 1;
         for (let i = 0; i < dayOffset; i++) {
-            calendarDatesContainer.innerHTML += `<button class="p-2 rounded-full"></button>`;
+            calendarDatesContainer.innerHTML += `<div class="p-2"></div>`;
         }
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
@@ -185,13 +242,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (agendaDate.getFullYear() === year && agendaDate.getMonth() === month) {
                 hasAgendaThisMonth = true;
                 dummyAgenda[dateStr].forEach(agenda => {
-                    let agendaItem = `<div class="flex items-start py-2"><div class="w-24 text-center font-bold text-sm border-r-2 border-gray-300 pr-4 flex-shrink-0">${agenda.time}</div><div class="pl-4 text-sm text-gray-700">${agenda.description}</div></div>`;
+                    let agendaItem = `<div class="flex items-start py-2 anim-fade-in-up" style="--anim-delay: 100ms;"><div class="w-24 text-center font-bold text-sm border-r-2 border-gray-300 pr-4 flex-shrink-0">${agenda.time}</div><div class="pl-4 text-sm text-gray-700">${agenda.description}</div></div>`;
                     agendaListContainer.innerHTML += agendaItem;
                 });
             }
         });
         if (!hasAgendaThisMonth) {
-            agendaListContainer.innerHTML = '<p class="text-sm text-center text-gray-500 py-4">Tidak ada agenda di bulan ini.</p>';
+            agendaListContainer.innerHTML = '<p class="text-sm text-center text-gray-500 py-4 anim-fade-in-up">Tidak ada agenda di bulan ini.</p>';
         }
     }
 
@@ -218,7 +275,9 @@ document.addEventListener('DOMContentLoaded', function () {
         currentDate.setMonth(currentDate.getMonth() + 1);
         renderCalendar();
     });
-
+    
+    // Set kalender ke tanggal saat ini (Juli 2025) saat pertama kali load
+    currentDate = new Date(currentYear, currentMonth, 1);
     renderCalendar();
 });
 </script>

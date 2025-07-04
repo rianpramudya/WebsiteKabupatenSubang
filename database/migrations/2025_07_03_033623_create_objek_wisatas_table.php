@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('objek_wisatas', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
+            $table->string('nama');
+            $table->string('slug')->unique();
+            $table->string('kategori')->default('Alam'); // Contoh: Alam, Buatan, Kuliner, Sejarah
+            $table->text('deskripsi_singkat');
+            $table->string('gambar')->nullable();
+            $table->string('lokasi_teks'); // Contoh: "Ciater, Subang"
+            $table->text('google_maps_url')->nullable(); // Untuk embed peta
+            $table->boolean('is_unggulan')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('objek_wisatas');
+    }
+};

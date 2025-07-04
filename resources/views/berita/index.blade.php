@@ -2,12 +2,38 @@
 
 @section('title', 'Berita Kabupaten Subang')
 
+@push('styles')
+<style>
+/* === DEFINISI ANIMASI === */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === KELAS HELPER ANIMASI === */
+.anim-fade-in-up {
+    opacity: 0;
+    animation: fadeInUp 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+.anim-fade-in-down {
+    opacity: 0;
+    animation: fadeInDown 0.7s ease-out forwards;
+    animation-delay: var(--anim-delay, 0ms);
+}
+</style>
+@endpush
+
 @section('content')
 {{-- Hero Section --}}
 <div class="bg-gray-100 py-16">
     <div class="container mx-auto px-6 text-center">
-        <h1 class="text-4xl font-extrabold text-gray-800">Berita Kabupaten Subang</h1>
-        <p class="text-gray-500 mt-2">Kumpulan informasi dan berita terkini seputar Kabupaten Subang.</p>
+        <h1 class="text-4xl font-extrabold text-gray-800 anim-fade-in-down" style="--anim-delay: 200ms;">Berita Kabupaten Subang</h1>
+        <p class="text-gray-500 mt-2 anim-fade-in-up" style="--anim-delay: 400ms;">Kumpulan informasi dan berita terkini seputar Kabupaten Subang.</p>
 
         {{-- Tombol Kelola Berita hanya untuk Admin/Superadmin --}}
         @auth
@@ -16,7 +42,7 @@
             @endphp
 
             @if(in_array($userRole, ['admin', 'superadmin']))
-                <div class="mt-6">
+                <div class="mt-6 anim-fade-in-up" style="--anim-delay: 600ms;">
                     <a href="{{ route('berita.index') }}" class="inline-block bg-blue-600 text-white font-bold py-2 px-5 rounded-lg text-sm hover:bg-blue-700 transition">
                         Kelola Berita
                     </a>
@@ -30,7 +56,7 @@
 <div class="container mx-auto px-6 py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse ($semuaBerita as $berita)
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col group">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col group anim-fade-in-up" style="--anim-delay: {{ 700 + ($loop->iteration * 150) }}ms;">
                 {{-- Gambar --}}
                 <div class="overflow-hidden">
                     <a href="{{ route('berita.show', $berita->slug) }}">
@@ -76,13 +102,15 @@
                 </div>
             </div>
         @empty
-            <p class="col-span-full text-center text-gray-500">Belum ada berita yang dipublikasikan.</p>
+            <p class="col-span-full text-center text-gray-500 anim-fade-in-up" style="--anim-delay: 700ms;">Belum ada berita yang dipublikasikan.</p>
         @endforelse
     </div>
 
     {{-- Pagination --}}
-    <div class="mt-12">
+    @if ($semuaBerita->hasPages())
+    <div class="mt-12 anim-fade-in-up" style="--anim-delay: {{ 800 + ($semuaBerita->count() * 150) }}ms;">
         {{ $semuaBerita->links() }}
     </div>
+    @endif
 </div>
 @endsection

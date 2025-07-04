@@ -29,7 +29,7 @@ class ProfilController extends Controller
      * Menampilkan halaman Sejarah.
      */
     public function sejarah($slug = null)
-{
+    {
     $nama_wilayah = '';
     $data_wilayah = $this->getProfilData($slug, $nama_wilayah); 
 
@@ -83,34 +83,18 @@ class ProfilController extends Controller
     /**
      * Menampilkan halaman Visi & Misi.
      */
-    public function visiMisi(string $slug = null): View
+   public function visiMisi($slug = null): View
     {
-        if ($slug) {
-            $tenant = Tenant::where('slug', $slug)->firstOrFail();
-            return view('profil.visi_misi', [
-                'nama_wilayah' => 'Kecamatan ' . $tenant->name,
-                'visi' => $tenant->visi ?? 'Visi belum tersedia.',
-                'misi' => $tenant->misi ?? 'Misi belum tersedia.',
-                'kecamatan' => $tenant,
-            ]);
-        } else {
-            return view('profil.visi_misi', [
-                'nama_wilayah' => 'Kabupaten Subang',
-                'visi' => 'Terwujudnya Kabupaten Subang yang bersih, maju, sejahtera, dan berkarakter.',
-                'misi' => '
-                    <ul class="list-disc pl-5 space-y-2">
-                        <li>Meningkatkan kualitas sumber daya manusia yang berdaya saing.</li>
-                        <li>Mewujudkan tata kelola pemerintahan yang baik dan bersih.</li>
-                        <li>Meningkatkan pertumbuhan ekonomi daerah yang berbasis potensi lokal.</li>
-                        <li>Meningkatkan pemerataan pembangunan infrastruktur yang berkualitas.</li>
-                        <li>Menciptakan lingkungan hidup yang lestari dan berkelanjutan.</li>
-                    </ul>
-                ',
-                'kecamatan' => null,
-            ]);
-        }
-    }
+        $nama_wilayah = '';
+        $data_wilayah = $this->getProfilData($slug, $nama_wilayah);
 
+        return view('profil.visi_misi', [
+            'kecamatan' => $data_wilayah,
+            'nama_wilayah' => $nama_wilayah,
+            'visi' => $data_wilayah->visi ?? 'Visi untuk wilayah ini belum ditetapkan.',
+            'misi' => $data_wilayah->misi ?? '<li>Misi untuk wilayah ini belum ditetapkan.</li>',
+        ]);
+    }
     /**
      * Menampilkan halaman daftar Penghargaan.
      */

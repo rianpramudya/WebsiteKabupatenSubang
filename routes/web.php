@@ -9,6 +9,8 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\TransparansiController;
 use App\Http\Controllers\PemerintahanController;
+use App\Http\Controllers\WisataController;
+use App\Http\Controllers\InfoGrafisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,3 +87,24 @@ Route::get('/pemerintahan/wilayah-administrasi', [PemerintahanController::class,
 
 // Rute untuk Wilayah Administrasi per Kecamatan
 Route::get('/kecamatan/{slug}/pemerintahan/wilayah-administrasi', [PemerintahanController::class, 'wilayahAdministrasi'])->name('wilayah_administrasi.kecamatan');
+
+// Rute untuk Halaman Wisata
+Route::get('/wisata/seni-dan-budaya', [WisataController::class, 'seniDanBudaya'])->name('wisata.senibudaya.kabupaten');
+Route::get('/kecamatan/{slug}/wisata/seni-dan-budaya', [WisataController::class, 'seniDanBudaya'])->name('wisata.senibudaya.kecamatan');
+
+// --- TAMBAHKAN DUA RUTE BARU DI BAWAH INI ---
+Route::get('/wisata/objek-wisata', [WisataController::class, 'objekWisata'])->name('wisata.objekwisata.kabupaten');
+Route::get('/kecamatan/{slug}/wisata/objek-wisata', [WisataController::class, 'objekWisata'])->name('wisata.objekwisata.kecamatan');
+
+
+// Rute untuk Halaman Info Grafis
+Route::get('/info-grafis', [InfoGrafisController::class, 'index'])->name('infografis.kabupaten');
+Route::get('/kecamatan/{slug}/info-grafis', [InfoGrafisController::class, 'index'])->name('infografis.kecamatan');
+
+// --- TAMBAHKAN DUA RUTE BARU DI BAWAH INI ---
+Route::get('/wisata/hotel', [WisataController::class, 'hotel'])->name('wisata.hotel.kabupaten');
+Route::get('/kecamatan/{slug}/wisata/hotel', [WisataController::class, 'hotel'])->name('wisata.hotel.kecamatan');
+
+// --- TAMBAHKAN DUA RUTE BARU DI BAWAH INI ---
+Route::get('/wisata/rumah-makan', [WisataController::class, 'rumahMakan'])->name('wisata.rumahmakan.kabupaten');
+Route::get('/kecamatan/{slug}/wisata/rumah-makan', [WisataController::class, 'rumahMakan'])->name('wisata.rumahmakan.kecamatan');

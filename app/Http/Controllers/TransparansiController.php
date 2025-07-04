@@ -14,7 +14,7 @@ class TransparansiController extends Controller
      */
     public function index(Request $request): View
     {
-        $laporanQuery = LaporanKeuangan::query()->orderBy('tahun', 'desc');
+        $laporanQuery = LaporanKeuangan::query()->orderBy('created_at', 'desc');
         $namaWilayah = 'Kabupaten Subang';
         $kecamatan = null;
 
@@ -34,9 +34,15 @@ class TransparansiController extends Controller
             $laporanQuery->whereNull('tenant_id');
         }
 
-        $laporanPerTahun = $laporanQuery->get()->groupBy('tahun');
+        // Group by tahun dan urutkan tahun dan isi dalam tahun secara descending
+        $laporanPerTahun = $laporanQuery->get()
+            ->groupBy('tahun')
+            ->sortKeysDesc()
+            ->map(function ($laporans) {
+                return $laporans->sortByDesc('created_at');
+            });
 
-        return view('transparansi.index', [
+        return view('transparansi_keuangan.index', [
             'nama_wilayah' => $namaWilayah,
             'laporan_per_tahun' => $laporanPerTahun,
             'kecamatan' => $kecamatan,

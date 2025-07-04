@@ -19,6 +19,8 @@ class Kecamatan extends Model
         'sejarah_img_1',
         'sejarah_img_2',
         'sejarah_img_3',
+        'visi',
+        'misi',
     ];
 
     /**
@@ -32,9 +34,34 @@ class Kecamatan extends Model
         return $this->hasMany(PerangkatDaerah::class);
     }
 
-     public function sejarahItems()
+    public function sejarahItems()
     {
         // Nama relasi diubah menjadi sejarahItems untuk menghindari konflik
         return $this->hasMany(Sejarah::class)->orderBy('urutan');
+    }
+
+    public function budayas()
+    {
+        return $this->hasMany(Budaya::class);
+    }
+
+    public function objekWisatas()
+    {
+        return $this->hasMany(ObjekWisata::class);
+    }
+
+    public function infografis()
+    {
+        return $this->hasMany(Infografis::class);
+    }
+
+    public function hotels()
+    {
+        return $this->hasMany(Hotel::class);
+    }
+
+    public function rumahMakans()
+    {
+        return $this->hasMany(RumahMakan::class);
     }
 }
