@@ -4,191 +4,201 @@
 
 @push('styles')
 <style>
-    /* Styling untuk garis-garis pada bagan organisasi */
-    .org-chart-node {
-        position: relative;
-        padding-top: 2.5rem; /* Memberi ruang untuk garis dari atas */
+    /* Background gradien animasi */
+    .dynamic-bg {
+        background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #f0f9ff, #fafafa);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
     }
-    .org-chart-node::before {
-        content: '';
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        background-color: #cbd5e1; /* gray-300 */
-        top: 0;
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Kartu Pimpinan */
+    .org-card-leader {
+        background-color: white;
+        border-radius: 0.75rem; /* 12px */
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        transition: transform 0.3s ease, box-shadow 0.4s ease;
+        border-left: 6px solid #0ea5e9; /* sky-500 */
+        overflow: hidden;
+    }
+    .org-card-leader:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 0 0 4px rgb(14 165 233 / 0.2);
+    }
+    .org-card-leader .foto-pejabat {
+        transition: transform 0.3s ease;
+    }
+    .org-card-leader:hover .foto-pejabat {
+        transform: scale(1.05);
+    }
+
+    /* Kartu Anggota */
+    .org-card-member {
+        background-color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        border-top: 4px solid #e5e7eb; /* gray-200 */
+        text-align: center;
+        padding: 1.5rem; /* 24px */
+    }
+    .org-card-member:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        border-top-color: #3b82f6; /* blue-500 */
+    }
+    .org-card-member .foto-pejabat {
+         transition: transform 0.3s ease;
+    }
+    .org-card-member:hover .foto-pejabat {
+        transform: scale(1.1);
+    }
+
+    /* Garis Penghubung */
+    .connector-line {
         width: 2px;
-        height: 2.5rem; /* Tinggi garis vertikal */
+        background: linear-gradient(to bottom, #d1d5db, #e5e7eb);
+        margin: 0 auto;
     }
-    /* Garis horizontal */
-    .org-chart-group {
-        position: relative;
-        padding-top: 2.5rem; /* Ruang untuk garis horizontal di atas */
-    }
-    .org-chart-group::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 25%;
-        right: 25%;
+    .horizontal-connector {
+        width: 90%;
+        max-width: 1200px;
         height: 2px;
-        background-color: #cbd5e1; /* gray-300 */
-    }
-    /* Sembunyikan garis horizontal jika hanya ada 1 item */
-    .org-chart-group[data-count="1"]::before {
-        display: none;
-    }
-    /* Sembunyikan garis vertikal untuk item di level teratas */
-    .top-level-node {
-        padding-top: 0;
-    }
-    .top-level-node::before {
-        display: none;
+        background: linear-gradient(to right, #e5e7eb, #d1d5db, #e5e7eb);
+        margin: 0 auto;
     }
 
-    /* === ANIMASI === */
-    @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInLeft {
-        from { opacity: 0; transform: translateX(-20px); }
-        to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes fadeInRight {
-        from { opacity: 0; transform: translateX(20px); }
-        to { opacity: 1; transform: translateX(0); }
-    }
-
-    .fade-in-up {
+    /* Animasi saat item muncul */
+    .animated-item {
         opacity: 0;
-        animation: fadeInUp 0.8s ease-out forwards;
-        animation-delay: var(--row-delay, 0ms);
+        transform: translateY(30px);
+        transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
-    .fade-in-left {
-        opacity: 0;
-        animation: fadeInLeft 0.7s ease-out forwards;
-        animation-delay: var(--row-delay, 0ms);
-    }
-    .fade-in-right {
-        opacity: 0;
-        animation: fadeInRight 0.7s ease-out forwards;
-        animation-delay: var(--row-delay, 0ms);
+    .animated-item.is-visible {
+        opacity: 1;
+        transform: translateY(0);
     }
 </style>
 @endpush
 
 @section('content')
 
-<div class="bg-gray-100 py-12">
+<div class="dynamic-bg min-h-screen py-20">
     <div class="container mx-auto px-4 sm:px-6">
 
         {{-- Judul Halaman --}}
-        <div class="text-center mb-12 fade-in-up" style="--row-delay: 100ms;">
-            <h1 class="text-4xl font-extrabold text-gray-800 tracking-tight">Struktur Pemerintahan</h1>
-            <p class="mt-2 text-xl text-gray-500">{{ $nama_wilayah }}</p>
+        <div class="text-center mb-20 animated-item">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                Struktur Organisasi
+            </h1>
+            <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">{{ $nama_wilayah }}</p>
         </div>
 
-        {{-- Kontainer Bagan --}}
-        <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10 fade-in-up" style="--row-delay: 250ms;">
-            @if($semua_pejabat->isEmpty())
-                <div class="text-center text-gray-500 py-10">
-                    <p>Struktur pemerintahan untuk wilayah ini belum tersedia.</p>
+        @if($semua_pejabat->isEmpty())
+            <div class="text-center text-gray-500 py-20 bg-white/70 backdrop-blur-sm rounded-lg shadow-lg animated-item">
+                <p class="text-lg">Struktur pemerintahan untuk wilayah ini belum tersedia.</p>
+            </div>
+        @else
+            @php
+                // Logika untuk memisahkan pejabat
+                $pimpinan = $semua_pejabat->sortBy('urutan')->first(fn($p) => str_contains(strtolower($p->jabatan), 'bupati') || str_contains(strtolower($p->jabatan), 'camat'));
+                $pejabatSisa = $pimpinan ? $semua_pejabat->where('id', '!=', $pimpinan->id) : $semua_pejabat;
+                
+                $wakil_pimpinan = $pejabatSisa->sortBy('urutan')->first(fn($p) => str_contains(strtolower($p->jabatan), 'sekretaris'));
+                $pejabatSisa = $wakil_pimpinan ? $pejabatSisa->where('id', '!=', $wakil_pimpinan->id) : $pejabatSisa;
+
+                $pejabatStruktural = $pejabatSisa->sortBy('urutan');
+            @endphp
+
+            <div class="flex flex-col items-center space-y-10">
+                
+                <!-- Pimpinan -->
+                @if($pimpinan)
+                <div class="w-full max-w-lg animated-item">
+                    <div class="org-card-leader p-6 flex items-center space-x-6">
+                        <img src="{{ $pimpinan->foto_url }}" alt="Foto {{ $pimpinan->nama }}" class="foto-pejabat w-28 h-28 rounded-full object-cover flex-shrink-0 border-4 border-white shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/112x112/E2E8F0/4A5568?text=Foto';">
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-2xl text-gray-900">{{ $pimpinan->nama }}</h3>
+                            <p class="text-lg text-sky-700 font-semibold">{{ $pimpinan->jabatan }}</p>
+                        </div>
+                    </div>
                 </div>
-            @else
-                @php
-                    $pimpinan = $semua_pejabat->first(fn($p) => str_contains($p->jabatan, 'Bupati') || str_contains($p->jabatan, 'Camat'));
-                    $pejabatSisa = $pimpinan ? $semua_pejabat->where('id', '!=', $pimpinan->id) : $semua_pejabat;
-                    $wakil_pimpinan = $pejabatSisa->first(fn($p) => str_contains($p->jabatan, 'Sekretaris'));
-                    $pejabatSisa = $wakil_pimpinan ? $pejabatSisa->where('id', '!=', $wakil_pimpinan->id) : $pejabatSisa;
-                    $kepala_bagian = $pejabatSisa->filter(fn($p) => str_starts_with($p->jabatan, 'Kasi') || str_starts_with($p->jabatan, 'Kasubag') || str_starts_with($p->jabatan, 'Kepala'));
-                    $idKepalaBagian = $kepala_bagian->pluck('id');
-                    $staf = $pejabatSisa->whereNotIn('id', $idKepalaBagian);
-                    
-                    // Counter untuk delay animasi
-                    $delayCounter = 300;
-                @endphp
+                @endif
 
-                <div class="flex flex-col items-center space-y-8">
-                    
-                    @if($pimpinan)
-                    <div class="top-level-node fade-in-up" style="--row-delay: {{ $delayCounter }}ms;">
-                        <div class="text-center w-48">
-                            <img src="{{ asset('storage/' . $pimpinan->foto_url) }}" alt="Foto {{ $pimpinan->nama }}" class="w-24 h-24 rounded-full mx-auto shadow-lg border-4 border-white object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/E2E8F0/4A5568?text=Foto';">
-                            <h3 class="mt-3 font-bold text-md text-gray-800">{{ $pimpinan->nama }}</h3>
-                            <p class="text-xs text-gray-500">{{ $pimpinan->jabatan }}</p>
+                <!-- Garis Penghubung -->
+                @if($pimpinan && ($wakil_pimpinan || $pejabatStruktural->isNotEmpty()))
+                    <div class="connector-line h-10 animated-item"></div>
+                @endif
+
+                <!-- Wakil Pimpinan -->
+                @if($wakil_pimpinan)
+                <div class="w-full max-w-lg animated-item">
+                     <div class="org-card-leader p-6 flex items-center space-x-6">
+                        <img src="{{ $wakil_pimpinan->foto_url }}" alt="Foto {{ $wakil_pimpinan->nama }}" class="foto-pejabat w-28 h-28 rounded-full object-cover flex-shrink-0 border-4 border-white shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/112x112/E2E8F0/4A5568?text=Foto';">
+                        <div class="flex-grow">
+                            <h3 class="font-bold text-2xl text-gray-900">{{ $wakil_pimpinan->nama }}</h3>
+                            <p class="text-lg text-gray-600 font-semibold">{{ $wakil_pimpinan->jabatan }}</p>
                         </div>
                     </div>
-                    @php $delayCounter += 150; @endphp
-                    @endif
-
-                    @if($pimpinan && ($wakil_pimpinan || $kepala_bagian->isNotEmpty()))
-                    <div class="w-px h-8 bg-gray-300 fade-in-up" style="--row-delay: {{ $delayCounter }}ms;"></div>
-                    @endif
-
-                    @if($wakil_pimpinan)
-                    <div class="top-level-node fade-in-up" style="--row-delay: {{ $delayCounter }}ms;">
-                         <div class="text-center w-48">
-                            <img src="{{ asset('storage/' . $wakil_pimpinan->foto_url) }}" alt="Foto {{ $wakil_pimpinan->nama }}" class="w-24 h-24 rounded-full mx-auto shadow-lg border-4 border-white object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/E2E8F0/4A5568?text=Foto';">
-                            <h3 class="mt-3 font-bold text-md text-gray-800">{{ $wakil_pimpinan->nama }}</h3>
-                            <p class="text-xs text-gray-500">{{ $wakil_pimpinan->jabatan }}</p>
-                        </div>
-                    </div>
-                    @php $delayCounter += 150; @endphp
-                    @endif
-                    
-                    @if($wakil_pimpinan && $kepala_bagian->isNotEmpty())
-                    <div class="w-px h-8 bg-gray-300 fade-in-up" style="--row-delay: {{ $delayCounter }}ms;"></div>
-                    @endif
-
-                    @if($kepala_bagian->isNotEmpty())
-                    <div class="w-full org-chart-group" data-count="{{ $kepala_bagian->count() }}">
-                        <div class="flex justify-center flex-wrap gap-x-8 gap-y-4">
-                            @foreach($kepala_bagian as $pejabat)
-                            @php 
-                                $anim = $loop->even ? 'fade-in-right' : 'fade-in-left'; 
-                                $delayCounter += 100;
-                            @endphp
-                            <div class="flex-shrink-0 org-chart-node {{ $anim }}" style="--row-delay: {{ $delayCounter }}ms;">
-                                <div class="text-center w-48">
-                                    <img src="{{ asset('storage/' . $pejabat->foto_url) }}" alt="Foto {{ $pejabat->nama }}" class="w-24 h-24 rounded-full mx-auto shadow-lg border-4 border-white object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/E2E8F0/4A5568?text=Foto';">
-                                    <h3 class="mt-3 font-bold text-md text-gray-800">{{ $pejabat->nama }}</h3>
-                                    <p class="text-xs text-gray-500">{{ $pejabat->jabatan }}</p>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    @php $delayCounter += 150; @endphp
-                    @endif
-                    
-                    @if($kepala_bagian->isNotEmpty() && $staf->isNotEmpty())
-                    <div class="w-px h-8 bg-gray-300 fade-in-up" style="--row-delay: {{ $delayCounter }}ms;"></div>
-                    @endif
-
-                    @if($staf->isNotEmpty())
-                     <div class="w-full org-chart-group" data-count="{{ $staf->count() }}">
-                        <div class="flex justify-center flex-wrap gap-x-8 gap-y-4">
-                             @foreach($staf as $pejabat)
-                             @php 
-                                $anim = $loop->even ? 'fade-in-right' : 'fade-in-left'; 
-                                $delayCounter += 100;
-                            @endphp
-                            <div class="flex-shrink-0 org-chart-node {{ $anim }}" style="--row-delay: {{ $delayCounter }}ms;">
-                                <div class="text-center w-48">
-                                    <img src="{{ asset('storage/' . $pejabat->foto_url) }}" alt="Foto {{ $pejabat->nama }}" class="w-24 h-24 rounded-full mx-auto shadow-lg border-4 border-white object-cover" onerror="this.onerror=null; this.src='https://placehold.co/100x100/E2E8F0/4A5568?text=Foto';">
-                                    <h3 class="mt-3 font-bold text-md text-gray-800">{{ $pejabat->nama }}</h3>
-                                    <p class="text-xs text-gray-500">{{ $pejabat->jabatan }}</p>
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    @endif
-
                 </div>
-            @endif
-        </div>
+                @endif
+
+                <!-- Garis Penghubung ke Staf -->
+                @if($wakil_pimpinan && $pejabatStruktural->isNotEmpty())
+                    <div class="connector-line h-10 animated-item"></div>
+                    <div class="horizontal-connector animated-item"></div>
+                    <div class="connector-line h-10 animated-item"></div>
+                @endif
+
+                <!-- Pejabat Struktural Lainnya -->
+                @if($pejabatStruktural->isNotEmpty())
+                <div class="w-full">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+                        @foreach($pejabatStruktural as $pejabat)
+                        <div class="animated-item">
+                            <div class="org-card-member h-full">
+                                <img src="{{ $pejabat->foto_url }}" alt="Foto {{ $pejabat->nama }}" class="foto-pejabat w-24 h-24 rounded-full mx-auto object-cover mb-4 border-4 border-white shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/96x96/E2E8F0/4A5568?text=Foto';">
+                                <h4 class="font-bold text-lg text-gray-800">{{ $pejabat->nama }}</h4>
+                                <p class="text-sm text-gray-500 mt-1">{{ $pejabat->jabatan }}</p>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+            </div>
+        @endif
     </div>
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const items = document.querySelectorAll('.animated-item');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+
+    items.forEach((item, index) => {
+        item.style.transitionDelay = `${index * 150}ms`;
+        observer.observe(item);
+    });
+});
+</script>
+@endpush

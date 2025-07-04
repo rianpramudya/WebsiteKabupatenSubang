@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             HotelSeeder::class,
             VisiMisiSeeder::class,
             RumahMakanSeeder::class,
+            PenghargaanSeeder::class,
+            PejabatSeeder::class,
         ]);
     }
 }
