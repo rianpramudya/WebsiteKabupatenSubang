@@ -820,10 +820,17 @@
             </div>
         </div>
 
-        {{-- Bar Copyright --}}
+         {{-- KODE INI ADALAH TAMBAHAN UNTUK FOOTER DENGAN KEBIJAKAN PRIVASI --}}
         <div class="bg-black/20 py-4">
             <div class="container mx-auto px-6 text-center text-xs text-gray-400">
-                <span>Hak Cipta © {{ date('Y') }} Pemerintah Kabupaten Subang. Dikelola oleh Diskominfo.</span>
+                <div class="flex flex-col sm:flex-row justify-center items-center gap-2">
+                    <span>Hak Cipta © {{ date('Y') }} Pemerintah Kabupaten Subang. Dikelola oleh Diskominfo.</span>
+                    {{-- Tambahan Tautan Kebijakan Privasi --}}
+                    <span>|</span>
+                    <a href="{{ route('privacy.policy') }}" class="hover:text-white transition-colors duration-200">
+                        Kebijakan Privasi
+                    </a>
+                </div>
             </div>
         </div>
     </footer>

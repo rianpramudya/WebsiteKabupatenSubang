@@ -90,6 +90,12 @@ Route::middleware('clear.tenant.context')->group(function () {
     Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak.kabupaten');
     Route::get('/halaman/{slug}', [PortalController::class, 'halamanKustom'])->name('halaman.kabupaten');
     Route::get('/statistik', [PortalController::class, 'statistik'])->name('statistik.kabupaten');
+
+    // Rute Tambahan untuk Kebijakan Privasi
+    Route::get('/kebijakan-privasi', function () {
+        // Baris ini diperbarui agar sesuai dengan nama file tampilan Anda
+        return view('pages.kebijakan_privasi');
+    })->name('privacy.policy');
 });
 
 // RUTE PUBLIK KECAMATAN
