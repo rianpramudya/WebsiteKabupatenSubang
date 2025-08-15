@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,4 +29,23 @@ class Budaya extends Model
     {
         return $this->belongsTo(Kecamatan::class);
     }
+
+    /**
+     * Relasi ke PerangkatDaerah (jika berita ini milik perangkat daerah).
+     */
+    public function perangkatDaerah()
+    {
+        return $this->belongsTo(PerangkatDaerah::class);
+    }
+    // --------------------------------
+
+    /**
+ * Terapkan global scope Tenant untuk admin-kecamatan.
+ */
+/* // <-- Tambahkan komentar di sini
+protected static function booted(): void
+{
+    static::addGlobalScope(new TenantScope);
+}
+*/ // <-- Dan di sini
 }

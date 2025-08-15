@@ -14,10 +14,14 @@ class VisiMisiSeeder extends Seeder
     public function run(): void
     {
         // 1. Mengisi Visi & Misi untuk Kabupaten Subang
-        // Asumsi ada entri kecamatan dengan slug 'kabupaten-subang' untuk data tingkat kabupaten
         Kecamatan::updateOrCreate(
-            ['slug' => 'kabupaten-subang'],
             [
+                'slug' => 'kabupaten-subang' // Kunci untuk mencari data
+            ],
+            [
+                // [PERBAIKAN] Tambahkan 'name' di sini agar tidak error
+                'name' => 'Kabupaten Subang',
+                
                 'visi' => 'Terwujudnya Kabupaten Subang yang bersih, maju, sejahtera, dan berkarakter.',
                 'misi' => '<li>Meningkatkan kualitas sumber daya manusia yang berdaya saing.</li>
                            <li>Mewujudkan tata kelola pemerintahan yang baik dan bersih.</li>

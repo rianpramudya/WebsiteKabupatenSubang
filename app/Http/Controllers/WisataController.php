@@ -2,150 +2,147 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Berita;
-use App\Models\Budaya;
 use App\Models\Kecamatan;
-use App\Models\ObjekWisata; // <- Pastikan ini diimpor!
-use App\Models\Hotel;
-use App\Models\RumahMakan;
+use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\Berita;
+use App\Repositories\BudayaRepository;
+use App\Repositories\HotelRepository;
+use App\Repositories\ObjekWisataRepository;
+use App\Repositories\RumahMakanRepository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class WisataController extends Controller
 {
-    public function seniDanBudaya(Request $request, $slug = null): View
-    {
-        $query = Budaya::query()->whereNotNull('published_at')->latest('published_at');
-        $beritaQuery = Berita::query()->latest()->take(5);
-        $nama_wilayah = 'Kabupaten Subang';
-        $kecamatan = null;
+    protected BudayaRepository $budayaRepository;
+    protected HotelRepository $hotelRepository;
+    protected ObjekWisataRepository $objekWisataRepository;
+    protected RumahMakanRepository $rumahMakanRepository;
 
-        if ($slug) {
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            $query->where('kecamatan_id', $kecamatan->id);
-            $beritaQuery->where('kecamatan_id', $kecamatan->id);
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
-        } else {
-            $query->whereNull('kecamatan_id');
-            $beritaQuery->whereNull('kecamatan_id');
-        }
-
-        // Logika Pencarian
-        if ($request->has('search')) {
-            $query->where('nama', 'like', '%' . $request->search . '%');
-        }
-
-        $budayas = $query->paginate(5); // Menampilkan 5 item per halaman
-        $berita_terkini = $beritaQuery->get();
-
-        return view('wisata.seni_dan_budaya', compact(
-            'budayas',
-            'berita_terkini',
-            'nama_wilayah',
-            'kecamatan'
-        ));
+    public function __construct(
+        BudayaRepository $budayaRepository,
+        HotelRepository $hotelRepository,
+        ObjekWisataRepository $objekWisataRepository,
+        RumahMakanRepository $rumahMakanRepository
+    ) {
+        $this->budayaRepository = $budayaRepository;
+        $this->hotelRepository = $hotelRepository;
+        $this->objekWisataRepository = $objekWisataRepository;
+        $this->rumahMakanRepository = $rumahMakanRepository;
     }
 
-    public function objekWisata(Request $request, $slug = null): View
+    /**
+     * [BARU] Helper function terpusat untuk mendapatkan konteks.
+     */
+    private function getContext(Request $request): Kecamatan|PerangkatDaerah|null
     {
-        $query = ObjekWisata::query()->orderBy('is_unggulan', 'desc')->orderBy('nama', 'asc');
-        $nama_wilayah = 'Kabupaten Subang';
-        $kecamatan = null;
-
-        if ($slug) {
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            $query->where('kecamatan_id', $kecamatan->id);
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
-        } else {
-            $query->whereNull('kecamatan_id');
+        if ($request->route('perangkatDaerah') instanceof PerangkatDaerah) {
+            return $request->route('perangkatDaerah');
         }
-
-        // Logika Pencarian
-        if ($request->has('search') && $request->search != '') {
-            $query->where('nama', 'like', '%' . $request->search . '%');
+        $kecamatanParam = $request->route('kecamatan');
+        if ($kecamatanParam instanceof Kecamatan) {
+            return $kecamatanParam;
         }
-
-        // Logika Filter Kategori
-        if ($request->has('kategori') && $request->kategori != '') {
-            $query->where('kategori', $request->kategori);
+        if (is_string($kecamatanParam)) {
+            return Kecamatan::where('slug', $kecamatanParam)->first();
         }
-
-        $objek_wisatas = $query->paginate(9)->withQueryString(); // Menampilkan 9 item per halaman
-
-        // Ambil semua kategori unik untuk filter dropdown
-        $kategori_filter = ObjekWisata::select('kategori')->distinct()->pluck('kategori');
-
-        return view('wisata.objek_wisata', compact(
-            'objek_wisatas',
-            'nama_wilayah',
-            'kecamatan',
-            'kategori_filter'
-        ));
+        return null;
     }
 
-    public function hotel(Request $request, $slug = null): View
+    /**
+     * [MODIFIKASI] Helper untuk berita terkini yang sadar konteks.
+     */
+    private function getBeritaTerkini(Kecamatan|PerangkatDaerah|null $context)
     {
-        $query = Hotel::query()->whereNotNull('published_at')->latest('published_at');
-        $beritaQuery = Berita::query()->latest()->take(5);
-        $nama_wilayah = 'Kabupaten Subang';
-        $kecamatan = null;
+        $query = Berita::query()->latest('published_at')->take(5);
 
-        if ($slug) {
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            $query->where('kecamatan_id', $kecamatan->id);
-            $beritaQuery->where('kecamatan_id', $kecamatan->id);
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
-        } else {
-            $query->whereNull('kecamatan_id');
-            $beritaQuery->whereNull('kecamatan_id');
+        if ($context instanceof PerangkatDaerah) {
+            return $query->where('perangkat_daerah_id', $context->id)->get();
         }
-
-        // Logika Pencarian
-        if ($request->has('search') && $request->search != '') {
-            $query->where('nama', 'like', '%' . $request->search . '%');
+        if ($context instanceof Kecamatan) {
+            return $query->where('kecamatan_id', $context->id)->get();
         }
-
-        $hotels = $query->paginate(5)->withQueryString();
-        $berita_terkini = $beritaQuery->get();
-
-        return view('wisata.hotel', compact(
-            'hotels',
-            'berita_terkini',
-            'nama_wilayah',
-            'kecamatan'
-        ));
+        
+        return $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id')->get();
     }
 
-    public function rumahMakan(Request $request, $slug = null): View
+    public function seniDanBudaya(Request $request): View
     {
-        $query = RumahMakan::query()->whereNotNull('published_at')->latest('published_at');
-        $beritaQuery = Berita::query()->latest()->take(5);
-        $nama_wilayah = 'Kabupaten Subang';
-        $kecamatan = null;
-
-        if ($slug) {
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            $query->where('kecamatan_id', $kecamatan->id);
-            $beritaQuery->where('kecamatan_id', $kecamatan->id);
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
+        $context = $this->getContext($request);
+        
+        if ($context instanceof PerangkatDaerah) {
+            $budayas = $this->budayaRepository->getPaginatedForPerangkatDaerah($context);
+        } elseif ($context instanceof Kecamatan) {
+            $budayas = $this->budayaRepository->getPaginatedForKecamatan($context);
         } else {
-            $query->whereNull('kecamatan_id');
-            $beritaQuery->whereNull('kecamatan_id');
+            $budayas = $this->budayaRepository->getPaginatedForKabupaten();
         }
 
-        // Logika Pencarian
-        if ($request->has('search') && $request->search != '') {
-            $query->where('nama', 'like', '%' . $request->search . '%');
+        return view('wisata.seni_dan_budaya', [
+            'budayas'          => $budayas,
+            'berita_terkini'   => $this->getBeritaTerkini($context),
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+        ]);
+    }
+
+    public function objekWisata(Request $request): View
+    {
+        $context = $this->getContext($request);
+
+        if ($context instanceof PerangkatDaerah) {
+            $objek_wisatas = $this->objekWisataRepository->getPaginatedForPerangkatDaerah($context, $request);
+        } elseif ($context instanceof Kecamatan) {
+            $objek_wisatas = $this->objekWisataRepository->getPaginatedForKecamatan($context, $request);
+        } else {
+            $objek_wisatas = $this->objekWisataRepository->getPaginatedForKabupaten($request);
         }
 
-        $rumah_makans = $query->paginate(5)->withQueryString();
-        $berita_terkini = $beritaQuery->get();
+        return view('wisata.objek_wisata', [
+            'objek_wisatas'    => $objek_wisatas,
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+            'kategori_filter'  => $this->objekWisataRepository->getKategoriList(),
+        ]);
+    }
 
-        return view('wisata.rumah_makan', compact(
-            'rumah_makans',
-            'berita_terkini',
-            'nama_wilayah',
-            'kecamatan'
-        ));
+    public function hotel(Request $request): View
+    {
+        $context = $this->getContext($request);
+        
+        if ($context instanceof PerangkatDaerah) {
+            $hotels = $this->hotelRepository->getPaginatedForPerangkatDaerah($context, $request);
+        } elseif ($context instanceof Kecamatan) {
+            $hotels = $this->hotelRepository->getPaginatedForKecamatan($context, $request);
+        } else {
+            $hotels = $this->hotelRepository->getPaginatedForKabupaten($request);
+        }
+
+        return view('wisata.hotel', [
+            'hotels'           => $hotels,
+            'berita_terkini'   => $this->getBeritaTerkini($context),
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+        ]);
+    }
+
+    public function rumahMakan(Request $request): View
+    {
+        $context = $this->getContext($request);
+
+        if ($context instanceof PerangkatDaerah) {
+            $rumah_makans = $this->rumahMakanRepository->getPaginatedForPerangkatDaerah($context, $request);
+        } elseif ($context instanceof Kecamatan) {
+            $rumah_makans = $this->rumahMakanRepository->getPaginatedForKecamatan($context, $request);
+        } else {
+            $rumah_makans = $this->rumahMakanRepository->getPaginatedForKabupaten($request);
+        }
+        
+        return view('wisata.rumah_makan', [
+            'rumah_makans'     => $rumah_makans,
+            'berita_terkini'   => $this->getBeritaTerkini($context),
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+        ]);
     }
 }

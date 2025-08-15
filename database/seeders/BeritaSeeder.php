@@ -6,67 +6,58 @@ use Illuminate\Database\Seeder;
 use App\Models\Berita;
 use App\Models\KategoriBerita;
 use App\Models\Kecamatan;
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Str;
 
 class BeritaSeeder extends Seeder
 {
     public function run(): void
     {
-        $kategoriList = KategoriBerita::pluck('id', 'slug');
+        Berita::query()->delete();
+
+        $kategoriPemerintahan = KategoriBerita::where('slug', 'pemerintahan')->first();
+        $kategoriPendidikan = KategoriBerita::where('slug', 'pendidikan')->first();
         $kecamatanBinong = Kecamatan::where('slug', 'binong')->first();
+        $pdArdapus = PerangkatDaerah::where('slug', 'ardapus')->first();
 
-        if ($kategoriList->isEmpty()) {
-            $this->command->warn('Kategori berita belum tersedia. Jalankan KategoriBeritaSeeder terlebih dahulu.');
-            return;
-        }
-
-        // 1. Berita kabupaten (tanpa kecamatan_id)
-        $this->createUniqueBerita([
-            'kategori_berita_id' => $kategoriList['pemerintahan'] ?? $kategoriList->first(),
-            'judul' => 'Peresmian Jembatan Baru Menghubungkan Dua Desa',
-            'excerpt' => 'Pemerintah Kabupaten Subang meresmikan jembatan gantung yang akan mempermudah akses warga.',
-            'isi' => 'Isi lengkap berita mengenai peresmian jembatan baru...',
+        // === DATA UNTUK KABUPATEN ===
+        Berita::create([
+            'kategori_berita_id' => $kategoriPemerintahan->id,
             'kecamatan_id' => null,
+            'perangkat_daerah_id' => null,
+            'judul' => 'Pemkab Subang Raih Penghargaan Kabupaten Inovatif 2025',
+            'slug' => Str::slug('Pemkab Subang Raih Penghargaan Kabupaten Inovatif 2025'),
+            'excerpt' => 'Pemerintah Kabupaten Subang berhasil meraih penghargaan sebagai salah satu kabupaten paling inovatif dalam pelayanan publik tingkat nasional.',
+            'isi' => '<p>Pemerintah Kabupaten Subang berhasil meraih penghargaan sebagai salah satu kabupaten paling inovatif dalam pelayanan publik tingkat nasional. Penghargaan ini diberikan atas berbagai terobosan digital yang memudahkan masyarakat.</p>',
+            'published_at' => now()->subDays(1),
         ]);
 
-        // 2. Berita kecamatan (Binong)
+        // === DATA UNTUK KECAMATAN BINONG ===
         if ($kecamatanBinong) {
-            $this->createUniqueBerita([
-                'kategori_berita_id' => $kategoriList['sosial'] ?? $kategoriList->first(),
-                'judul' => 'Bakti Sosial di Kecamatan Binong Berhasil Kumpulkan Ratusan Kantong Darah',
-                'excerpt' => 'Antusiasme warga Binong dalam kegiatan donor darah sangat tinggi.',
-                'isi' => 'Isi lengkap berita bakti sosial Binong...',
+            Berita::create([
+                'kategori_berita_id' => $kategoriPemerintahan->id,
                 'kecamatan_id' => $kecamatanBinong->id,
+                'perangkat_daerah_id' => null,
+                'judul' => 'Kecamatan Binong Gelar Musrenbang untuk Pembangunan 2026',
+                'slug' => Str::slug('Kecamatan Binong Gelar Musrenbang untuk Pembangunan 2026'),
+                'excerpt' => 'Musyawarah Perencanaan Pembangunan (Musrenbang) Kecamatan Binong dihadiri oleh seluruh elemen masyarakat untuk menyusun prioritas pembangunan.',
+                'isi' => '<p>Musyawarah Perencanaan Pembangunan (Musrenbang) Kecamatan Binong dihadiri oleh seluruh elemen masyarakat untuk menyusun prioritas pembangunan. Fokus utama adalah perbaikan infrastruktur pertanian dan jalan desa.</p>',
+                'published_at' => now()->subDays(2),
             ]);
         }
 
-        // 3. Tambahan berita acak (sebagian kabupaten, sebagian Binong)
-        for ($i = 3; $i <= 15; $i++) {
-            $judul = "Contoh Judul Berita Ke-$i di Kabupaten Subang";
-            $this->createUniqueBerita([
-                'kategori_berita_id' => $kategoriList->random(),
-                'judul' => $judul,
-                'excerpt' => "Ini adalah ringkasan singkat untuk berita ke-$i.",
-                'isi' => "Isi lengkap untuk contoh berita ke-$i.",
-                'published_at' => now()->subDays($i),
-                'kecamatan_id' => $i % 2 === 0 && $kecamatanBinong ? $kecamatanBinong->id : null, // selang-seling kecamatan/kabupaten
+        // === DATA UNTUK PERANGKAT DAERAH ARDAPUS ===
+        if ($pdArdapus) {
+            Berita::create([
+                'kategori_berita_id' => $kategoriPendidikan->id,
+                'kecamatan_id' => null,
+                'perangkat_daerah_id' => $pdArdapus->id,
+                'judul' => 'Ardapus Luncurkan Program Digitalisasi Arsip Desa',
+                'slug' => Str::slug('Ardapus Luncurkan Program Digitalisasi Arsip Desa'),
+                'excerpt' => 'Dinas Kearsipan dan Perpustakaan (Ardapus) Subang memulai program digitalisasi arsip penting di seluruh desa sebagai upaya pelestarian dokumen.',
+                'isi' => '<p>Dinas Kearsipan dan Perpustakaan (Ardapus) Subang memulai program digitalisasi arsip penting di seluruh desa sebagai upaya pelestarian dokumen. Program ini akan berjalan selama satu tahun ke depan.</p>',
+                'published_at' => now()->subDays(3),
             ]);
         }
-    }
-
-    private function createUniqueBerita(array $data): void
-    {
-        $baseSlug = Str::slug($data['judul']);
-        $slug = $baseSlug;
-        $counter = 1;
-
-        while (Berita::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
-        }
-
-        Berita::create(array_merge($data, [
-            'slug' => $slug,
-            'published_at' => $data['published_at'] ?? now(),
-        ]));
     }
 }

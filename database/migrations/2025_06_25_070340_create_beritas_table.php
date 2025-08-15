@@ -6,28 +6,30 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-      public function up(): void
+    public function up(): void
     {
         Schema::create('beritas', function (Blueprint $table) {
             $table->id();
             $table->foreignId('kategori_berita_id')->constrained()->onDelete('cascade');
+
+            $table->foreignId('perangkat_daerah_id')->nullable()->constrained('perangkat_daerahs')->onDelete('cascade');
+            
+            // [PERBAIKAN KONSISTENSI] Mengubah onDelete menjadi 'cascade'
+            $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
+            
             $table->string('judul');
             $table->string('slug')->unique();
-            $table->text('excerpt'); // Untuk ringkasan
+            $table->text('excerpt');
             $table->text('isi');
-            $table->string('gambar')->nullable(); // Path ke gambar
-            $table->timestamp('published_at')->nullable();
+            $table->string('gambar')->nullable();
+            
+            // Tipe data timestamp sudah benar untuk pengurutan
+            $table->timestamp('published_at')->nullable(); 
+            
             $table->timestamps();
         });
     }
-    
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('beritas');

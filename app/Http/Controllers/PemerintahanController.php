@@ -2,131 +2,93 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pejabat;
-use App\Models\Tenant;
 use App\Models\Kecamatan;
-use App\Models\PeranDanProgram;
 use App\Models\PerangkatDaerah;
+use App\Repositories\StrukturPemerintahanRepository;
+use App\Repositories\PeranDanProgramRepository;
+use App\Repositories\WilayahAdministrasiRepository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-
 class PemerintahanController extends Controller
 {
+    // ... (bagian __construct() Anda sudah benar, tidak perlu diubah) ...
+    protected StrukturPemerintahanRepository $strukturPemerintahanRepository;
+    protected PeranDanProgramRepository $peranDanProgramRepository;
+    protected WilayahAdministrasiRepository $wilayahAdministrasiRepository;
+
+    public function __construct(
+        StrukturPemerintahanRepository $strukturPemerintahanRepository,
+        PeranDanProgramRepository $peranDanProgramRepository,
+        WilayahAdministrasiRepository $wilayahAdministrasiRepository
+    ) {
+        $this->strukturPemerintahanRepository = $strukturPemerintahanRepository;
+        $this->peranDanProgramRepository = $peranDanProgramRepository;
+        $this->wilayahAdministrasiRepository = $wilayahAdministrasiRepository;
+    }
+
     /**
-     * Menampilkan halaman Struktur Pemerintahan.
-     * Logika ini dinamis berdasarkan slug yang diberikan.
+     * [DIPERBAIKI] Helper disederhanakan untuk mendapatkan konteks tenant.
      */
-    public function struktur(string $slug = null): View
+    private function getContext(Request $request): Kecamatan|PerangkatDaerah|null
     {
-        // Catatan: Metode ini masih menggunakan model Tenant, yang mungkin perlu diseragamkan
-        // dengan model Kecamatan di masa depan untuk konsistensi.
-        $query = Pejabat::query()->orderBy('urutan', 'asc');
-        $nama_wilayah = 'Kabupaten Subang';
-        $kecamatan = null;
+        return $request->route('perangkatDaerah') ?? $request->route('kecamatan');
+    }
 
-        if ($slug) {
-            $tenant = Tenant::where('slug', $slug)->firstOrFail();
-            $query->where('tenant_id', $tenant->id);
-            $nama_wilayah = 'Kecamatan ' . $tenant->name;
-            $kecamatan = $tenant;
-        } else {
-            $query->whereNull('tenant_id');
-        }
+    public function struktur(Request $request): View
+    {
+        // ... (method ini sudah benar) ...
+        $context = $this->getContext($request);
+        $semua_pejabat = $this->strukturPemerintahanRepository->getAllPejabat($context);
 
-        $pejabats = $query->get();
+        $semua_pejabat->each(function ($pejabat) {
+            $pejabat->foto_url = $pejabat->foto
+                ? asset('storage/' . $pejabat->foto)
+                : 'https://placehold.co/300x300/e2e8f0/64748b?text=Foto';
+        });
 
-        $pimpinan = $pejabats->whereIn('jabatan', ['Bupati', 'Camat']);
-        $sekretaris = $pejabats->whereIn('jabatan', ['Sekretaris Daerah', 'Sekretaris Kecamatan']);
-        $kepala_bagian = $pejabats->whereIn('jabatan', ['Kepala Bagian A', 'Kepala Bagian B']);
-        $staf = $pejabats->where('jabatan', 'Staf Ahli');
+        $pimpinan = $semua_pejabat->filter(fn($p) => stripos($p->jabatan, 'bupati') !== false || stripos($p->jabatan, 'camat') !== false || stripos($p->jabatan, 'kepala dinas') !== false || stripos($p->jabatan, 'kepala badan') !== false);
+        $sekretaris = $semua_pejabat->filter(fn($p) => stripos($p->jabatan, 'sekretaris') !== false);
 
         return view('pemerintahan.struktur', [
-            'nama_wilayah' => $nama_wilayah,
-            'kecamatan' => $kecamatan,
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
             'pimpinan' => $pimpinan,
             'sekretaris' => $sekretaris,
-            'kepala_bagian' => $kepala_bagian,
-            'staf' => $staf,
-            'semua_pejabat' => $pejabats
+            'semua_pejabat' => $semua_pejabat
         ]);
     }
 
-    /**
-     * Menampilkan halaman Peran dan Program.
-     */
-    public function peranDanProgram(Request $request, string $slug = null): View
+    public function peranDanProgram(Request $request): View
     {
-        if ($slug) {
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            $peran_dan_program = PeranDanProgram::where('kecamatan_id', $kecamatan->id)
-                ->orderBy('urutan')
-                ->get();
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
-        } else {
-            $kecamatan = null;
-            $peran_dan_program = PeranDanProgram::whereNull('kecamatan_id')
-                ->orderBy('urutan')
-                ->get();
-            $nama_wilayah = 'Kabupaten Subang';
-        }
+        // ... (method ini sudah benar) ...
+        $context = $this->getContext($request);
+        $peran_dan_program = $this->peranDanProgramRepository->getAllPeranDanProgram($context);
 
-        return view('pemerintahan.peran_dan_program', compact('peran_dan_program', 'nama_wilayah', 'kecamatan'));
+        return view('pemerintahan.peran_dan_program', [
+            'peran_dan_program' => $peran_dan_program,
+            'currentKecamatan'  => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+        ]);
     }
 
-    /**
-     * Menampilkan halaman Perangkat Daerah.
-     */
-    public function perangkatDaerah(Request $request, $slug = null)
+    public function wilayahAdministrasi(Request $request): View
     {
-        $query = PerangkatDaerah::query();
-
-        if ($slug) {
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            $query->where('kecamatan_id', $kecamatan->id);
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
+        $context = $this->getContext($request);
+        
+        // [PERBAIKAN] Langsung gunakan relasi dari model untuk konsistensi
+        if ($context) {
+            $list_data = $context->wilayahAdministrasi()->orderBy('nama_desa')->get();
         } else {
-            $kecamatan = null;
-            $query->whereNull('kecamatan_id');
-            $nama_wilayah = 'Kabupaten Subang';
+            // Logika untuk Kabupaten (jika repository diperlukan)
+            $list_data = $this->wilayahAdministrasiRepository->getWilayahAdministrasiData($context);
         }
 
-        $perangkat_daerah = $query->orderBy('nama_desa')->get();
-
-        return view('pemerintahan.perangkat_daerah', compact('perangkat_daerah', 'nama_wilayah', 'kecamatan'));
-    }
-
-    /**
-     * Menampilkan halaman Wilayah Administrasi.
-     * PERBAIKAN DITERAPKAN DI SINI.
-     */
-    public function wilayahAdministrasi(Request $request, $slug = null)
-    {
-        if ($slug) {
-            // KONTEKS KECAMATAN: Tampilkan daftar Perangkat Daerah di dalamnya
-            $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-            // PERBAIKAN: Memanggil nama relasi yang benar (perangkatDaerahs)
-            $list_data = $kecamatan->perangkatDaerahs()->orderBy('nama_desa')->get();
-            $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
-            $is_kabupaten = false;
-        } else {
-            // KONTEKS KABUPATEN: Tampilkan daftar Kecamatan
-            $kecamatan = null;
-            // PERBAIKAN: Menggunakan nama relasi yang benar (perangkatDaerahs) di withCount dan withSum
-            $list_data = Kecamatan::where('slug', '!=', 'kabupaten-subang')
-                                    ->withCount('perangkatDaerahs')
-                                    ->withSum('perangkatDaerahs as total_penduduk', 'jumlah_penduduk')
-                                    ->orderBy('name')
-                                    ->get();
-            $nama_wilayah = 'Kabupaten Subang';
-            $is_kabupaten = true;
-        }
-
-        return view('pemerintahan.wilayah_administrasi', compact(
-            'list_data', 
-            'nama_wilayah', 
-            'kecamatan', 
-            'is_kabupaten'
-        ));
+        return view('pemerintahan.wilayah_administrasi', [
+            'list_data'        => $list_data,
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+            'is_kabupaten'     => is_null($context),
+        ]);
     }
 }

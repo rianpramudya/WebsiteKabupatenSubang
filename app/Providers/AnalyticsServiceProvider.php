@@ -2,67 +2,138 @@
 
 namespace App\Providers;
 
-// --- PASTIKAN BAGIAN 'USE' INI TERSALIN DENGAN BENAR ---
-// Perhatikan penggunaan backslash (\) bukan titik (.).
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\ServiceProvider;
 use Spatie\Analytics\Facades\Analytics;
 use Spatie\Analytics\Period;
-use Carbon\Carbon;
-// ---------------------------------------------------------
+
+// [PERBAIKAN] Impor kelas yang benar untuk membuat filter GA4
+use Google\Analytics\Data\V1beta\Filter;
+use Google\Analytics\Data\V1beta\Filter\StringFilter;
+use Google\Analytics\Data\V1beta\Filter\StringFilter\MatchType;
+use Google\Analytics\Data\V1beta\FilterExpression;
 
 class AnalyticsServiceProvider extends ServiceProvider
 {
     /**
+     * Register services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
      * Bootstrap services.
-     *
-     * @return void
      */
     public function boot(): void
     {
-        // Menggunakan View Composer untuk membagikan data ke semua view.
-        // Ini memastikan variabel $visitorStats tersedia di layout utama (app.blade.php).
-        View::composer('*', function ($view) {
-            
-            // Cek dulu apakah Property ID sudah diatur di file .env
-            // untuk menghindari error jika belum di-setting.
-            if (!config('analytics.property_id')) {
-                // Jika belum di-setting, kirim data default agar tidak error.
-                $stats = ['online' => 0, 'today' => 0, 'total' => 0];
-            } else {
-                // Gunakan cache untuk menyimpan hasil dari API Google selama 30 menit.
-                // Ini sangat penting untuk meningkatkan kecepatan website dan
-                // menghindari pemanggilan API yang berlebihan setiap kali halaman dimuat.
-                $stats = Cache::remember('analytics_stats', now()->addMinutes(30), function () {
-                    try {
-                        // Tentukan tanggal website Anda mulai dilacak oleh Google Analytics.
-                        // PENTING: Ganti tanggal di bawah ini sesuai dengan kapan Anda
-                        // pertama kali memasang kode pelacakan Google Analytics.
-                        $startDate = Carbon::create(2024, 6, 30); 
+        View::composer(['layouts.app', 'dashboard.superadmin'], function ($view) {
+            $defaultStats = [
+                'online' => 'N/A',
+                'today' => 'N/A',
+                'total' => 'N/A'
+            ];
 
-                        return [
-                            'online' => Analytics::fetchActiveUsers()->first()['activeUsers'] ?? 0,
-                            'today'  => Analytics::fetchTotalUsersAndSessions(Period::days(1))->first()['totalUsers'] ?? 0,
-                            'total'  => Analytics::fetchTotalUsersAndSessions(Period::create($startDate, now()))->first()['totalUsers'] ?? 0,
-                        ];
-                    } catch (\Exception $e) {
-                        // Jika terjadi error saat mengambil data dari API (misal: masalah koneksi, izin, dll.)
-                        // kita akan mencatat errornya ke dalam file log Laravel dan mengembalikan
-                        // nilai default agar website tidak rusak atau menampilkan pesan error.
-                        Log::error('Gagal mengambil data dari Google Analytics: ' . $e->getMessage());
-                        return [
-                            'online' => 0,
-                            'today'  => 0,
-                            'total'  => 0,
-                        ];
-                    }
-                });
+            if (!config('analytics.property_id') || !file_exists(config('analytics.service_account_credentials_json'))) {
+                Log::warning('Google Analytics tidak terkonfigurasi.');
+                $view->with('visitorStats', $defaultStats);
+                return;
             }
 
-            // Kirim variabel $visitorStats ke semua view yang ada.
-            $view->with('visitorStats', $stats);
+            $request = request();
+            if (!$request->route()) {
+                $view->with('visitorStats', $defaultStats);
+                return;
+            }
+
+            $routeName = $request->route()->getName();
+            $cacheKey = 'visitor_stats_';
+            
+            // [PERBAIKAN] Inisialisasi filter expression sebagai null
+            $filterExpression = null;
+
+            // 1. Logika untuk statistik spesifik per kecamatan
+            if ($view->getName() === 'layouts.app' && $routeName === 'kecamatan.show' && $request->route('kecamatan')) {
+                $kecamatan = $request->route('kecamatan');
+                $cacheKey .= 'kecamatan_' . $kecamatan->slug;
+                $pagePath = '/kecamatan/' . $kecamatan->slug;
+                
+                // [PERBAIKAN] Membuat filter expression dengan struktur yang benar untuk GA4
+                $filterExpression = new FilterExpression([
+                    'filter' => new Filter([
+                        'field_name' => 'pagePath',
+                        'string_filter' => new StringFilter([
+                            'match_type' => MatchType::EXACT,
+                            'value' => $pagePath,
+                        ]),
+                    ]),
+                ]);
+
+            // 2. Logika untuk statistik global di dashboard
+            } elseif ($routeName === 'dashboard') {
+                $cacheKey .= 'global_dashboard';
+            
+            // 3. Fallback untuk footer
+            } else {
+                 $cacheKey .= 'global_footer';
+            }
+
+            try {
+                // Menggunakan $filterExpression di dalam closure
+                $stats = Cache::remember($cacheKey, now()->addMinutes(15), function () use ($filterExpression) {
+                    
+                    // Query untuk total pengunjung
+                    $totalVisitorsQuery = Analytics::get(
+                        Period::years(1),
+                        ['totalUsers'],
+                        [], // dimensions
+                        10, // limit
+                        [], // orderBy
+                        0,  // [PERBAIKAN] Menambahkan nilai 0 untuk offset (argumen ke-6)
+                        $filterExpression // Filter sekarang menjadi argumen ke-7
+                    );
+                    $totalVisitors = $totalVisitorsQuery->first()['totalUsers'] ?? 0;
+
+                    // Query untuk pengunjung hari ini
+                    $todayVisitorsQuery = Analytics::get(
+                        Period::days(1),
+                        ['activeUsers'],
+                        [], // dimensions
+                        10, // limit
+                        [], // orderBy
+                        0,  // [PERBAIKAN] Menambahkan nilai 0 untuk offset (argumen ke-6)
+                        $filterExpression // Filter sekarang menjadi argumen ke-7
+                    );
+                    $todayVisitors = $todayVisitorsQuery->first()['activeUsers'] ?? 0;
+
+                    // Query untuk pengguna online (realtime)
+                    $onlineUsersQuery = Analytics::get(
+                        Period::create(now()->subMinutes(5), now()),
+                        ['activeUsers'],
+                        [], // dimensions
+                        10, // limit
+                        [], // orderBy
+                        0,  // [PERBAIKAN] Menambahkan nilai 0 untuk offset (argumen ke-6)
+                        $filterExpression // Filter sekarang menjadi argumen ke-7
+                    );
+                    $onlineUsers = $onlineUsersQuery->first()['activeUsers'] ?? 0;
+                    
+                    return [
+                        'online' => $onlineUsers,
+                        'today'  => $todayVisitors,
+                        'total'  => $totalVisitors,
+                    ];
+                });
+
+                $view->with('visitorStats', $stats);
+
+            } catch (\Exception $e) {
+                Log::error('Google Analytics API Error: ' . $e->getMessage());
+                $view->with('visitorStats', $defaultStats);
+            }
         });
     }
 }

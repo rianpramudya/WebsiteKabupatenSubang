@@ -6,28 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-        public function up(): void
+    public function up(): void
     {
         Schema::create('penghargaans', function (Blueprint $table) {
             $table->id();
-            // Kolom ini untuk menghubungkan penghargaan ke tenant/kecamatan.
-            // Dibuat nullable agar bisa untuk penghargaan tingkat kabupaten (tidak terikat tenant).
-            $table->foreignId('tenant_id')->nullable()->constrained()->onDelete('set null');
+
+            // [PERBAIKAN] Ganti tenant_id dengan relasi yang jelas
+            $table->foreignId('perangkat_daerah_id')->nullable()->constrained('perangkat_daerahs')->onDelete('cascade');
+            $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
             
             $table->string('nama_penghargaan');
             $table->year('tahun');
-            $table->string('tingkat'); // Misal: Nasional, Provinsi, Kabupaten
+            $table->string('tingkat');
             $table->string('instansi_pemberi');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('penghargaans');

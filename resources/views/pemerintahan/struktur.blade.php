@@ -1,187 +1,231 @@
 @extends('layouts.app')
 
-@section('title', 'Struktur Pemerintahan - ' . $nama_wilayah)
+{{-- 1. Blok PHP untuk judul dinamis --}}
+@php
+$namaKonteks = 'Kabupaten Subang'; // Default
+if (isset($currentPerangkatDaerah)) {
+$namaKonteks = $currentPerangkatDaerah->name;
+} elseif (isset($currentKecamatan)) {
+$namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
+}
+@endphp
 
+@section('title', 'Struktur Organisasi - ' . $namaKonteks)
 @push('styles')
 <style>
-    /* Background gradien animasi */
-    .dynamic-bg {
-        background: linear-gradient(-45deg, #f0f9ff, #e0f2fe, #f0f9ff, #fafafa);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
+    :root {
+        --org-line-color: #d1d5db;
+        /* Warna garis konektor (gray-300) */
+        --org-card-bg: #ffffff;
+        --org-card-border: #1E4E7C;
+        /* Warna utama (biru Subang) */
+        --org-text-title: #1f2937;
+        /* gray-800 */
+        --org-text-body: #4b5563;
+        /* gray-600 */
+        --org-gap: 50px;
+        /* Jarak vertikal antar level */
     }
 
-    @keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+    .org-chart {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    /* Kartu Pimpinan */
-    .org-card-leader {
-        background-color: white;
-        border-radius: 0.75rem; /* 12px */
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        transition: transform 0.3s ease, box-shadow 0.4s ease;
-        border-left: 6px solid #0ea5e9; /* sky-500 */
-        overflow: hidden;
-    }
-    .org-card-leader:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 0 0 4px rgb(14 165 233 / 0.2);
-    }
-    .org-card-leader .foto-pejabat {
-        transition: transform 0.3s ease;
-    }
-    .org-card-leader:hover .foto-pejabat {
-        transform: scale(1.05);
+    .org-chart ul {
+        display: flex;
+        justify-content: center;
+        list-style-type: none;
+        padding: 0;
+        position: relative;
+        margin-top: var(--org-gap);
     }
 
-    /* Kartu Anggota */
-    .org-card-member {
-        background-color: white;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-        border-top: 4px solid #e5e7eb; /* gray-200 */
-        text-align: center;
-        padding: 1.5rem; /* 24px */
-    }
-    .org-card-member:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        border-top-color: #3b82f6; /* blue-500 */
-    }
-    .org-card-member .foto-pejabat {
-         transition: transform 0.3s ease;
-    }
-    .org-card-member:hover .foto-pejabat {
-        transform: scale(1.1);
+    .org-chart>ul:first-child {
+        margin-top: 0;
     }
 
-    /* Garis Penghubung */
-    .connector-line {
+    .org-chart li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0 1.5rem;
+        /* Jarak horizontal antar kartu */
+        position: relative;
+    }
+
+    /* === LOGIKA KONEKTOR BARU === */
+
+    /* Garis Vertikal dari ATAS ke kartu */
+    .org-chart li::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
         width: 2px;
-        background: linear-gradient(to bottom, #d1d5db, #e5e7eb);
-        margin: 0 auto;
-    }
-    .horizontal-connector {
-        width: 90%;
-        max-width: 1200px;
-        height: 2px;
-        background: linear-gradient(to right, #e5e7eb, #d1d5db, #e5e7eb);
-        margin: 0 auto;
+        height: calc(var(--org-gap) / 2);
+        background-color: var(--org-line-color);
     }
 
-    /* Animasi saat item muncul */
+    /* Garis Vertikal dari BAWAH kartu */
+    .org-chart li::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: calc(var(--org-gap) / 2);
+        background-color: var(--org-line-color);
+    }
+
+    /* Garis Horizontal yang menghubungkan SIBLING */
+    .org-chart li:not(:only-child)::after {
+        /* Sembunyikan garis bawah jika kartu punya sibling, karena koneksi lewat garis horizontal */
+        display: none;
+    }
+
+    .org-chart ul::after {
+        content: '';
+        position: absolute;
+        top: calc(0px - var(--org-gap) / 2);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 2px;
+        height: calc(var(--org-gap) / 2);
+        background-color: var(--org-line-color);
+    }
+
+    .org-chart ul:not(:has(li:only-child))::before {
+        content: '';
+        position: absolute;
+        top: calc(0px - var(--org-gap) / 2);
+        left: 15%;
+        /* Mulai dari sebagian kartu pertama */
+        right: 15%;
+        /* Berakhir di sebagian kartu terakhir */
+        height: 2px;
+        background-color: var(--org-line-color);
+    }
+
+    /* Sembunyikan konektor yang tidak perlu */
+    .org-chart>ul:first-child>li::before {
+        display: none;
+    }
+
+    .org-chart>ul:last-child>li::after {
+        display: none;
+    }
+
+    .org-chart>ul:first-child::after {
+        display: none;
+    }
+
+
+    /* === AKHIR LOGIKA KONEKTOR === */
+
+    .org-card {
+        background-color: var(--org-card-bg);
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        text-align: center;
+        width: 280px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-top: 5px solid var(--org-card-border);
+        z-index: 1;
+        /* Agar kartu di atas garis */
+    }
+
+    .org-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .org-card .foto-pejabat {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto 1rem auto;
+        border: 5px solid #f3f4f6;
+    }
+
+    .org-card .nama {
+        font-weight: 700;
+        font-size: 1.125rem;
+        color: var(--org-text-title);
+    }
+
+    .org-card .jabatan {
+        font-size: 0.875rem;
+        color: var(--org-text-body);
+        margin-top: 0.25rem;
+    }
+
+    /* Animasi */
     .animated-item {
         opacity: 0;
-        transform: translateY(30px);
-        transition: opacity 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        transform: scale(0.95) translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     }
+
     .animated-item.is-visible {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1) translateY(0);
     }
 </style>
 @endpush
 
 @section('content')
+<div class="bg-gray-100 min-h-screen py-20">
+    <div class="container mx-auto px-4 sm:px-6 overflow-x-auto">
 
-<div class="dynamic-bg min-h-screen py-20">
-    <div class="container mx-auto px-4 sm:px-6">
-
-        {{-- Judul Halaman --}}
-        <div class="text-center mb-20 animated-item">
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+        <div class="text-center mb-16 animated-item">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-[#1E4E7C] tracking-tight">
                 Struktur Organisasi
             </h1>
-            <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">{{ $nama_wilayah }}</p>
+            {{-- 2. Gunakan nama konteks dinamis --}}
+            <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
+                {{ $namaKonteks }}
+            </p>
         </div>
 
         @if($semua_pejabat->isEmpty())
-            <div class="text-center text-gray-500 py-20 bg-white/70 backdrop-blur-sm rounded-lg shadow-lg animated-item">
-                <p class="text-lg">Struktur pemerintahan untuk wilayah ini belum tersedia.</p>
-            </div>
+        <div class="text-center text-gray-500 py-20 bg-white/70 backdrop-blur-sm rounded-lg shadow-lg animated-item">
+            <p class="text-lg">Struktur pemerintahan untuk wilayah ini belum tersedia.</p>
+        </div>
         @else
-            @php
-                // Logika untuk memisahkan pejabat
-                $pimpinan = $semua_pejabat->sortBy('urutan')->first(fn($p) => str_contains(strtolower($p->jabatan), 'bupati') || str_contains(strtolower($p->jabatan), 'camat'));
-                $pejabatSisa = $pimpinan ? $semua_pejabat->where('id', '!=', $pimpinan->id) : $semua_pejabat;
-                
-                $wakil_pimpinan = $pejabatSisa->sortBy('urutan')->first(fn($p) => str_contains(strtolower($p->jabatan), 'sekretaris'));
-                $pejabatSisa = $wakil_pimpinan ? $pejabatSisa->where('id', '!=', $wakil_pimpinan->id) : $pejabatSisa;
+        @php
+        $groupedPejabats = $semua_pejabat->sortBy('urutan')->groupBy('urutan');
+        @endphp
 
-                $pejabatStruktural = $pejabatSisa->sortBy('urutan');
-            @endphp
-
-            <div class="flex flex-col items-center space-y-10">
-                
-                <!-- Pimpinan -->
-                @if($pimpinan)
-                <div class="w-full max-w-lg animated-item">
-                    <div class="org-card-leader p-6 flex items-center space-x-6">
-                        <img src="{{ $pimpinan->foto_url }}" alt="Foto {{ $pimpinan->nama }}" class="foto-pejabat w-28 h-28 rounded-full object-cover flex-shrink-0 border-4 border-white shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/112x112/E2E8F0/4A5568?text=Foto';">
-                        <div class="flex-grow">
-                            <h3 class="font-bold text-2xl text-gray-900">{{ $pimpinan->nama }}</h3>
-                            <p class="text-lg text-sky-700 font-semibold">{{ $pimpinan->jabatan }}</p>
-                        </div>
+        <div class="org-chart">
+            @foreach($groupedPejabats as $urutan => $pejabatsDiLevelIni)
+            <ul class="animated-item">
+                @foreach($pejabatsDiLevelIni as $pejabat)
+                <li>
+                    <div class="org-card">
+                        <img src="{{ $pejabat->foto_url }}" alt="Foto {{ $pejabat->nama }}" class="foto-pejabat"
+                            onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/4A5568?text=Foto';">
+                        <h4 class="nama">{{ $pejabat->nama }}</h4>
+                        <p class="jabatan">{{ $pejabat->jabatan }}</p>
                     </div>
-                </div>
-                @endif
-
-                <!-- Garis Penghubung -->
-                @if($pimpinan && ($wakil_pimpinan || $pejabatStruktural->isNotEmpty()))
-                    <div class="connector-line h-10 animated-item"></div>
-                @endif
-
-                <!-- Wakil Pimpinan -->
-                @if($wakil_pimpinan)
-                <div class="w-full max-w-lg animated-item">
-                     <div class="org-card-leader p-6 flex items-center space-x-6">
-                        <img src="{{ $wakil_pimpinan->foto_url }}" alt="Foto {{ $wakil_pimpinan->nama }}" class="foto-pejabat w-28 h-28 rounded-full object-cover flex-shrink-0 border-4 border-white shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/112x112/E2E8F0/4A5568?text=Foto';">
-                        <div class="flex-grow">
-                            <h3 class="font-bold text-2xl text-gray-900">{{ $wakil_pimpinan->nama }}</h3>
-                            <p class="text-lg text-gray-600 font-semibold">{{ $wakil_pimpinan->jabatan }}</p>
-                        </div>
-                    </div>
-                </div>
-                @endif
-
-                <!-- Garis Penghubung ke Staf -->
-                @if($wakil_pimpinan && $pejabatStruktural->isNotEmpty())
-                    <div class="connector-line h-10 animated-item"></div>
-                    <div class="horizontal-connector animated-item"></div>
-                    <div class="connector-line h-10 animated-item"></div>
-                @endif
-
-                <!-- Pejabat Struktural Lainnya -->
-                @if($pejabatStruktural->isNotEmpty())
-                <div class="w-full">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-                        @foreach($pejabatStruktural as $pejabat)
-                        <div class="animated-item">
-                            <div class="org-card-member h-full">
-                                <img src="{{ $pejabat->foto_url }}" alt="Foto {{ $pejabat->nama }}" class="foto-pejabat w-24 h-24 rounded-full mx-auto object-cover mb-4 border-4 border-white shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/96x96/E2E8F0/4A5568?text=Foto';">
-                                <h4 class="font-bold text-lg text-gray-800">{{ $pejabat->nama }}</h4>
-                                <p class="text-sm text-gray-500 mt-1">{{ $pejabat->jabatan }}</p>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-
-            </div>
+                </li>
+                @endforeach
+            </ul>
+            @endforeach
+        </div>
         @endif
     </div>
 </div>
-
 @endsection
 
 @push('scripts')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
     const items = document.querySelectorAll('.animated-item');
 
     const observer = new IntersectionObserver((entries) => {

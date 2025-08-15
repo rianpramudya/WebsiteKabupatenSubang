@@ -1,48 +1,58 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Infografis;
 use App\Models\Kecamatan;
+use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\Berita;
+use App\Repositories\InfografisRepository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use App\Models\Berita;
 
 class InfoGrafisController extends Controller
 {
-    public function index(Request $request, $slug = null): View
-{
-    $query = Infografis::query()->whereNotNull('published_at')->latest('published_at');
-    $nama_wilayah = 'Kabupaten Subang';
-    $kecamatan = null;
+    protected InfografisRepository $infografisRepository;
 
-    if ($slug) {
-        $kecamatan = Kecamatan::where('slug', $slug)->firstOrFail();
-        $query->where('kecamatan_id', $kecamatan->id);
-        $nama_wilayah = 'Kecamatan ' . $kecamatan->name;
-    } else {
-        $query->whereNull('kecamatan_id');
+    public function __construct(InfografisRepository $infografisRepository)
+    {
+        $this->infografisRepository = $infografisRepository;
     }
 
-    $infografis = $query->paginate(12); // Menampilkan 12 item per halaman
+    private function getContext(Request $request): Kecamatan|PerangkatDaerah|null
+    {
+        if ($request->route('perangkatDaerah') instanceof PerangkatDaerah) {
+            return $request->route('perangkatDaerah');
+        }
+        $kecamatanParam = $request->route('kecamatan');
+        if ($kecamatanParam instanceof Kecamatan) {
+            return $kecamatanParam;
+        }
+        if (is_string($kecamatanParam)) {
+            return Kecamatan::where('slug', $kecamatanParam)->first();
+        }
+        return null;
+    }
 
-    // 🔥 Ambil 5 berita terkini, kontekstual dengan kecamatan bila ada
-    $berita_terkini = Berita::query()
-        ->latest()
-        ->when($kecamatan, function ($q) use ($kecamatan) {
-            $q->where('kecamatan_id', $kecamatan->id);
-        }, function ($q) {
-            $q->whereNull('kecamatan_id');
-        })
-        ->take(5)
-        ->get();
+    public function index(Request $request): View
+    {
+        $context = $this->getContext($request);
+        $beritaQuery = Berita::query()->latest('published_at')->take(5);
 
-    return view('info_grafis.index', compact(
-        'infografis',
-        'nama_wilayah',
-        'kecamatan',
-        'berita_terkini' // <- ini yang penting!
-    ));
-}
+        if ($context instanceof PerangkatDaerah) {
+            $infografis = $this->infografisRepository->getPaginatedForPerangkatDaerah($context);
+            $berita_terkini = $beritaQuery->where('perangkat_daerah_id', $context->id)->get();
+        } elseif ($context instanceof Kecamatan) {
+            $infografis = $this->infografisRepository->getPaginatedForKecamatan($context);
+            $berita_terkini = $beritaQuery->where('kecamatan_id', $context->id)->get();
+        } else {
+            $infografis = $this->infografisRepository->getPaginatedForKabupaten();
+            $berita_terkini = $beritaQuery->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id')->get();
+        }
 
+        return view('info_grafis.index', [
+            'infografis'       => $infografis,
+            'currentKecamatan' => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
+            'berita_terkini'   => $berita_terkini,
+        ]);
+    }
 }

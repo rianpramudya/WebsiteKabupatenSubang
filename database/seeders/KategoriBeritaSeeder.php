@@ -7,9 +7,6 @@ use Illuminate\Database\Seeder;
 
 class KategoriBeritaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $data = [
@@ -17,12 +14,14 @@ class KategoriBeritaSeeder extends Seeder
             ['nama' => 'Sosial', 'slug' => 'sosial'],
             ['nama' => 'Ekonomi', 'slug' => 'ekonomi'],
             ['nama' => 'Pendidikan', 'slug' => 'pendidikan'],
+            ['nama' => 'Kesehatan', 'slug' => 'kesehatan'],
+            ['nama' => 'Budaya dan Wisata', 'slug' => 'budaya-wisata'],
         ];
 
         foreach ($data as $item) {
             KategoriBerita::firstOrCreate(
-                ['slug' => $item['slug']], // cek berdasarkan slug
-                ['nama' => $item['nama']]  // jika tidak ada, insert
+                ['slug' => $item['slug']],
+                ['nama' => $item['nama']]
             );
         }
     }

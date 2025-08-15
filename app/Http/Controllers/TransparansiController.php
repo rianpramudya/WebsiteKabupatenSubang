@@ -2,50 +2,46 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\LaporanKeuangan;
-use App\Models\Tenant;
+use App\Models\Kecamatan;
+use App\Models\PerangkatDaerah; // <-- Tambahkan import
+use App\Repositories\LaporanKeuanganRepository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class TransparansiController extends Controller
 {
-    /**
-     * Menampilkan halaman Transparansi Keuangan untuk Kabupaten atau Kecamatan.
-     */
+    protected LaporanKeuanganRepository $laporanKeuanganRepository;
+
+    public function __construct(LaporanKeuanganRepository $laporanKeuanganRepository)
+    {
+        $this->laporanKeuanganRepository = $laporanKeuanganRepository;
+    }
+
+    private function getContext(Request $request): Kecamatan|PerangkatDaerah|null
+    {
+        if ($request->route('perangkatDaerah') instanceof PerangkatDaerah) {
+            return $request->route('perangkatDaerah');
+        }
+        $kecamatanParam = $request->route('kecamatan');
+        if ($kecamatanParam instanceof Kecamatan) {
+            return $kecamatanParam;
+        }
+        if (is_string($kecamatanParam)) {
+            return Kecamatan::where('slug', $kecamatanParam)->first();
+        }
+        return null;
+    }
+
     public function index(Request $request): View
     {
-        $laporanQuery = LaporanKeuangan::query()->orderBy('created_at', 'desc');
-        $namaWilayah = 'Kabupaten Subang';
-        $kecamatan = null;
-
-        // Periksa jika ini rute kecamatan
-        if ($request->routeIs('transparansi.kecamatan')) {
-            $slug = $request->route('slug'); // Ambil slug dari URL
-
-            $tenant = Tenant::where('slug', $slug)->first();
-            if (!$tenant) {
-                abort(404, 'Kecamatan tidak ditemukan.');
-            }
-
-            $laporanQuery->where('tenant_id', $tenant->id);
-            $namaWilayah = 'Kecamatan ' . $tenant->name;
-            $kecamatan = $tenant;
-        } else {
-            $laporanQuery->whereNull('tenant_id');
-        }
-
-        // Group by tahun dan urutkan tahun dan isi dalam tahun secara descending
-        $laporanPerTahun = $laporanQuery->get()
-            ->groupBy('tahun')
-            ->sortKeysDesc()
-            ->map(function ($laporans) {
-                return $laporans->sortByDesc('created_at');
-            });
+        $context = $this->getContext($request);
+        // Anda perlu mengupdate LaporanKeuanganRepository agar bisa menerima $context
+        $laporanPerTahun = $this->laporanKeuanganRepository->getGroupedByYear($context);
 
         return view('transparansi_keuangan.index', [
-            'nama_wilayah' => $namaWilayah,
             'laporan_per_tahun' => $laporanPerTahun,
-            'kecamatan' => $kecamatan,
+            'currentKecamatan'  => ($context instanceof Kecamatan) ? $context : null,
+            'currentPerangkatDaerah' => ($context instanceof PerangkatDaerah) ? $context : null,
         ]);
     }
 }

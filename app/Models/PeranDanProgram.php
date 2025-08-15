@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,23 +10,26 @@ class PeranDanProgram extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'kecamatan_id',
+        'perangkat_daerah_id', // <-- TAMBAHKAN INI
         'judul',
         'deskripsi',
         'urutan',
     ];
 
-    /**
-     * Mendapatkan data kecamatan yang memiliki peran/program ini.
-     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new TenantScope);
+    }
+
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class);
+    }
+
+    public function perangkatDaerah()
+    {
+        return $this->belongsTo(PerangkatDaerah::class);
     }
 }

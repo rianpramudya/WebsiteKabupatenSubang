@@ -6,7 +6,15 @@ module.exports = {
     "./resources/**/*.vue",
   ],
   theme: {
-    extend: {},
-  },
+    extend: {
+      colors: {
+        'yellow-subang': '#FCE405',
+        'orange-subang': '#FF3B00',
+        'red-subang': '#E20E0D',
+        'blue-subang': '#1E4E7C',
+      }
+    }
+  }, // <-- Kurung kurawal ini yang dipindahkan
+
   plugins: [],
 }

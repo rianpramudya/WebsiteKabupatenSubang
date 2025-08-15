@@ -3,44 +3,50 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use App\Models\Kecamatan; // <-- Gunakan model Kecamatan
+use App\Models\Tenant;    // <-- Gunakan model Tenant
 use Illuminate\Support\Str;
 
 class TenantSeeder extends Seeder
 {
+    /**
+     * Jalankan proses seeding database.
+     */
     public function run(): void
     {
-        // Nonaktifkan foreign key constraint sementara agar bisa truncate tanpa error
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        // Kosongkan tabel untuk memastikan seeding berjalan bersih
+        // Hapus tenants dulu karena memiliki foreign key ke kecamatans
+        Tenant::query()->delete();
+        Kecamatan::query()->delete();
 
-        // Kosongkan tabel tenants
-        DB::table('tenants')->truncate();
-
-        // Aktifkan kembali foreign key constraint
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
-        // Daftar nama kecamatan
+        // Daftar nama kecamatan di Kabupaten Subang
         $kecamatanList = [
-            'Binong', 'Blanakan', 'Ciasem', 'Ciater', 'Cibogo',
-            'Cijambe', 'Cikaum', 'Cipeundeuy', 'Compreng', 'Dawuan',
-            'Jalancagak', 'Kalijati', 'Kasomalang', 'Legonkulon', 'Pagaden',
-            'Pagaden Barat', 'Pamanukan', 'Patokbeusi', 'Purwadadi', 'Pusakajaya',
-            'Pusakanagara', 'Sagalaherang', 'Serangpanjang', 'Subang', 'Sukasari',
-            'Tambakdahan', 'Tanjungsiang', 'Cipunagara', 'Cisalak', 'Pabuaran'
+            'Binong', 'Blanakan', 'Ciasem', 'Ciater', 'Cibogo', 'Cijambe', 'Cikaum',
+            'Cipeundeuy', 'Cipunagara', 'Cisalak', 'Compreng', 'Dawuan', 'Jalancagak',
+            'Kalijati', 'Kasomalang', 'Legonkulon', 'Pagaden', 'Pagaden Barat', 'Pamanukan',
+            'Patokbeusi', 'Pabuaran', 'Purwadadi', 'Pusakajaya', 'Pusakanagara',
+            'Sagalaherang', 'Serangpanjang', 'Subang', 'Sukasari', 'Tambakdahan', 'Tanjungsiang'
         ];
 
-        // Masukkan data ke tabel tenants
-        foreach ($kecamatanList as $kecamatan) {
-            $slug = Str::slug($kecamatan);
+        // Lakukan iterasi untuk setiap kecamatan
+        foreach ($kecamatanList as $namaKecamatan) {
+            $slug = Str::slug($namaKecamatan);
 
-            DB::table('tenants')->insert([
-                'name' => $kecamatan,
+            // 1. Buat record di tabel 'kecamatans' terlebih dahulu
+            $kecamatan = Kecamatan::create([
+                'name' => $namaKecamatan,
                 'slug' => $slug,
-                'subdomain' => $slug . '.subang.go.id',
-                'logo' => null,
-                'status' => 'active',
-                'created_at' => now(),
-                'updated_at' => now(),
+                // Anda bisa menambahkan data default lain di sini jika ada
+                // 'logo' => 'logos/default.png',
+            ]);
+
+            // 2. Buat record di tabel 'tenants' dan hubungkan menggunakan ID dari kecamatan
+            Tenant::create([
+                'kecamatan_id' => $kecamatan->id, // <- Kunci utamanya ada di sini
+                'name'         => $kecamatan->name,
+                'slug'         => $kecamatan->slug,
+                'subdomain'    => $slug, // subdomain biasanya tanpa .subang.go.id
+                'status'       => 'active',
             ]);
         }
     }

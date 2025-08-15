@@ -6,30 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-        public function up(): void
+    public function up(): void
     {
         Schema::create('laporan_keuangans', function (Blueprint $table) {
             $table->id();
-            // Kolom ini untuk menghubungkan laporan ke tenant/kecamatan.
-            // Dibuat nullable agar bisa untuk laporan tingkat kabupaten.
-            $table->foreignId('tenant_id')->nullable()->constrained()->onDelete('cascade');
+
+            // [PERBAIKAN] Ganti tenant_id dengan relasi yang jelas
+            $table->foreignId('perangkat_daerah_id')->nullable()->constrained('perangkat_daerahs')->onDelete('cascade');
+            $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
             
             $table->year('tahun');
             $table->string('judul_laporan');
-            $table->string('jenis_laporan'); // Misal: APBD, Realisasi Anggaran, LRA
+            $table->string('jenis_laporan');
             $table->text('deskripsi_singkat')->nullable();
-            $table->string('file_url'); // Path ke file PDF di storage
+            $table->string('file_url');
             $table->timestamps();
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('laporan_keuangans');
