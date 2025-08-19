@@ -373,105 +373,228 @@ $video_id = $kabupaten->youtube_video_id ?? null;
         </div>
 
         {{-- ====================================================== --}}
-        {{-- = BAGIAN SLIDER PERANGKAT DAERAH (DESAIN BARU) = --}}
+        {{-- = [REDESIGN] BAGIAN JELAJAHI PERANGKAT DAERAH (GRID INTERAKTIF) = --}}
         {{-- ====================================================== --}}
         <style>
-            /* CSS tambahan untuk efek interaktif */
-            .perangkat-card {
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                transform: translateY(0);
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* CSS untuk desain kartu list-grid yang baru */
+            .pd-list-card {
+                background-color: #ffffff;
+                border-radius: 0.5rem;
+                /* 8px */
+                padding: 1rem;
+                /* 16px */
+                border: 1px solid #e5e7eb;
+                /* border-gray-200 */
+                transition: all 0.2s ease-in-out;
+                display: flex;
+                align-items: center;
+                text-decoration: none;
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             }
 
-            .perangkat-card:hover {
-                transform: translateY(-8px);
-                box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+            .pd-list-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 4px 6px -1px rgba(30, 78, 124, 0.1), 0 2px 4px -2px rgba(30, 78, 124, 0.07);
+                border-color: #93c5fd;
+                /* border-blue-300 */
+                background-color: #f7fafc;
+                /* bg-gray-50 */
             }
 
-            .card-accent {
-                height: 8px;
-                background-color: #1E4E7C;
+            .pd-list-card .icon-container {
+                width: 3rem;
+                /* 48px */
+                height: 3rem;
+                /* 48px */
+                flex-shrink: 0;
+                border-radius: 0.5rem;
+                /* 8px */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #f0f4f8;
+                /* Warna latar ikon yang lembut */
+                color: #1E4E7C;
                 /* Warna aksen utama */
-                transition: background-color 0.3s ease;
+                margin-right: 1rem;
+                /* 16px */
+                transition: all 0.2s ease-in-out;
             }
 
-            .perangkat-card:hover .card-accent {
-                background-color: #FF3B00;
-                /* Warna aksen saat di-hover */
+            .pd-list-card:hover .icon-container {
+                background-color: #1E4E7C;
+                color: #ffffff;
             }
 
-            .card-abbreviation {
-                font-size: 1.25rem;
-                /* Ukuran font lebih besar */
+            .pd-list-card .pd-name {
+                font-weight: 600;
+                /* font-semibold */
+                color: #1f2937;
+                /* text-gray-800 */
+                line-height: 1.4;
+                text-align: left;
             }
 
-            .card-fullname {
-                font-size: 0.875rem;
-                /* Ukuran font lebih kecil */
+            .pd-list-card .arrow-icon {
+                margin-left: auto;
+                color: #9ca3af;
+                /* text-gray-400 */
+                transition: all 0.2s ease-in-out;
+                opacity: 0;
+                transform: translateX(-5px);
             }
 
-            .swiper-button-prev,
-            .swiper-button-next {
-                color: #1E4E7C !important;
-                top: 45% !important;
+            .pd-list-card:hover .arrow-icon {
+                opacity: 1;
+                transform: translateX(0);
+                color: #1E4E7C;
             }
 
-            .swiper-pagination-bullet {
-                background: #1E4E7C !important;
-                opacity: 0.5 !important;
+            /* Style untuk wrapper/frame */
+            .pd-wrapper {
+                background-color: #f9fafb;
+                /* bg-gray-50 */
+                border: 1px solid #e5e7eb;
+                /* border-gray-200 */
+                border-radius: 0.75rem;
+                /* 12px */
+                padding: 2rem;
+                /* 32px */
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             }
 
-            .swiper-pagination-bullet-active {
-                opacity: 1 !important;
+            /* Style untuk search input */
+            .pd-search-input {
+                width: 100%;
+                max-width: 320px;
+                padding-left: 2.5rem;
+                padding-right: 1rem;
+                padding-top: 0.5rem;
+                padding-bottom: 0.5rem;
+                border: 1px solid #d1d5db;
+                border-radius: 9999px;
+                /* rounded-full */
+                box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+                transition: all 0.2s ease-in-out;
+            }
+
+            .pd-search-input:focus {
+                outline: none;
+                box-shadow: 0 0 0 2px #bfdbfe;
+                /* ring-2 ring-blue-200 */
+                border-color: #3b82f6;
+                /* border-blue-500 */
             }
         </style>
-        <div class="my-16 anim-fade-in-up" style="--anim-delay: 400ms;">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-bold text-gray-800">Jelajahi Perangkat Daerah</h2>
-                <p class="text-gray-600 mt-2">Informasi dari dinas dan badan di lingkungan Pemerintah Kabupaten Subang.
-                </p>
-            </div>
 
-            @if($perangkatDaerahs->isNotEmpty())
-            <div class="swiper perangkat-daerah-slider px-4 relative">
-                <div class="swiper-wrapper py-4">
-                    @foreach($perangkatDaerahs as $perangkat)
-                    <div class="swiper-slide h-auto">
-                        <a href="{{ route('perangkat.show', ['perangkatDaerah' => $perangkat->slug]) }}"
-                            class="perangkat-card bg-white rounded-lg p-6 text-center h-full flex flex-col items-center justify-center">
-                            {{-- Elemen Garis Aksen sebagai pengganti logo --}}
-                            <div class="card-accent w-full rounded-t-lg mb-4"></div>
-
-                            {{-- Konten Utama Kartu --}}
-                            <div class="flex-grow flex flex-col justify-center">
-                                <h4 class="card-abbreviation font-extrabold text-[#1E4E7C] leading-tight mb-1">
-                                    {{-- Menggunakan nama singkat dari seeder yang sudah diupdate --}}
-                                    {{ $perangkat->name }}
-                                </h4>
-                                <p class="card-fullname text-gray-600 font-medium">
-                                    {{-- Ganti dengan nama lengkap jika tersedia, atau gunakan nama yang sama --}}
-                                    {{-- Contoh: 'Badan Pendapatan Daerah' --}}
-                                </p>
-                            </div>
-                        </a>
+        <div class="my-20 anim-fade-in-up" style="--anim-delay: 400ms;" x-data="perangkatDaerahSearch()">
+            <div class="pd-wrapper">
+                {{-- Header dengan Judul dan Search Bar --}}
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <div class="text-center md:text-left">
+                        <h2 class="text-2xl font-bold text-gray-800">Jelajahi Perangkat Daerah</h2>
+                        <p class="text-gray-500 mt-1 text-sm">
+                            Temukan dinas atau badan yang Anda cari.
+                        </p>
                     </div>
-                    @endforeach
+                    <div class="relative w-full md:w-auto">
+                        <input type="text" x-model="search" @input="limit = 6" placeholder="Cari perangkat daerah..."
+                            class="pd-search-input">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- Pagination (Titik-titik) --}}
-                <div class="swiper-pagination bottom-0 mt-4"></div>
+                @if($perangkatDaerahs->isNotEmpty())
+                {{-- Grid yang lebih luas: 1 kolom di mobile, 2 di tablet, 3 di layar besar --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {{-- Loop menggunakan Alpine.js untuk filtering dinamis --}}
+                    <template x-for="perangkat in paginatedItems" :key="perangkat.slug">
+                        <a :href="generateUrl(perangkat.slug)" class="pd-list-card">
+                            <div class="icon-container">
+                                <i class="fas fa-building-shield fa-lg"></i>
+                            </div>
+                            <span class="pd-name text-sm" x-text="perangkat.name"></span>
+                            <div class="arrow-icon">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </a>
+                    </template>
+                </div>
 
-                {{-- Tombol Navigasi Slider --}}
-                <div class="swiper-button-next after:text-2xl after:content-['\276F']"></div>
-                <div class="swiper-button-prev after:text-2xl after:content-['\276E']"></div>
+                {{-- Pesan jika pencarian tidak ditemukan --}}
+                <div x-show="filteredItems.length === 0 && search !== ''" class="text-center text-gray-500 py-10">
+                    <p>Perangkat daerah tidak ditemukan.</p>
+                </div>
+
+                {{-- Tombol "Tampilkan Lebih Banyak" dan "Tampilkan Lebih Sedikit" --}}
+                <div class="flex justify-center items-center gap-4 mt-8">
+                    <div x-show="limit < filteredItems.length">
+                        <button @click="limit += 6"
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition">
+                            Tampilkan Lebih Banyak
+                        </button>
+                    </div>
+                    <div x-show="limit > 6 && search === ''">
+                        {{-- ====================================================== --}}
+                        {{-- = PERBAIKAN LOGIKA ADA DI SINI ========================= --}}
+                        {{-- ====================================================== --}}
+                        <button @click="limit -= 6"
+                            class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-6 rounded-full transition border border-gray-300">
+                            Tampilkan Lebih Sedikit
+                        </button>
+                    </div>
+                </div>
+                @else
+                <p class="text-center text-gray-500 py-10">
+                    Data perangkat daerah belum tersedia.
+                </p>
+                @endif
             </div>
-            @else
-            <p class="text-center text-gray-500">Data perangkat daerah belum tersedia.</p>
-            @endif
         </div>
+
+        <script>
+            function perangkatDaerahSearch() {
+        return {
+            search: '',
+            limit: 6, // Jumlah item yang ditampilkan awalnya
+            allItems: @json($perangkatDaerahs->map->only(['name', 'slug'])),
+
+            get filteredItems() {
+                if (this.search === '') {
+                    return this.allItems;
+                }
+                return this.allItems.filter(item =>
+                    item.name.toLowerCase().includes(this.search.toLowerCase())
+                );
+            },
+
+            get paginatedItems() {
+                // Jika ada pencarian, tampilkan semua hasil tanpa batasan
+                if (this.search !== '') {
+                    return this.filteredItems;
+                }
+                return this.filteredItems.slice(0, this.limit);
+            },
+
+            generateUrl(slug) {
+                const domain = "{{ env('APP_DOMAIN', 'subang.go.id') }}";
+                const port = window.location.port;
+                const scheme = window.location.protocol;
+                let url = `${scheme}//${slug}.${domain}`;
+                if (port && !['80', '443'].includes(port)) {
+                    url += `:${port}`;
+                }
+                return url;
+            }
+        }
+    }
+        </script>
         {{-- ====================================================== --}}
         {{-- = AKHIR BAGIAN BARU = --}}
         {{-- ====================================================== --}}
+
 
     </div>
 </div>
