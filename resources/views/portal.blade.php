@@ -489,16 +489,14 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             map: null,
             markers: {},
             activeMarker: null,
-            activeSlug: null, // <-- State baru untuk menyorot item di daftar
+            activeSlug: null,
             
-            // Mengambil data kecamatan dari Controller (jika ada)
             allKecamatans: @isset($kecamatans) 
                 @json($kecamatans->map(fn($kec) => ['name' => $kec->name, 'slug' => $kec->slug])->values())
             @else 
                 [] 
             @endisset,
             
-            // Koordinat Geografis yang Telah Diperbarui dan Lebih Akurat
             coordinates: {
                 'binong': [-6.4021, 107.8015], 'blanakan': [-6.2458, 107.6581], 'ciasem': [-6.3353, 107.7024],
                 'ciater': [-6.7162, 107.6539], 'cibogo': [-6.4897, 107.7562], 'cijambe': [-6.5873, 107.8341],
@@ -539,14 +537,25 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                     this.map = L.map('map').setView([-6.57, 107.76], 10);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(this.map);
                     
+                    // ======================================================================
+                    // === PERBAIKAN UTAMA ADA DI SINI ======================================
+                    // ======================================================================
+                    // 1. Kita buat sebuah 'template' URL menggunakan Blade, dengan placeholder.
+                    const urlTemplate = "{{ route('kecamatan.show', ['kecamatan' => 'SLUG_PLACEHOLDER']) }}";
+
                     this.allKecamatans.forEach(kecamatan => {
                         const coord = this.coordinates[kecamatan.slug];
                         if (coord) {
                             const marker = L.marker(coord, { title: kecamatan.name }).addTo(this.map);
                             marker.bindTooltip(kecamatan.name, { direction: 'top', className: 'kecamatan-tooltip', offset: [0, -10] });
+
+                            // 2. Ganti placeholder dengan slug kecamatan yang sebenarnya untuk setiap marker.
+                            const finalUrl = urlTemplate.replace('SLUG_PLACEHOLDER', kecamatan.slug);
+
+                            // 3. Gunakan URL yang sudah benar di dalam popup.
                             marker.bindPopup(
                                 `<div class='text-center'><strong class='text-lg'>Kecamatan ${kecamatan.name}</strong><br>` +
-                                `<a href='/kecamatan/${kecamatan.slug}' class='mt-2 inline-block bg-[#1E4E7C] text-white px-3 py-1 rounded-full text-sm font-semibold'>Kunjungi Halaman</a></div>`
+                                `<a href='${finalUrl}' class='mt-2 inline-block bg-[#1E4E7C] text-white px-3 py-1 rounded-full text-sm font-semibold'>Kunjungi Halaman</a></div>`
                             );
                             marker.on('click', () => this.selectKecamatan(kecamatan.slug));
                             this.markers[kecamatan.slug] = marker;

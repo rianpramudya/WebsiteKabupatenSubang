@@ -45,12 +45,14 @@ class Kecamatan extends Model
     ];
 
     /**
-     * Implicit route model binding menggunakan kolom 'slug'.
-     */
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
+ * Get the route key for the model.
+ *
+ * @return string
+ */
+public function getRouteKeyName()
+{
+    return 'slug';
+}
 
     // =================================================================
     // RELASI DATABASE
