@@ -43,7 +43,12 @@
                 </form>
 
                 @forelse ($budayas as $item)
-                <a href="#" class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up" @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])>
+                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up cursor-pointer budaya-card"
+                     data-nama="{{ $item->nama }}"
+                     data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}"
+                     data-tanggal="Dipublikasikan pada {{ $item->published_at->translatedFormat('d F Y') }}"
+                     data-deskripsi="{{ strip_tags($item->deskripsi) }}"
+                     @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])>
                     <div class="flex flex-col sm:flex-row gap-6">
                         <div class="w-full sm:w-1/3 h-48 sm:h-auto overflow-hidden rounded-lg">
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}" alt="{{ $item->nama }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
@@ -55,7 +60,7 @@
                             <p class="text-sm text-gray-600 leading-relaxed">{{ Str::limit(strip_tags($item->deskripsi), 200) }}</p>
                         </div>
                     </div>
-                </a>
+                </div>
                 @empty
                 <div class="bg-white p-10 rounded-lg shadow-sm text-center anim-fade-in-up" style="--anim-delay: 700ms;">
                     <i class="fas fa-search-minus text-4xl text-gray-300 mb-4"></i>
@@ -69,8 +74,85 @@
             </div>
 
             @include('partials.sidebar_berita_terkini')
-            
+
         </div>
     </div>
 </div>
+
+<div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-full overflow-y-auto anim-fade-in-down">
+        <div class="p-5 sm:p-7">
+            <div class="flex justify-end">
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="mt-2 text-center">
+                <img id="modal-gambar" src="" alt="Gambar Detail" class="w-full h-64 object-cover rounded-lg mb-4">
+                <h2 id="modal-nama" class="text-3xl font-bold text-gray-900"></h2>
+                <p id="modal-tanggal" class="text-sm text-gray-500 mt-2 mb-4"></p>
+                <div id="modal-deskripsi" class="text-base text-gray-700 text-left leading-relaxed whitespace-pre-wrap"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('detail-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cards = document.querySelectorAll('.budaya-card');
+
+    const modalNama = document.getElementById('modal-nama');
+    const modalGambar = document.getElementById('modal-gambar');
+    const modalTanggal = document.getElementById('modal-tanggal');
+    const modalDeskripsi = document.getElementById('modal-deskripsi');
+
+    cards.forEach(card => {
+        card.addEventListener('click', function () {
+            // 1. Ambil data dari atribut data-* kartu yang diklik
+            const nama = this.dataset.nama;
+            const gambar = this.dataset.gambar;
+            const tanggal = this.dataset.tanggal;
+            const deskripsi = this.dataset.deskripsi;
+
+            // 2. Masukkan data ke dalam elemen-elemen di modal
+            modalNama.textContent = nama;
+            modalGambar.src = gambar;
+            modalGambar.alt = "Gambar " + nama;
+            modalTanggal.textContent = tanggal;
+            modalDeskripsi.textContent = deskripsi;
+
+            // 3. Tampilkan modal
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Mencegah scrolling di belakang modal
+        });
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto'; // Mengembalikan scrolling
+    }
+
+    // Event listener untuk tombol close
+    closeModalBtn.addEventListener('click', closeModal);
+
+    // Event listener untuk menutup modal saat mengklik area gelap di luar
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Event listener untuk menutup modal dengan tombol 'Escape'
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
+@endpush

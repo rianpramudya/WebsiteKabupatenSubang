@@ -43,19 +43,23 @@
                 </form>
 
                 @forelse ($rumah_makans as $item)
-                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up" @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])>
+                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up cursor-pointer rumahmakan-card" 
+                     @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])
+                     data-nama="{{ $item->nama }}"
+                     data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}"
+                     data-jeniskuliner="{{ $item->jenis_kuliner ?? 'Kuliner' }}"
+                     data-alamat="{{ strip_tags($item->alamat) }}"
+                     data-deskripsi="{{ strip_tags($item->deskripsi) }}"
+                     data-telepon="{{ $item->telepon }}">
                     <div class="flex flex-col sm:flex-row gap-6">
-                        {{-- ================= PERBAIKAN DI SINI ================= --}}
-                        {{-- Mengubah sm:h-auto menjadi tinggi yang tetap (sm:h-56) --}}
                         <div class="w-full sm:w-1/3 h-48 sm:h-56 overflow-hidden rounded-lg">
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}" alt="{{ $item->nama }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                         </div>
-                        {{-- ======================================================= --}}
                         <div class="flex-1">
                             {{-- WARNA DIUBAH --}}
                             <p class="text-xs font-semibold text-[#1E4E7C] uppercase tracking-wider">{{ $item->jenis_kuliner ?? 'Kuliner' }}</p>
                             <h2 class="text-2xl font-bold text-gray-800 group-hover:text-[#FF3B00] transition-colors mt-1">{{ $item->nama }}</h2>
-                            <p class="text-sm text-gray-500 mt-2 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ $item->alamat }}</p>
+                            <p class="text-sm text-gray-500 mt-2 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ strip_tags($item->alamat) }}</p>
                             <p class="text-sm text-gray-600 leading-relaxed">{{ Str::limit(strip_tags($item->deskripsi), 200) }}</p>
                         </div>
                     </div>
@@ -77,4 +81,93 @@
         </div>
     </div>
 </div>
+
+<div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-full overflow-y-auto anim-fade-in-down">
+        <div class="p-5 sm:p-7">
+            <div class="flex justify-end">
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="mt-2">
+                <img id="modal-gambar" src="" alt="Gambar Detail" class="w-full h-64 object-cover rounded-lg mb-4">
+                <p id="modal-jeniskuliner" class="text-xs font-semibold text-[#1E4E7C] uppercase tracking-wider"></p>
+                <h2 id="modal-nama" class="text-3xl font-bold text-gray-900 mt-1"></h2>
+                <p id="modal-alamat" class="text-base text-gray-500 mt-2 mb-4 flex items-start"><i class="fas fa-map-marker-alt mr-2 text-gray-400 mt-1"></i><span></span></p>
+                <div id="modal-deskripsi" class="text-base text-gray-700 text-left leading-relaxed whitespace-pre-wrap mb-6"></div>
+                <a id="modal-telepon" href="#" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-full transition duration-200 shadow-md">
+                    <i class="fas fa-phone-alt mr-2"></i>Hubungi
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('detail-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cards = document.querySelectorAll('.rumahmakan-card');
+
+    const modalNama = document.getElementById('modal-nama');
+    const modalGambar = document.getElementById('modal-gambar');
+    const modalJenisKuliner = document.getElementById('modal-jeniskuliner');
+    const modalAlamat = document.querySelector('#modal-alamat span');
+    const modalDeskripsi = document.getElementById('modal-deskripsi');
+    const modalTelepon = document.getElementById('modal-telepon');
+
+    cards.forEach(card => {
+        card.addEventListener('click', function () {
+            // Ambil data dari atribut data-* kartu yang diklik
+            const nama = this.dataset.nama;
+            const gambar = this.dataset.gambar;
+            const jenisKuliner = this.dataset.jeniskuliner;
+            const alamat = this.dataset.alamat;
+            const deskripsi = this.dataset.deskripsi;
+            const telepon = this.dataset.telepon;
+            
+            // Masukkan data ke dalam elemen-elemen di modal
+            modalNama.textContent = nama;
+            modalGambar.src = gambar;
+            modalGambar.alt = "Gambar " + nama;
+            modalJenisKuliner.textContent = jenisKuliner;
+            modalAlamat.textContent = alamat;
+            modalDeskripsi.textContent = deskripsi;
+
+            // Atur link Telepon
+            if (telepon && telepon.trim() !== '') {
+                modalTelepon.href = 'tel:' + telepon;
+                modalTelepon.classList.remove('hidden');
+            } else {
+                modalTelepon.classList.add('hidden');
+            }
+            
+            // Tampilkan modal
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
+@endpush

@@ -20,7 +20,9 @@ class StoreObjekWisataRequest extends FormRequest
             'deskripsi_singkat' => ['required', 'string'],
             'gambar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'lokasi_teks' => ['required', 'string', 'max:255'],
-            'Maps_url' => ['nullable', 'url'],
+            // --- PERBAIKAN DI SINI ---
+            'google_maps_url' => ['nullable', 'url'], // Menggunakan nama yang benar (semua huruf kecil)
+            // -------------------------
             'is_unggulan' => ['sometimes', 'boolean'],
         ];
     }

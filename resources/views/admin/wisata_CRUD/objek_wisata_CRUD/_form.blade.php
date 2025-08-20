@@ -1,44 +1,44 @@
 @push('styles')
-{{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
-<style>
-    /* Styling agar Trix Editor menyatu dengan form Anda */
-    trix-toolbar [data-trix-button-group="file-tools"] {
-        display: none;
-        /* Sembunyikan tombol upload file */
-    }
+    {{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <style>
+        /* Styling agar Trix Editor menyatu dengan form Anda */
+        trix-toolbar [data-trix-button-group="file-tools"] {
+            display: none;
+            /* Sembunyikan tombol upload file */
+        }
 
-    .trix-content {
-        min-height: 200px;
-        /* Atur tinggi minimal editor */
-        border-color: #d1d5db;
-        border-radius: 0.375rem;
-        background-color: white;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
+        .trix-content {
+            min-height: 200px;
+            /* Atur tinggi minimal editor */
+            border-color: #d1d5db;
+            border-radius: 0.375rem;
+            background-color: white;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
 
-    .trix-content:focus {
-        border-color: #4f46e5;
-        /* Warna focus indigo */
-        box-shadow: 0 0 0 1px #4f46e5;
-    }
-</style>
+        .trix-content:focus {
+            border-color: #4f46e5;
+            /* Warna focus indigo */
+            box-shadow: 0 0 0 1px #4f46e5;
+        }
+    </style>
 @endpush
 
 @push('scripts')
-{{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
-<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
-<script src="//unpkg.com/alpinejs" defer></script>
+    {{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
 
 
 @csrf
 @if ($errors->any())
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-    <strong class="font-bold">Oops!</strong> <span class="block sm:inline">Ada beberapa masalah dengan input
-        Anda.</span>
-    <ul class="mt-2 list-disc list-inside">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
-</div>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Oops!</strong> <span class="block sm:inline">Ada beberapa masalah dengan input
+            Anda.</span>
+        <ul class="mt-2 list-disc list-inside">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+    </div>
 @endif
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -75,8 +75,9 @@
     </div>
 
     <div class="md:col-span-2">
-        <label for="Maps_url" class="block text-sm font-medium text-gray-700">URL Google Maps</label>
-        <input type="url" name="Maps_url" id="Maps_url" value="{{ old('Maps_url', $objekWisata->Maps_url ?? '') }}"
+        <label for="google_maps_url" class="block text-sm font-medium text-gray-700">URL Google Maps</label>
+        <input type="url" name="google_maps_url" id="google_maps_url"
+            value="{{ old('google_maps_url', $objekWisata->google_maps_url ?? '') }}"
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             placeholder="https://maps.app.goo.gl/xxxx">
     </div>
@@ -124,14 +125,18 @@
         </div>
 
         @if(isset($objekWisata) && $objekWisata->gambar)
-        <input type="checkbox" name="hapus_gambar" id="hapus_gambar" value="1" x-ref="hapusGambarCheckbox"
-            class="hidden">
+            <input type="checkbox" name="hapus_gambar" id="hapus_gambar" value="1" x-ref="hapusGambarCheckbox"
+                class="hidden">
         @endif
     </div>
 
     <div class="flex items-center pt-6">
-        <input type="checkbox" name="is_unggulan" id="is_unggulan" value="1" @checked(old('is_unggulan',
-            $objekWisata->is_unggulan ?? false)) class="h-4 w-4 rounded border-gray-300 text-indigo-600
+        <input type="checkbox" name="is_unggulan" id="is_unggulan" value="1" @checked(
+            old(
+                'is_unggulan',
+                $objekWisata->is_unggulan ?? false
+            )
+        ) class="h-4 w-4 rounded border-gray-300 text-indigo-600
         focus:ring-indigo-500">
         <label for="is_unggulan" class="ml-2 block text-sm text-gray-900">Jadikan Wisata Unggulan?</label>
     </div>

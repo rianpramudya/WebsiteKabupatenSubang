@@ -44,7 +44,15 @@
                 </form>
 
                 @forelse ($hotels as $item)
-                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up" @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])>
+                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up cursor-pointer hotel-card" 
+                     @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])
+                     data-nama="{{ $item->nama }}"
+                     data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar+Hotel' }}"
+                     data-bintang="{{ $item->bintang }}"
+                     data-alamat="{{ strip_tags($item->alamat) }}"
+                     data-deskripsi="{{ strip_tags($item->deskripsi) }}"
+                     data-telepon="{{ $item->telepon }}"
+                     data-website="{{ $item->website_url }}">
                     <div class="flex flex-col sm:flex-row gap-6">
                         <div class="w-full sm:w-1/3 h-48 sm:h-auto overflow-hidden rounded-lg">
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar+Hotel' }}"
@@ -63,7 +71,7 @@
                                 </div>
                                 @endif
                             </div>
-                            <p class="text-sm text-gray-500 mt-1 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ $item->alamat }}</p>
+                            <p class="text-sm text-gray-500 mt-1 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ strip_tags($item->alamat) }}</p>
                             <p class="text-sm text-gray-600 leading-relaxed">{{ Str::limit(strip_tags($item->deskripsi), 200) }}</p>
                         </div>
                     </div>
@@ -85,4 +93,120 @@
         </div>
     </div>
 </div>
+
+<div id="detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-full overflow-y-auto anim-fade-in-down">
+        <div class="p-5 sm:p-7">
+            <div class="flex justify-end">
+                <button id="close-modal-btn" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="mt-2">
+                <img id="modal-gambar" src="" alt="Gambar Detail" class="w-full h-64 object-cover rounded-lg mb-4">
+                <div class="flex justify-between items-center">
+                    <h2 id="modal-nama" class="text-3xl font-bold text-gray-900"></h2>
+                    <div id="modal-bintang-container" class="flex items-center bg-[#FCE405] text-[#1E4E7C] text-sm font-bold px-3 py-1 rounded-md hidden">
+                        <i class="fas fa-star mr-2"></i>
+                        <span id="modal-bintang"></span>
+                    </div>
+                </div>
+                <p id="modal-alamat" class="text-base text-gray-500 mt-2 mb-4 flex items-start"><i class="fas fa-map-marker-alt mr-2 text-gray-400 mt-1"></i><span></span></p>
+                <div id="modal-deskripsi" class="text-base text-gray-700 text-left leading-relaxed whitespace-pre-wrap mb-6"></div>
+                <div class="flex flex-wrap gap-4">
+                    <a id="modal-telepon" href="#" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-semibold px-6 py-2 rounded-full transition duration-200 shadow-md">
+                        <i class="fas fa-phone-alt mr-2"></i>Hubungi
+                    </a>
+                    <a id="modal-website" href="#" target="_blank" class="inline-block bg-gray-700 hover:bg-gray-800 text-white font-semibold px-6 py-2 rounded-full transition duration-200 shadow-md">
+                        <i class="fas fa-globe mr-2"></i>Kunjungi Website
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('detail-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const cards = document.querySelectorAll('.hotel-card');
+
+    const modalNama = document.getElementById('modal-nama');
+    const modalGambar = document.getElementById('modal-gambar');
+    const modalBintangContainer = document.getElementById('modal-bintang-container');
+    const modalBintang = document.getElementById('modal-bintang');
+    const modalAlamat = document.querySelector('#modal-alamat span');
+    const modalDeskripsi = document.getElementById('modal-deskripsi');
+    const modalTelepon = document.getElementById('modal-telepon');
+    const modalWebsite = document.getElementById('modal-website');
+
+    cards.forEach(card => {
+        card.addEventListener('click', function () {
+            // Ambil data dari atribut data-* kartu yang diklik
+            const nama = this.dataset.nama;
+            const gambar = this.dataset.gambar;
+            const bintang = this.dataset.bintang;
+            const alamat = this.dataset.alamat;
+            const deskripsi = this.dataset.deskripsi;
+            const telepon = this.dataset.telepon;
+            const website = this.dataset.website;
+            
+            // Masukkan data ke dalam elemen-elemen di modal
+            modalNama.textContent = nama;
+            modalGambar.src = gambar;
+            modalGambar.alt = "Gambar " + nama;
+            modalAlamat.textContent = alamat;
+            modalDeskripsi.textContent = deskripsi;
+
+            // Atur Bintang
+            if (bintang && bintang.trim() !== '') {
+                modalBintang.textContent = bintang;
+                modalBintangContainer.classList.remove('hidden');
+            } else {
+                modalBintangContainer.classList.add('hidden');
+            }
+
+            // Atur link Telepon
+            if (telepon && telepon.trim() !== '') {
+                modalTelepon.href = 'tel:' + telepon;
+                modalTelepon.classList.remove('hidden');
+            } else {
+                modalTelepon.classList.add('hidden');
+            }
+
+            // Atur link Website
+            if (website && website.trim() !== '') {
+                modalWebsite.href = website;
+                modalWebsite.classList.remove('hidden');
+            } else {
+                modalWebsite.classList.add('hidden');
+            }
+            
+            // Tampilkan modal
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    function closeModal() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    closeModalBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+});
+</script>
+@endpush
