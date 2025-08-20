@@ -19,27 +19,55 @@
 
 @section('title', 'Edit Sejarah & Lambang - ' . $tenant->name)
 
+{{-- ================================================================= --}}
+{{-- Menambahkan Aset Trix (CSS) dan Custom Style --}}
+{{-- ================================================================= --}}
+@push('styles')
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <style>
+        trix-toolbar [data-trix-button-group="file-tools"] {
+            display: none;
+        }
+
+        .trix-content {
+            min-height: 150px; /* Menyesuaikan tinggi minimal editor */
+            border-color: #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            background-color: white;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .trix-content:focus {
+            border-color: #1E4E7C;
+            box-shadow: 0 0 0 1px #1E4E7C;
+        }
+    </style>
+@endpush
+
+
 @section('content')
 <div id="page-content" class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Sejarah Awal & Lambang</h1>
     <div class="bg-white p-8 rounded-lg shadow-md">
-        {{-- [FIX] Form action sekarang dinamis --}}
         <form action="{{ route($baseRouteName . 'profil.sejarah.updateProfil', $routeParameters) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            {{-- Field untuk Sejarah Awal --}}
+            {{-- Field untuk Sejarah Awal dengan Trix Editor --}}
             <div class="mb-6">
                 <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
-                {{-- [FIX] Menggunakan variabel $tenant --}}
-                <textarea name="sejarah" id="sejarah" rows="10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('sejarah', $tenant->sejarah) }}</textarea>
+                <input id="sejarah" type="hidden" name="sejarah" value="{{ old('sejarah', $tenant->sejarah) }}">
+                {{-- [MODIFIKASI] Menambahkan class trix-content --}}
+                <trix-editor input="sejarah" class="trix-content"></trix-editor>
             </div>
 
-            {{-- Field untuk Arti Lambang --}}
+            {{-- Field untuk Arti Lambang dengan Trix Editor --}}
             <div class="mb-6">
                 <label for="arti_lambang" class="block text-gray-700 text-sm font-bold mb-2">Arti Lambang</label>
-                {{-- [FIX] Menggunakan variabel $tenant --}}
-                <textarea name="arti_lambang" id="arti_lambang" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('arti_lambang', $tenant->arti_lambang) }}</textarea>
+                <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
+                {{-- [MODIFIKASI] Menambahkan class trix-content --}}
+                <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
             </div>
 
             {{-- Field untuk Upload Logo --}}
@@ -57,7 +85,7 @@
             <hr class="my-8">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Gambar-gambar Sejarah</h3>
             <p class="text-sm text-gray-600 mb-6">Kosongkan jika tidak ingin mengubah gambar.</p>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="mb-4">
                     <label for="sejarah_img_1" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 1</label>
@@ -92,7 +120,6 @@
             </div>
 
             <div class="flex items-center justify-end mt-8 pt-5 border-t border-gray-200 space-x-3">
-                {{-- [FIX] Link Batal sekarang dinamis --}}
                 <a href="{{ route($baseRouteName . 'profil.sejarah.index', $routeParameters) }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">Batal</a>
                 <button type="submit" class="bg-[#1E4E7C] hover:bg-[#163a5f] text-white font-bold py-2 px-4 rounded-lg transition-colors">Simpan Perubahan</button>
             </div>
@@ -101,3 +128,10 @@
     </div>
 </div>
 @endsection
+
+{{-- ================================================================= --}}
+{{-- Menambahkan Aset Trix (JS) --}}
+{{-- ================================================================= --}}
+@push('scripts')
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+@endpush
