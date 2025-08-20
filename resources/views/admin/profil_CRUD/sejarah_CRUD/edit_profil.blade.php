@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @php
+    // Logika routing multi-tenant
     if ($tenant instanceof \App\Models\Kecamatan && $tenant->slug !== 'kabupaten-subang') {
         $baseRouteName = 'admin.kecamatan.';
         $routeParameters = ['kecamatan' => $tenant->slug];
@@ -19,6 +20,7 @@
 {{-- Menambahkan Aset Trix (CSS) dan Custom Style --}}
 {{-- ================================================================= --}}
 @push('styles')
+<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
         trix-toolbar [data-trix-button-group="file-tools"] {
@@ -39,6 +41,26 @@
             box-shadow: 0 0 0 1px #1E4E7C;
         }
     </style>
+=======
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+<style>
+    trix-toolbar [data-trix-button-group="file-tools"] {
+        display: none;
+    }
+    .trix-content {
+        min-height: 150px;
+        border-color: #d1d5db;
+        border-radius: 0.375rem;
+        padding: 0.75rem;
+        background-color: white;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    .trix-content:focus {
+        border-color: #1E4E7C;
+        box-shadow: 0 0 0 1px #1E4E7C;
+    }
+</style>
+>>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
 @endpush
 
 
@@ -49,12 +71,17 @@
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
         {{-- ==== FORM UTAMA (HANYA SATU) ==== --}}
 >>>>>>> e8f96ed (Penyempurnaan dan perbaikan bug bug minor yang baru ditemukan)
+=======
+        {{-- ==== FORM UTAMA ==== --}}
+>>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
         <form action="{{ route($baseRouteName . 'profil.sejarah.updateProfil', $routeParameters) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             {{-- Field untuk Sejarah Awal dengan Trix Editor --}}
             <div class="mb-6">
@@ -72,19 +99,28 @@
                 <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
 =======
             {{-- Sejarah --}}
+=======
+            {{-- Field untuk Sejarah Awal --}}
+>>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
             <div class="mb-6">
                 <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
-                <textarea name="sejarah" id="sejarah" rows="10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('sejarah', $tenant->sejarah) }}</textarea>
+                <input id="sejarah" type="hidden" name="sejarah" value="{{ old('sejarah', $tenant->sejarah) }}">
+                <trix-editor input="sejarah" class="trix-content"></trix-editor>
             </div>
 
-            {{-- Arti Lambang --}}
+            {{-- Field untuk Arti Lambang --}}
             <div class="mb-6">
                 <label for="arti_lambang" class="block text-gray-700 text-sm font-bold mb-2">Arti Lambang</label>
+<<<<<<< HEAD
                 <textarea name="arti_lambang" id="arti_lambang" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('arti_lambang', $tenant->arti_lambang) }}</textarea>
 >>>>>>> e8f96ed (Penyempurnaan dan perbaikan bug bug minor yang baru ditemukan)
+=======
+                <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
+                <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
+>>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
             </div>
 
-            {{-- Upload Logo + tombol hapus (tombol mengarah ke form terpisah via atribut form) --}}
+            {{-- Upload Logo + tombol hapus --}}
             <div class="mb-6">
                 <label for="logo" class="block text-gray-700 text-sm font-bold mb-2">Ganti Lambang/Logo</label>
                 <input type="file" name="logo" id="logo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
@@ -92,10 +128,7 @@
                     <div class="mt-2">
                         <p class="text-xs text-gray-600">Lambang Saat Ini:</p>
                         <img src="{{ asset('storage/' . $tenant->logo) }}" alt="Logo" class="w-24 h-24 mt-1 border p-1 object-contain">
-                        <button type="submit"
-                                form="delete-logo-form"
-                                class="text-xs text-red-600 hover:text-red-800 font-semibold mt-2"
-                                onclick="return confirm('Anda yakin ingin menghapus logo ini?');">
+                        <button type="submit" form="delete-logo-form" class="text-xs text-red-600 hover:text-red-800 font-semibold mt-2" onclick="return confirm('Anda yakin ingin menghapus logo ini?');">
                             Hapus Logo
                         </button>
                     </div>
@@ -115,16 +148,12 @@
                         <div class="mt-2">
                             <p class="text-xs text-gray-600">Gambar Saat Ini:</p>
                             <img src="{{ asset('storage/' . $tenant->sejarah_img_1) }}" class="mt-1 w-full h-32 object-cover rounded">
-                            <button type="submit"
-                                    form="delete-sejarah_img_1-form"
-                                    class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2"
-                                    onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
+                            <button type="submit" form="delete-sejarah_img_1-form" class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2" onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
                                 <i class="fas fa-trash-alt mr-1"></i> Hapus Gambar
                             </button>
                         </div>
                     @endif
                 </div>
-
                 {{-- Gambar 2 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_2" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 2</label>
@@ -133,16 +162,12 @@
                         <div class="mt-2">
                             <p class="text-xs text-gray-600">Gambar Saat Ini:</p>
                             <img src="{{ asset('storage/' . $tenant->sejarah_img_2) }}" class="mt-1 w-full h-32 object-cover rounded">
-                            <button type="submit"
-                                    form="delete-sejarah_img_2-form"
-                                    class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2"
-                                    onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
+                            <button type="submit" form="delete-sejarah_img_2-form" class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2" onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
                                 <i class="fas fa-trash-alt mr-1"></i> Hapus Gambar
                             </button>
                         </div>
                     @endif
                 </div>
-
                 {{-- Gambar 3 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_3" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 3</label>
@@ -151,10 +176,7 @@
                         <div class="mt-2">
                             <p class="text-xs text-gray-600">Gambar Saat Ini:</p>
                             <img src="{{ asset('storage/' . $tenant->sejarah_img_3) }}" class="mt-1 w-full h-32 object-cover rounded">
-                            <button type="submit"
-                                    form="delete-sejarah_img_3-form"
-                                    class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2"
-                                    onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
+                            <button type="submit" form="delete-sejarah_img_3-form" class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2" onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
                                 <i class="fas fa-trash-alt mr-1"></i> Hapus Gambar
                             </button>
                         </div>
@@ -177,7 +199,6 @@
                 <input type="hidden" name="image_field" value="logo">
             </form>
         @endif
-
         @if($tenant->sejarah_img_1)
             <form id="delete-sejarah_img_1-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
                 @csrf
@@ -185,7 +206,6 @@
                 <input type="hidden" name="image_field" value="sejarah_img_1">
             </form>
         @endif
-
         @if($tenant->sejarah_img_2)
             <form id="delete-sejarah_img_2-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
                 @csrf
@@ -193,7 +213,6 @@
                 <input type="hidden" name="image_field" value="sejarah_img_2">
             </form>
         @endif
-
         @if($tenant->sejarah_img_3)
             <form id="delete-sejarah_img_3-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
                 @csrf
@@ -202,7 +221,6 @@
             </form>
         @endif
         {{-- ==== /FORM-FORM HAPUS ==== --}}
-
     </div>
 </div>
 @endsection
@@ -211,5 +229,9 @@
 {{-- Menambahkan Aset Trix (JS) --}}
 {{-- ================================================================= --}}
 @push('scripts')
+<<<<<<< HEAD
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+=======
+<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+>>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
 @endpush
