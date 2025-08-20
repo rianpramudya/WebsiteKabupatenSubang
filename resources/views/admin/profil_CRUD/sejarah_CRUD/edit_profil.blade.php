@@ -1,19 +1,15 @@
 @extends('layouts.app')
 
 @php
-    // [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
     if ($tenant instanceof \App\Models\Kecamatan && $tenant->slug !== 'kabupaten-subang') {
-        // Ini untuk Kecamatan biasa
         $baseRouteName = 'admin.kecamatan.';
         $routeParameters = ['kecamatan' => $tenant->slug];
     } elseif ($tenant instanceof \App\Models\PerangkatDaerah) {
-        // Ini untuk Perangkat Daerah
         $baseRouteName = 'admin.perangkat-daerah.';
         $routeParameters = ['perangkatDaerah' => $tenant->slug];
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.';
-        $routeParameters = []; // Rute kabupaten tidak butuh parameter
+        $routeParameters = [];
     }
 @endphp
 
@@ -50,10 +46,16 @@
 <div id="page-content" class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Sejarah Awal & Lambang</h1>
     <div class="bg-white p-8 rounded-lg shadow-md">
+<<<<<<< HEAD
+=======
+
+        {{-- ==== FORM UTAMA (HANYA SATU) ==== --}}
+>>>>>>> e8f96ed (Penyempurnaan dan perbaikan bug bug minor yang baru ditemukan)
         <form action="{{ route($baseRouteName . 'profil.sejarah.updateProfil', $routeParameters) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
+<<<<<<< HEAD
             {{-- Field untuk Sejarah Awal dengan Trix Editor --}}
             <div class="mb-6">
                 <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
@@ -68,16 +70,34 @@
                 <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
                 {{-- [MODIFIKASI] Menambahkan class trix-content --}}
                 <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
+=======
+            {{-- Sejarah --}}
+            <div class="mb-6">
+                <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
+                <textarea name="sejarah" id="sejarah" rows="10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>{{ old('sejarah', $tenant->sejarah) }}</textarea>
             </div>
 
-            {{-- Field untuk Upload Logo --}}
+            {{-- Arti Lambang --}}
+            <div class="mb-6">
+                <label for="arti_lambang" class="block text-gray-700 text-sm font-bold mb-2">Arti Lambang</label>
+                <textarea name="arti_lambang" id="arti_lambang" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('arti_lambang', $tenant->arti_lambang) }}</textarea>
+>>>>>>> e8f96ed (Penyempurnaan dan perbaikan bug bug minor yang baru ditemukan)
+            </div>
+
+            {{-- Upload Logo + tombol hapus (tombol mengarah ke form terpisah via atribut form) --}}
             <div class="mb-6">
                 <label for="logo" class="block text-gray-700 text-sm font-bold mb-2">Ganti Lambang/Logo</label>
-                <input type="file" name="logo" id="logo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="file" name="logo" id="logo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline">
                 @if($tenant->logo)
                     <div class="mt-2">
                         <p class="text-xs text-gray-600">Lambang Saat Ini:</p>
                         <img src="{{ asset('storage/' . $tenant->logo) }}" alt="Logo" class="w-24 h-24 mt-1 border p-1 object-contain">
+                        <button type="submit"
+                                form="delete-logo-form"
+                                class="text-xs text-red-600 hover:text-red-800 font-semibold mt-2"
+                                onclick="return confirm('Anda yakin ingin menghapus logo ini?');">
+                            Hapus Logo
+                        </button>
                     </div>
                 @endif
             </div>
@@ -87,6 +107,7 @@
             <p class="text-sm text-gray-600 mb-6">Kosongkan jika tidak ingin mengubah gambar.</p>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {{-- Gambar 1 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_1" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 1</label>
                     <input type="file" name="sejarah_img_1" id="sejarah_img_1" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
@@ -94,26 +115,48 @@
                         <div class="mt-2">
                             <p class="text-xs text-gray-600">Gambar Saat Ini:</p>
                             <img src="{{ asset('storage/' . $tenant->sejarah_img_1) }}" class="mt-1 w-full h-32 object-cover rounded">
+                            <button type="submit"
+                                    form="delete-sejarah_img_1-form"
+                                    class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2"
+                                    onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
+                                <i class="fas fa-trash-alt mr-1"></i> Hapus Gambar
+                            </button>
                         </div>
                     @endif
                 </div>
+
+                {{-- Gambar 2 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_2" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 2</label>
                     <input type="file" name="sejarah_img_2" id="sejarah_img_2" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
                     @if($tenant->sejarah_img_2)
-                         <div class="mt-2">
+                        <div class="mt-2">
                             <p class="text-xs text-gray-600">Gambar Saat Ini:</p>
                             <img src="{{ asset('storage/' . $tenant->sejarah_img_2) }}" class="mt-1 w-full h-32 object-cover rounded">
+                            <button type="submit"
+                                    form="delete-sejarah_img_2-form"
+                                    class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2"
+                                    onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
+                                <i class="fas fa-trash-alt mr-1"></i> Hapus Gambar
+                            </button>
                         </div>
                     @endif
                 </div>
+
+                {{-- Gambar 3 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_3" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 3</label>
                     <input type="file" name="sejarah_img_3" id="sejarah_img_3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
                     @if($tenant->sejarah_img_3)
-                         <div class="mt-2">
+                        <div class="mt-2">
                             <p class="text-xs text-gray-600">Gambar Saat Ini:</p>
                             <img src="{{ asset('storage/' . $tenant->sejarah_img_3) }}" class="mt-1 w-full h-32 object-cover rounded">
+                            <button type="submit"
+                                    form="delete-sejarah_img_3-form"
+                                    class="w-full text-center text-sm font-semibold text-red-600 hover:text-red-800 mt-2"
+                                    onclick="return confirm('Anda yakin ingin menghapus gambar ini?');">
+                                <i class="fas fa-trash-alt mr-1"></i> Hapus Gambar
+                            </button>
                         </div>
                     @endif
                 </div>
@@ -123,8 +166,43 @@
                 <a href="{{ route($baseRouteName . 'profil.sejarah.index', $routeParameters) }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">Batal</a>
                 <button type="submit" class="bg-[#1E4E7C] hover:bg-[#163a5f] text-white font-bold py-2 px-4 rounded-lg transition-colors">Simpan Perubahan</button>
             </div>
-
         </form>
+        {{-- ==== /FORM UTAMA ==== --}}
+
+        {{-- ==== FORM-FORM HAPUS (DI LUAR FORM UTAMA) ==== --}}
+        @if($tenant->logo)
+            <form id="delete-logo-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="image_field" value="logo">
+            </form>
+        @endif
+
+        @if($tenant->sejarah_img_1)
+            <form id="delete-sejarah_img_1-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="image_field" value="sejarah_img_1">
+            </form>
+        @endif
+
+        @if($tenant->sejarah_img_2)
+            <form id="delete-sejarah_img_2-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="image_field" value="sejarah_img_2">
+            </form>
+        @endif
+
+        @if($tenant->sejarah_img_3)
+            <form id="delete-sejarah_img_3-form" action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST" class="hidden">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="image_field" value="sejarah_img_3">
+            </form>
+        @endif
+        {{-- ==== /FORM-FORM HAPUS ==== --}}
+
     </div>
 </div>
 @endsection

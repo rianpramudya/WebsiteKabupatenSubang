@@ -226,4 +226,32 @@ class SejarahController extends Controller
         return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))
             ->with('success', 'Data Sejarah, Lambang, dan Gambar Utama berhasil diperbarui.');
     }
+
+    public function destroyImage(Request $request): RedirectResponse
+    {
+        $tenant = $this->getTenant($request);
+        if (!$tenant) {
+            $tenant = Kecamatan::where('slug', 'kabupaten-subang')->firstOrFail();
+        }
+        $this->authorize('update', $tenant);
+
+        $validated = $request->validate([
+            'image_field' => 'required|string|in:sejarah_img_1,sejarah_img_2,sejarah_img_3,logo',
+        ]);
+
+        $imageField = $validated['image_field'];
+
+        if ($tenant->{$imageField}) {
+            Storage::disk('public')->delete($tenant->{$imageField});
+            $tenant->update([$imageField => null]);
+            $message = "Gambar berhasil dihapus.";
+        } else {
+            $message = "Gambar tidak ditemukan.";
+        }
+
+        // Redirect langsung ke halaman edit profil sejarah
+        return redirect()
+            ->route($this->getRouteName($tenant, 'editProfil'), $this->getRouteParameters($tenant))
+            ->with('success', $message);
+    }
 }

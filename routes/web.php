@@ -133,6 +133,7 @@ Route::domain(env('APP_DOMAIN', 'subang.go.id'))->group(function () {
                 Route::put('/wilayah', [AdminProfilController::class, 'updateWilayah'])->name('wilayah.update');
                 Route::get('sejarah/edit-profil', [AdminSejarahController::class, 'editProfil'])->name('sejarah.editProfil');
                 Route::put('sejarah/update-profil', [AdminSejarahController::class, 'updateProfil'])->name('sejarah.updateProfil');
+                Route::delete('sejarah/destroy-image', [AdminSejarahController::class, 'destroyImage'])->name('sejarah.destroyImage');
                 Route::resource('sejarah', AdminSejarahController::class)->except('show');
                 Route::resource('penghargaan', AdminPenghargaanController::class)->except('show');
             });
@@ -224,6 +225,7 @@ Route::domain('{kecamatan}.' . env('APP_DOMAIN', 'subang.go.id'))
                     Route::put('/wilayah', [AdminProfilController::class, 'updateWilayah'])->name('wilayah.update');
                     Route::get('sejarah/edit-profil', [AdminSejarahController::class, 'editProfil'])->name('sejarah.editProfil');
                     Route::put('sejarah/update-profil', [AdminSejarahController::class, 'updateProfil'])->name('sejarah.updateProfil');
+                    Route::delete('sejarah/destroy-image', [AdminSejarahController::class, 'destroyImage'])->name('sejarah.destroyImage');
                     Route::resource('sejarah', AdminSejarahController::class)->except(['show'])->scoped();
                     Route::resource('penghargaan', AdminPenghargaanController::class)->except(['show'])->scoped();
                     Route::resource('infografis', AdminInfografisController::class)->except(['show'])->scoped();
