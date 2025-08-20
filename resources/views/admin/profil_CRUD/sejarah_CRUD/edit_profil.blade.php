@@ -27,7 +27,7 @@
         }
 
         .trix-content {
-            min-height: 150px; /* Menyesuaikan tinggi minimal editor */
+            min-height: 150px;
             border-color: #d1d5db;
             border-radius: 0.375rem;
             padding: 0.75rem;
@@ -42,39 +42,17 @@
     </style>
 @endpush
 
-
 @section('content')
 <div id="page-content" class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Sejarah Awal & Lambang</h1>
     <div class="bg-white p-8 rounded-lg shadow-md">
 
-        {{-- ==== FORM UTAMA (HANYA SATU) ==== --}}
-
         {{-- ==== FORM UTAMA ==== --}}
-
         <form action="{{ route($baseRouteName . 'profil.sejarah.updateProfil', $routeParameters) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-            {{-- Field untuk Sejarah Awal dengan Trix Editor --}}
-            <div class="mb-6">
-                <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
-                <input id="sejarah" type="hidden" name="sejarah" value="{{ old('sejarah', $tenant->sejarah) }}">
-                {{-- [MODIFIKASI] Menambahkan class trix-content --}}
-                <trix-editor input="sejarah" class="trix-content"></trix-editor>
-            </div>
-
-            {{-- Field untuk Arti Lambang dengan Trix Editor --}}
-            <div class="mb-6">
-                <label for="arti_lambang" class="block text-gray-700 text-sm font-bold mb-2">Arti Lambang</label>
-                <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
-                {{-- [MODIFIKASI] Menambahkan class trix-content --}}
-                <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
-
-            {{-- Sejarah --}}
-
             {{-- Field untuk Sejarah Awal --}}
-
             <div class="mb-6">
                 <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
                 <input id="sejarah" type="hidden" name="sejarah" value="{{ old('sejarah', $tenant->sejarah) }}">
@@ -84,12 +62,8 @@
             {{-- Field untuk Arti Lambang --}}
             <div class="mb-6">
                 <label for="arti_lambang" class="block text-gray-700 text-sm font-bold mb-2">Arti Lambang</label>
-
-                <textarea name="arti_lambang" id="arti_lambang" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('arti_lambang', $tenant->arti_lambang) }}</textarea>
-
                 <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
                 <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
-
             </div>
 
             {{-- Upload Logo + tombol hapus --}}
@@ -126,6 +100,7 @@
                         </div>
                     @endif
                 </div>
+
                 {{-- Gambar 2 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_2" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 2</label>
@@ -140,6 +115,7 @@
                         </div>
                     @endif
                 </div>
+
                 {{-- Gambar 3 --}}
                 <div class="mb-4">
                     <label for="sejarah_img_3" class="block text-gray-700 text-sm font-bold mb-2">Gambar Sejarah 3</label>
