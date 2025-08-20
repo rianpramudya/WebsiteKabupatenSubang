@@ -826,13 +826,15 @@
                     <span>Hak Cipta © {{ date('Y') }} Pemerintah Kabupaten Subang. Dikelola oleh Diskominfo.</span>
                     {{-- Tambahan Tautan Kebijakan Privasi --}}
                     <span>|</span>
-                    <a href="{{ route('privacy.policy') }}" class="hover:text-white transition-colors duration-200">
-                        Kebijakan Privasi
+                    <a href="{{ route('privacy.policy') }}" class="hover:text-white transition-colors duration-200">  Kebijakan Privasi
                     </a>
                 </div>
             </div>
         </div>
     </footer>
+
+
+
 
 
     {{-- Cookie banner --}}
@@ -871,7 +873,7 @@
                     class="bg-[#1E4E7C] hover:brightness-90 text-white px-4 sm:px-6 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 shadow-md btn-animate">
                     <i class="fas fa-check mr-2"></i>Setuju
                 </button>
-                <a href="#" class="text-[#1E4E7C] hover:underline px-4 py-2 text-xs sm:text-sm font-medium text-center">
+                <a href="{{ route('privacy.policy') }}" class="text-[#1E4E7C] hover:underline px-4 py-2 text-xs sm:text-sm font-medium text-center">
                     Pelajari Lebih Lanjut
                 </a>
             </div>
@@ -879,7 +881,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // --- Fungsi untuk menampilkan jam waktu nyata ---
             const clockElement = document.getElementById('realtime-clock');
             if (clockElement) {
@@ -1049,7 +1051,7 @@
             });
 
             // Tutup hasil pencarian saat klik di luar
-            document.addEventListener('click', function (e) {
+            document.addEventListener('click', function(e) {
                 if (!searchContainer.contains(e.target)) {
                     searchInput.classList.remove('active');
                     hideSearchResults();
@@ -1089,7 +1091,7 @@
             });
 
             document.querySelectorAll('.mobile-dropdown-toggle').forEach(toggle => {
-                toggle.addEventListener('click', function () {
+                toggle.addEventListener('click', function() {
                     const menu = this.nextElementSibling;
                     const icon = this.querySelector('svg');
                     menu.classList.toggle('hidden');
@@ -1106,7 +1108,7 @@
                 const toggleButton = dropdownContainer.querySelector('.dropdown-toggle');
                 const menu = dropdownContainer.querySelector('.dropdown-menu');
 
-                toggleButton.addEventListener('click', function (event) {
+                toggleButton.addEventListener('click', function(event) {
                     // Mencegah link default dan menghentikan event agar tidak langsung ditangapi oleh document
                     event.preventDefault();
                     event.stopPropagation();
@@ -1127,7 +1129,7 @@
             });
 
             // 2. Tambahkan satu event listener global untuk menutup dropdown saat klik di luar area
-            document.addEventListener('click', function (event) {
+            document.addEventListener('click', function(event) {
                 // Jika target klik BUKAN di dalam sebuah container dropdown...
                 if (!event.target.closest('[data-dropdown]')) {
                     // ...maka tutup semua dropdown yang sedang terbuka.
