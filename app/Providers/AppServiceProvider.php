@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Providers;
+use Illuminate\Support\Facades\View;
+use App\Http\View\Composers\BeritaTerkiniComposer;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\Berita;
@@ -67,5 +69,7 @@ class AppServiceProvider extends ServiceProvider
         PeranDanProgram::observe(PeranDanProgramObserver::class);
         Layanan::observe(LayananObserver::class);
         WilayahAdministrasi::observe(WilayahAdministrasiObserver::class);
+
+        View::composer('partials.sidebar_berita_terkini', BeritaTerkiniComposer::class);
     }
 }

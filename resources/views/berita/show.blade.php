@@ -67,18 +67,37 @@
             </div>
 
             @if($berita->tags->isNotEmpty())
-            <div class="mt-10 pt-6 border-t">
-                <div class="flex items-center gap-2 flex-wrap">
-                    <h4 class="font-bold text-gray-800 mr-2">Tags:</h4>
-                    @foreach($berita->tags as $tag)
-                    <a href="{{ route('berita.tags.index', ['tag' => $tag->slug]) }}"
-                        class="bg-gray-100 text-[#1E4E7C] text-sm font-medium px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors">
-                        #{{ $tag->name }}
-                    </a>
-                    @endforeach
-                </div>
-            </div>
-            @endif
+<div class="mt-10 pt-6 border-t">
+    <div class="flex items-center gap-2 flex-wrap">
+        <h4 class="font-bold text-gray-800 mr-2">Tags:</h4>
+        @foreach($berita->tags as $tag)
+            @php
+                $route = '';
+                // Cek apakah berita ini milik sebuah Kecamatan
+                if ($berita->kecamatan) {
+                    $route = route('berita.tags.kecamatan.index', [
+                        'kecamatan' => $berita->kecamatan->slug, 
+                        'tag' => $tag->slug
+                    ]);
+                // Cek apakah berita ini milik sebuah Perangkat Daerah
+                } elseif ($berita->perangkatDaerah) {
+                    $route = route('berita.tags.perangkat.index', [
+                        'perangkatDaerah' => $berita->perangkatDaerah->slug, 
+                        'tag' => $tag->slug
+                    ]);
+                // Jika bukan keduanya, gunakan route global (Kabupaten)
+                } else {
+                    $route = route('berita.tags.index', ['tag' => $tag->slug]);
+                }
+            @endphp
+            <a href="{{ $route }}"
+                class="bg-gray-100 text-[#1E4E7C] text-sm font-medium px-3 py-1.5 rounded-full hover:bg-gray-200 transition-colors">
+                #{{ $tag->name }}
+            </a>
+        @endforeach
+    </div>
+</div>
+@endif
 
             <div class="mt-10 pt-6 {{ $berita->tags->isEmpty() ? 'border-t' : '' }}">
                 <div class="flex flex-col sm:flex-row justify-between items-center gap-6">

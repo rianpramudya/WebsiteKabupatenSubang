@@ -170,85 +170,83 @@ Route::domain(env('APP_DOMAIN', 'subang.go.id'))->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::domain('{kecamatan}.' . env('APP_DOMAIN', 'subang.go.id'))
-    // ======================================================================
-    // === PERBAIKAN UTAMA ADA DI SINI ======================================
-    // ======================================================================
     ->whereIn('kecamatan', Kecamatan::pluck('slug')->all())
     ->group(function () {
 
-    // --- RUTE PUBLIK KECAMATAN ---
-    Route::middleware('set.tenant.context:kecamatan', 'block.kabupaten.slug')
-        ->group(function () {
-            Route::get('/', [KecamatanController::class, 'show'])->name('kecamatan.show');
-            Route::get('/berita', [BeritaController::class, 'indexKecamatan'])->name('berita.kecamatan.index');
-            Route::get('/sejarah', [ProfilController::class, 'sejarah'])->name('sejarah.kecamatan');
-            Route::get('/profil/wilayah', [ProfilController::class, 'wilayah'])->name('wilayah.kecamatan');
-            Route::get('/profil/visi-misi', [ProfilController::class, 'visiMisi'])->name('visimisi.kecamatan');
-            Route::get('/profil/penghargaan', [ProfilController::class, 'penghargaan'])->name('penghargaan.kecamatan');
-            Route::get('/transparansi', [TransparansiController::class, 'index'])->name('transparansi.kecamatan');
-            Route::get('/pemerintahan/struktur', [PemerintahanController::class, 'struktur'])->name('struktur.kecamatan');
-            Route::get('/pemerintahan/peran-dan-program', [PemerintahanController::class, 'peranDanProgram'])->name('peran_program.kecamatan');
-            Route::get('/pemerintahan/wilayah-administrasi', [PemerintahanController::class, 'wilayahAdministrasi'])->name('wilayah_administrasi.kecamatan');
-            Route::get('/wisata/seni-dan-budaya', [WisataController::class, 'seniDanBudaya'])->name('wisata.senibudaya.kecamatan');
-            Route::get('/wisata/objek-wisata', [WisataController::class, 'objekWisata'])->name('wisata.objekwisata.kecamatan');
-            Route::get('/wisata/hotel', [WisataController::class, 'hotel'])->name('wisata.hotel.kecamatan');
-            Route::get('/wisata/rumah-makan', [WisataController::class, 'rumahMakan'])->name('wisata.rumahmakan.kecamatan');
-            Route::get('/info-grafis', [InfoGrafisController::class, 'index'])->name('infografis.kecamatan');
-            Route::get('/agenda', [PortalController::class, 'agenda'])->name('agenda.kecamatan');
-            Route::get('/galeri/foto', [KecamatanController::class, 'galeriFoto'])->name('kecamatan.galeri.foto');
-            Route::get('/galeri/video', [KecamatanController::class, 'galeriVideo'])->name('kecamatan.galeri.video');
-            Route::get('/layanan', [KecamatanController::class, 'semuaLayanan'])->name('kecamatan.layanan.index');
-            Route::get('/layanan/{layanan}', [PublicLayananController::class, 'show'])->name('layanan.detail');
-            Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak.kecamatan');
-            Route::post('/pengaduan', [PortalController::class, 'kirimPengaduan'])->name('pengaduan.kecamatan');
-            Route::get('/halaman/{halamanSlug}', [PortalController::class, 'halamanKustom'])->name('halaman.kecamatan');
-            Route::get('/statistik', [PortalController::class, 'statistik'])->name('statistik.kecamatan');
-        });
+        // --- RUTE PUBLIK KECAMATAN ---
+        Route::middleware('set.tenant.context:kecamatan', 'block.kabupaten.slug')
+            ->group(function () {
+                Route::get('/', [KecamatanController::class, 'show'])->name('kecamatan.show');
+                Route::get('/berita', [BeritaController::class, 'indexKecamatan'])->name('berita.kecamatan.index');
+                Route::get('/berita/tag/{tag:slug}', [BeritaController::class, 'indexTagKecamatan'])->name('berita.tags.kecamatan.index');
+                Route::get('/sejarah', [ProfilController::class, 'sejarah'])->name('sejarah.kecamatan');
+                Route::get('/profil/wilayah', [ProfilController::class, 'wilayah'])->name('wilayah.kecamatan');
+                Route::get('/profil/visi-misi', [ProfilController::class, 'visiMisi'])->name('visimisi.kecamatan');
+                Route::get('/profil/penghargaan', [ProfilController::class, 'penghargaan'])->name('penghargaan.kecamatan');
+                Route::get('/transparansi', [TransparansiController::class, 'index'])->name('transparansi.kecamatan');
+                Route::get('/pemerintahan/struktur', [PemerintahanController::class, 'struktur'])->name('struktur.kecamatan');
+                Route::get('/pemerintahan/peran-dan-program', [PemerintahanController::class, 'peranDanProgram'])->name('peran_program.kecamatan');
+                Route::get('/pemerintahan/wilayah-administrasi', [PemerintahanController::class, 'wilayahAdministrasi'])->name('wilayah_administrasi.kecamatan');
+                Route::get('/wisata/seni-dan-budaya', [WisataController::class, 'seniDanBudaya'])->name('wisata.senibudaya.kecamatan');
+                Route::get('/wisata/objek-wisata', [WisataController::class, 'objekWisata'])->name('wisata.objekwisata.kecamatan');
+                Route::get('/wisata/hotel', [WisataController::class, 'hotel'])->name('wisata.hotel.kecamatan');
+                Route::get('/wisata/rumah-makan', [WisataController::class, 'rumahMakan'])->name('wisata.rumahmakan.kecamatan');
+                Route::get('/info-grafis', [InfoGrafisController::class, 'index'])->name('infografis.kecamatan');
+                Route::get('/agenda', [PortalController::class, 'agenda'])->name('agenda.kecamatan');
+                Route::get('/galeri/foto', [KecamatanController::class, 'galeriFoto'])->name('kecamatan.galeri.foto');
+                Route::get('/galeri/video', [KecamatanController::class, 'galeriVideo'])->name('kecamatan.galeri.video');
+                Route::get('/layanan', [KecamatanController::class, 'semuaLayanan'])->name('kecamatan.layanan.index');
+                Route::get('/layanan/{layanan}', [PublicLayananController::class, 'show'])->name('layanan.detail');
+                Route::get('/kontak', [PortalController::class, 'kontak'])->name('kontak.kecamatan');
+                Route::post('/pengaduan', [PortalController::class, 'kirimPengaduan'])->name('pengaduan.kecamatan');
+                Route::get('/halaman/{halamanSlug}', [PortalController::class, 'halamanKustom'])->name('halaman.kecamatan');
+                Route::get('/statistik', [PortalController::class, 'statistik'])->name('statistik.kecamatan');
+            });
 
-    // --- RUTE ADMIN KECAMATAN ---
-    Route::middleware(['auth', 'set.tenant.context:kecamatan', 'block.kabupaten.slug', 'auth.kecamatan'])
-        ->prefix('admin')->name('admin.kecamatan.')->group(function () {
-            Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil.index');
-            Route::get('/pemerintahan', fn(Kecamatan $kecamatan) => view('admin.pemerintahan_CRUD.index', compact('kecamatan')))->name('pemerintahan.index');
-            Route::get('/wisata', fn(Kecamatan $kecamatan) => view('admin.wisata_CRUD.index', compact('kecamatan')))->name('wisata.index');
-            Route::resource('berita', AdminBeritaController::class)->parameters(['berita' => 'berita'])->scoped();
-            Route::resource('galeri', AdminGaleriController::class)->except(['show', 'edit', 'update'])->scoped();
-            Route::resource('agenda', AdminAgendaController::class)->except(['show'])->scoped();
-            Route::resource('layanan', AdminLayananController::class)->except(['show'])->scoped();
-            Route::prefix('kontak')->name('kontak.')->group(function () {
-                Route::get('/edit', [KontakController::class, 'edit'])->name('edit');
-                Route::put('/', [KontakController::class, 'update'])->name('update');
+        // --- RUTE ADMIN KECAMATAN ---
+        Route::middleware(['auth', 'set.tenant.context:kecamatan', 'block.kabupaten.slug', 'auth.kecamatan'])
+            ->prefix('admin')->name('admin.kecamatan.')->group(function () {
+                Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil.index');
+                Route::get('/pemerintahan', fn(Kecamatan $kecamatan) => view('admin.pemerintahan_CRUD.index', compact('kecamatan')))->name('pemerintahan.index');
+                Route::get('/wisata', fn(Kecamatan $kecamatan) => view('admin.wisata_CRUD.index', compact('kecamatan')))->name('wisata.index');
+                Route::resource('berita', AdminBeritaController::class)->parameters(['berita' => 'berita'])->scoped();
+                Route::resource('galeri', AdminGaleriController::class)->except(['show', 'edit', 'update'])->scoped();
+                Route::resource('agenda', AdminAgendaController::class)->except(['show'])->scoped();
+                Route::resource('layanan', AdminLayananController::class)->except(['show'])->scoped();
+                Route::prefix('kontak')->name('kontak.')->group(function () {
+                    Route::get('/edit', [KontakController::class, 'edit'])->name('edit');
+                    Route::put('/', [KontakController::class, 'update'])->name('update');
+                });
+                Route::prefix('profil')->name('profil.')->group(function () {
+                    Route::get('/visi-misi', [AdminProfilController::class, 'editVisiMisi'])->name('visimisi.edit');
+                    Route::put('/visi-misi', [AdminProfilController::class, 'updateVisiMisi'])->name('visimisi.update');
+                    Route::get('/wilayah', [AdminProfilController::class, 'editWilayah'])->name('wilayah.edit');
+                    Route::put('/wilayah', [AdminProfilController::class, 'updateWilayah'])->name('wilayah.update');
+                    Route::get('sejarah/edit-profil', [AdminSejarahController::class, 'editProfil'])->name('sejarah.editProfil');
+                    Route::put('sejarah/update-profil', [AdminSejarahController::class, 'updateProfil'])->name('sejarah.updateProfil');
+                    Route::resource('sejarah', AdminSejarahController::class)->except(['show'])->scoped();
+                    Route::resource('penghargaan', AdminPenghargaanController::class)->except(['show'])->scoped();
+                    Route::resource('infografis', AdminInfografisController::class)->except(['show'])->scoped();
+                });
+                Route::prefix('pemerintahan')->name('pemerintahan.')->group(function () {
+                    Route::resource('pejabats', StrukturPemerintahanController::class)->parameters(['pejabats' => 'pejabat']);
+                    Route::resource('peran-program', PeranProgramController::class)->parameters(['peran-program' => 'peranProgram'])->scoped();
+                    Route::resource('wilayah-administrasi', WilayahAdministrasiController::class)->scoped();
+                });
+                Route::resource('laporan-keuangan', AdminLaporanKeuanganController::class)->except('show')->scoped();
+                Route::prefix('wisata')->name('wisata.')->group(function () {
+                    Route::resource('budaya', AdminBudayaController::class)->except(['show'])->scoped();
+                    Route::resource('objek-wisata', AdminObjekWisataController::class)->except(['show'])->parameters(['objek-wisata' => 'objekWisata'])->scoped();
+                    Route::resource('hotel', AdminHotelController::class)->except(['show'])->scoped();
+                    Route::resource('rumah-makan', AdminRumahMakanController::class)->except(['show'])->parameters(['rumah-makan' => 'rumahMakan'])->scoped();
+                });
+                Route::prefix('banner')->name('banner.')->group(function () {
+                    Route::get('/edit', [BannerController::class, 'edit'])->name('edit');
+                    Route::put('/update', [BannerController::class, 'update'])->name('update');
+                    Route::delete('/destroy', [BannerController::class, 'destroy'])->name('destroy');
+                });
             });
-            Route::prefix('profil')->name('profil.')->group(function () {
-                Route::get('/visi-misi', [AdminProfilController::class, 'editVisiMisi'])->name('visimisi.edit');
-                Route::put('/visi-misi', [AdminProfilController::class, 'updateVisiMisi'])->name('visimisi.update');
-                Route::get('/wilayah', [AdminProfilController::class, 'editWilayah'])->name('wilayah.edit');
-                Route::put('/wilayah', [AdminProfilController::class, 'updateWilayah'])->name('wilayah.update');
-                Route::get('sejarah/edit-profil', [AdminSejarahController::class, 'editProfil'])->name('sejarah.editProfil');
-                Route::put('sejarah/update-profil', [AdminSejarahController::class, 'updateProfil'])->name('sejarah.updateProfil');
-                Route::resource('sejarah', AdminSejarahController::class)->except(['show'])->scoped();
-                Route::resource('penghargaan', AdminPenghargaanController::class)->except(['show'])->scoped();
-                Route::resource('infografis', AdminInfografisController::class)->except(['show'])->scoped();
-            });
-            Route::prefix('pemerintahan')->name('pemerintahan.')->group(function () {
-                Route::resource('pejabats', StrukturPemerintahanController::class)->parameters(['pejabats' => 'pejabat']);
-                Route::resource('peran-program', PeranProgramController::class)->parameters(['peran-program' => 'peranProgram'])->scoped();
-                Route::resource('wilayah-administrasi', WilayahAdministrasiController::class)->scoped();
-            });
-            Route::resource('laporan-keuangan', AdminLaporanKeuanganController::class)->except('show')->scoped();
-            Route::prefix('wisata')->name('wisata.')->group(function () {
-                Route::resource('budaya', AdminBudayaController::class)->except(['show'])->scoped();
-                Route::resource('objek-wisata', AdminObjekWisataController::class)->except(['show'])->parameters(['objek-wisata' => 'objekWisata'])->scoped();
-                Route::resource('hotel', AdminHotelController::class)->except(['show'])->scoped();
-                Route::resource('rumah-makan', AdminRumahMakanController::class)->except(['show'])->parameters(['rumah-makan' => 'rumahMakan'])->scoped();
-            });
-            Route::prefix('banner')->name('banner.')->group(function () {
-                Route::get('/edit', [BannerController::class, 'edit'])->name('edit');
-                Route::put('/update', [BannerController::class, 'update'])->name('update');
-                Route::delete('/destroy', [BannerController::class, 'destroy'])->name('destroy');
-            });
-        });
-});
+    });
 
 
 /*

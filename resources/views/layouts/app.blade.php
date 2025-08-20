@@ -820,7 +820,6 @@
             </div>
         </div>
 
-         {{-- KODE INI ADALAH TAMBAHAN UNTUK FOOTER DENGAN KEBIJAKAN PRIVASI --}}
         <div class="bg-black/20 py-4">
             <div class="container mx-auto px-6 text-center text-xs text-gray-400">
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-2">

@@ -2,31 +2,24 @@
 
 namespace App\Http\Controllers;
 
-// Ganti model utama ke PerangkatDaerah
 use App\Models\PerangkatDaerah;
 use App\Models\Agenda;
 use App\Models\Berita;
 use App\Models\Layanan;
-use App\Models\Galeri; 
-
-// Impor semua repository yang dibutuhkan, sama seperti KecamatanController
+use App\Models\Galeri;
 use App\Repositories\AgendaRepository;
 use App\Repositories\BeritaRepository;
-use App\Repositories\BudayaRepository;
 use App\Repositories\GaleriRepository;
 use App\Repositories\LayananRepository;
-use App\Repositories\ObjekWisataRepository;
 use App\Repositories\StrukturPemerintahanRepository;
 use Carbon\Carbon;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Cache;
 
 class PerangkatController extends Controller
 {
+    // ... (properti dan constructor tetap sama) ...
     protected GaleriRepository $galeriRepository;
     protected AgendaRepository $agendaRepository;
-    protected BudayaRepository $budayaRepository;
-    protected ObjekWisataRepository $objekWisataRepository;
     protected LayananRepository $layananRepository;
     protected StrukturPemerintahanRepository $strukturPemerintahanRepository;
     protected BeritaRepository $beritaRepository;
@@ -34,46 +27,29 @@ class PerangkatController extends Controller
     public function __construct(
         GaleriRepository $galeriRepository,
         AgendaRepository $agendaRepository,
-        BudayaRepository $budayaRepository,
-        ObjekWisataRepository $objekWisataRepository,
         LayananRepository $layananRepository,
         StrukturPemerintahanRepository $strukturPemerintahanRepository,
         BeritaRepository $beritaRepository
     ) {
         $this->galeriRepository = $galeriRepository;
         $this->agendaRepository = $agendaRepository;
-        $this->budayaRepository = $budayaRepository;
-        $this->objekWisataRepository = $objekWisataRepository;
         $this->layananRepository = $layananRepository;
         $this->strukturPemerintahanRepository = $strukturPemerintahanRepository;
         $this->beritaRepository = $beritaRepository;
     }
+
 
     /**
      * Halaman beranda publik sebuah Perangkat Daerah.
      */
     public function show(PerangkatDaerah $perangkatDaerah): View
     {
-        // Ambil 5 berita terbaru untuk perangkat daerah ini
-        $beritaTerkini = Berita::query()
-            ->where('perangkat_daerah_id', $perangkatDaerah->id)
-            ->whereNotNull('published_at')
-            ->where('published_at', '<=', now())
-            ->latest('published_at')
-            ->take(5)
-            ->get();
-
-        // Populer: gunakan cache singkat (5 menit)
-        $cacheKey = "berita.perangkat.{$perangkatDaerah->id}.populer.5";
-        $beritaPopuler = Cache::remember($cacheKey, 300, function () use ($perangkatDaerah) {
-            return Berita::query()
-                ->where('perangkat_daerah_id', $perangkatDaerah->id)
-                ->whereNotNull('published_at')
-                ->where('published_at', '<=', now())
-                ->orderByDesc('views')
-                ->limit(5)
-                ->get();
-        });
+        // ======================================================================
+        // === PERBAIKAN UTAMA ADA DI SINI ======================================
+        // ======================================================================
+        // Ambil berita terkini dan populer melalui Repository agar cache berfungsi.
+        $beritaTerkini = $this->beritaRepository->getBeritaTerkiniForPerangkatDaerah($perangkatDaerah, 5);
+        $beritaPopuler = $this->beritaRepository->getBeritaPopulerForPerangkatDaerah($perangkatDaerah, 5);
 
         // Query agenda khusus untuk kalender
         $agendasForCalendar = Agenda::query()
@@ -131,31 +107,27 @@ class PerangkatController extends Controller
         ]);
     }
 
-    /**
-     * Halaman daftar video untuk Perangkat Daerah.
-     */
-   public function galeriVideo(PerangkatDaerah $perangkatDaerah): View
+    // ... (metode lainnya tetap sama) ...
+    public function galeriVideo(PerangkatDaerah $perangkatDaerah): View
     {
-        // PERBAIKAN: Gunakan 'whereIn' untuk mencari semua tipe video ('video_yt' dan 'video_upload').
         $videos = Galeri::where('perangkat_daerah_id', $perangkatDaerah->id)
-                          ->whereIn('tipe', ['video_yt', 'video_upload']) // <-- PERUBAHAN DI SINI
-                          ->latest() // Urutkan berdasarkan yang terbaru
-                          ->paginate(12);
+            ->whereIn('tipe', ['video_yt', 'video_upload'])
+            ->latest()
+            ->paginate(12);
 
         return view('galeri.video', [
             'videos' => $videos,
-            'activePerangkatDaerah' => $perangkatDaerah, // Kirim konteks perangkat daerah ke view
-            'currentPerangkatDaerah' => $perangkatDaerah, // Untuk konsistensi dengan composer
+            'activePerangkatDaerah' => $perangkatDaerah,
+            'currentPerangkatDaerah' => $perangkatDaerah,
         ]);
     }
 
     public function galeriFoto(PerangkatDaerah $perangkatDaerah): View
     {
-        // Query untuk mengambil semua foto milik Perangkat Daerah ini
         $fotos = Galeri::where('perangkat_daerah_id', $perangkatDaerah->id)
-                         ->where('tipe', 'foto') // Filter untuk hanya mendapatkan foto
-                         ->latest() // Urutkan berdasarkan yang terbaru
-                         ->paginate(16); // Tampilkan 16 foto per halaman
+            ->where('tipe', 'foto')
+            ->latest()
+            ->paginate(16);
 
         return view('galeri.foto', [
             'fotos' => $fotos,
@@ -163,10 +135,6 @@ class PerangkatController extends Controller
         ]);
     }
 
-
-    /**
-     * [BARU] Menampilkan halaman daftar semua layanan untuk Perangkat Daerah.
-     */
     public function semuaLayanan(PerangkatDaerah $perangkatDaerah): View
     {
         $layanans = Layanan::query()
@@ -177,16 +145,12 @@ class PerangkatController extends Controller
         return view('layanan.index', [
             'currentPerangkatDaerah' => $perangkatDaerah,
             'layanans' => $layanans,
-            'currentKecamatan' => null, // Menghindari error di view
+            'currentKecamatan' => null,
         ]);
     }
 
-    /**
-     * [BARU] Menampilkan halaman detail untuk satu layanan.
-     */
     public function detailLayanan(PerangkatDaerah $perangkatDaerah, Layanan $layanan): View
     {
-        // Pastikan layanan yang diakses benar-benar milik perangkat daerah yang ada di URL
         if ($layanan->perangkat_daerah_id !== $perangkatDaerah->id) {
             abort(404);
         }
@@ -194,7 +158,7 @@ class PerangkatController extends Controller
         return view('layanan.show', [
             'currentPerangkatDaerah' => $perangkatDaerah,
             'layanan' => $layanan,
-            'currentKecamatan' => null, // Menghindari error di view
+            'currentKecamatan' => null,
         ]);
     }
 }

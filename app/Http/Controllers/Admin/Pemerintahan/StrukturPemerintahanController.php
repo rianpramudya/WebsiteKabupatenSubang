@@ -138,32 +138,39 @@ class StrukturPemerintahanController extends Controller
     }
 
     public function update(Request $request)
-    {
-        $tenant = $this->getTenant($request);
-        $pejabatId = $request->route('pejabat');
+{
+    $tenant = $this->getTenant($request);
+    $pejabatId = $request->route('pejabat');
 
-        // [PERBAIKAN] Logika query baru yang menangani null
-        $query = Pejabat::withoutGlobalScopes()->where('id', $pejabatId);
-        if ($tenant instanceof Kecamatan) {
-            $query->where('kecamatan_id', $tenant->id);
-        } elseif ($tenant instanceof PerangkatDaerah) {
-            $query->where('perangkat_daerah_id', $tenant->id);
-        } else {
-            $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
-        }
-        $pejabat = $query->firstOrFail();
-
-        $this->authorize('update', $pejabat);
-        $validated = $request->validate([/* ...aturan validasi Anda... */]);
-        if ($request->hasFile('foto')) {
-            if ($pejabat->foto) Storage::disk('public')->delete($pejabat->foto);
-            $validated['foto'] = $request->file('foto')->store('pejabat', 'public');
-        }
-        $pejabat->update($validated);
-
-        return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))
-            ->with('success', 'Struktur Pemerintahan berhasil diperbarui.');
+    $query = Pejabat::withoutGlobalScopes()->where('id', $pejabatId);
+    if ($tenant instanceof Kecamatan) {
+        $query->where('kecamatan_id', $tenant->id);
+    } elseif ($tenant instanceof PerangkatDaerah) {
+        $query->where('perangkat_daerah_id', $tenant->id);
+    } else {
+        $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
     }
+    $pejabat = $query->firstOrFail();
+
+    $this->authorize('update', $pejabat);
+
+    $validated = $request->validate([
+        'nama' => 'required|string|max:255',
+        'jabatan' => 'required|string|max:255',
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        'urutan' => 'required|integer|min:0',
+    ]);
+
+    if ($request->hasFile('foto')) {
+        if ($pejabat->foto) Storage::disk('public')->delete($pejabat->foto);
+        $validated['foto'] = $request->file('foto')->store('pejabat', 'public');
+    }
+    
+    $pejabat->update($validated);
+
+    return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))
+        ->with('success', 'Struktur Pemerintahan berhasil diperbarui.');
+}
 
     public function destroy(Request $request)
     {

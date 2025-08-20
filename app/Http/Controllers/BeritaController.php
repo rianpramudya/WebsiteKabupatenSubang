@@ -180,4 +180,34 @@ class BeritaController extends Controller
             'currentKecamatan' => null,
         ]);
     }
+
+    public function indexTagKecamatan(Kecamatan $kecamatan, string $slug): View
+    {
+        session()->forget('origin_page_url');
+        $tag = Tag::where('slug->en', $slug)->firstOrFail();
+        $beritas = $this->beritaRepository->getPaginatedForTagAndKecamatan($tag, $kecamatan, 9);
+
+        return view('berita.index', [
+            'beritas' => $beritas,
+            'currentKecamatan' => $kecamatan,
+            'judulHalaman' => 'Berita Kecamatan ' . $kecamatan->name . ' dengan Tag: ' . $tag->name,
+        ]);
+    }
+
+    /**
+     * Menampilkan daftar berita yang memiliki tag tertentu untuk Perangkat Daerah.
+     */
+    public function indexTagPerangkatDaerah(PerangkatDaerah $perangkatDaerah, string $slug): View
+    {
+        session()->forget('origin_page_url');
+        $tag = Tag::where('slug->en', $slug)->firstOrFail();
+        $beritas = $this->beritaRepository->getPaginatedForTagAndPerangkatDaerah($tag, $perangkatDaerah, 9);
+
+        return view('berita.index', [
+            'beritas' => $beritas,
+            'currentPerangkatDaerah' => $perangkatDaerah,
+            'currentKecamatan' => null,
+            'judulHalaman' => 'Berita ' . $perangkatDaerah->name . ' dengan Tag: ' . $tag->name,
+        ]);
+    }
 }

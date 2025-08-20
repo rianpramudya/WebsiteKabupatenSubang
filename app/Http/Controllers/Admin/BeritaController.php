@@ -79,6 +79,8 @@ class BeritaController extends Controller
         $data['slug'] = Str::slug($data['judul']) . '-' . uniqid();
         $data['excerpt'] = Str::limit(strip_tags($request->isi), 150);
 
+        $data['published_at'] = now();
+
         if ($request->hasFile('gambar')) {
             $data['gambar'] = $request->file('gambar')->store('images/berita', 'public');
         }
@@ -180,6 +182,10 @@ class BeritaController extends Controller
         $this->authorize('update', $berita);
         $data = $request->validated();
         $data['excerpt'] = Str::limit(strip_tags($request->isi), 150);
+
+        if (is_null($berita->published_at)) {
+            $data['published_at'] = now();
+        }
 
         if ($request->hasFile('gambar')) {
             if ($berita->gambar) Storage::disk('public')->delete($berita->gambar);
