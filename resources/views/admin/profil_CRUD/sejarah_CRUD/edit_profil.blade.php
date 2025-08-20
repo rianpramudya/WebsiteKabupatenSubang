@@ -20,7 +20,6 @@
 {{-- Menambahkan Aset Trix (CSS) dan Custom Style --}}
 {{-- ================================================================= --}}
 @push('styles')
-<<<<<<< HEAD
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
         trix-toolbar [data-trix-button-group="file-tools"] {
@@ -41,26 +40,6 @@
             box-shadow: 0 0 0 1px #1E4E7C;
         }
     </style>
-=======
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
-<style>
-    trix-toolbar [data-trix-button-group="file-tools"] {
-        display: none;
-    }
-    .trix-content {
-        min-height: 150px;
-        border-color: #d1d5db;
-        border-radius: 0.375rem;
-        padding: 0.75rem;
-        background-color: white;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
-    .trix-content:focus {
-        border-color: #1E4E7C;
-        box-shadow: 0 0 0 1px #1E4E7C;
-    }
-</style>
->>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
 @endpush
 
 
@@ -68,21 +47,15 @@
 <div id="page-content" class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Sejarah Awal & Lambang</h1>
     <div class="bg-white p-8 rounded-lg shadow-md">
-<<<<<<< HEAD
-=======
 
-<<<<<<< HEAD
         {{-- ==== FORM UTAMA (HANYA SATU) ==== --}}
->>>>>>> e8f96ed (Penyempurnaan dan perbaikan bug bug minor yang baru ditemukan)
-=======
+
         {{-- ==== FORM UTAMA ==== --}}
->>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
+
         <form action="{{ route($baseRouteName . 'profil.sejarah.updateProfil', $routeParameters) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
-<<<<<<< HEAD
-<<<<<<< HEAD
             {{-- Field untuk Sejarah Awal dengan Trix Editor --}}
             <div class="mb-6">
                 <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
@@ -97,11 +70,11 @@
                 <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
                 {{-- [MODIFIKASI] Menambahkan class trix-content --}}
                 <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
-=======
+
             {{-- Sejarah --}}
-=======
+
             {{-- Field untuk Sejarah Awal --}}
->>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
+
             <div class="mb-6">
                 <label for="sejarah" class="block text-gray-700 text-sm font-bold mb-2">Deskripsi Sejarah Awal</label>
                 <input id="sejarah" type="hidden" name="sejarah" value="{{ old('sejarah', $tenant->sejarah) }}">
@@ -111,13 +84,12 @@
             {{-- Field untuk Arti Lambang --}}
             <div class="mb-6">
                 <label for="arti_lambang" class="block text-gray-700 text-sm font-bold mb-2">Arti Lambang</label>
-<<<<<<< HEAD
+
                 <textarea name="arti_lambang" id="arti_lambang" rows="5" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ old('arti_lambang', $tenant->arti_lambang) }}</textarea>
->>>>>>> e8f96ed (Penyempurnaan dan perbaikan bug bug minor yang baru ditemukan)
-=======
+
                 <input id="arti_lambang" type="hidden" name="arti_lambang" value="{{ old('arti_lambang', $tenant->arti_lambang) }}">
                 <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
->>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
+
             </div>
 
             {{-- Upload Logo + tombol hapus --}}
@@ -229,9 +201,5 @@
 {{-- Menambahkan Aset Trix (JS) --}}
 {{-- ================================================================= --}}
 @push('scripts')
-<<<<<<< HEAD
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
-=======
-<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
->>>>>>> f2b1616 (Memperbaiki masalah hapus foto di sejarah dan juga penggabungan Trix Editor)
 @endpush
