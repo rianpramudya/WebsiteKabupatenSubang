@@ -6,25 +6,36 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBudayaRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return true; // Otorisasi ditangani oleh Policy di Controller
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'nama' => ['required', 'string', 'max:255'],
             'deskripsi' => ['required', 'string'],
-            'gambar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
+            
+            // MODIFIKASI DIMULAI DI SINI
+            'gambar' => [
+                'nullable', 
+                'image', 
+                'mimes:jpeg,png,jpg,webp', 
+                'max:2048',
+                'dimensions:ratio=4/3' // Aturan untuk rasio aspek 4:3
+            ],
+            // AKHIR MODIFIKASI
+        ];
+    }
+
+    /**
+     * Menambahkan pesan error kustom agar lebih ramah pengguna.
+     */
+    public function messages(): array
+    {
+        return [
+            'gambar.dimensions' => 'Ukuran gambar tidak valid. Harap gunakan gambar dengan rasio aspek 4:3.',
         ];
     }
 }

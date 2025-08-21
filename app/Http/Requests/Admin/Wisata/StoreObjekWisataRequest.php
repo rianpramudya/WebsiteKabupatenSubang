@@ -18,12 +18,29 @@ class StoreObjekWisataRequest extends FormRequest
             'nama' => ['required', 'string', 'max:255'],
             'kategori' => ['required', 'string', 'max:255'],
             'deskripsi_singkat' => ['required', 'string'],
-            'gambar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'lokasi_teks' => ['required', 'string', 'max:255'],
-            // --- PERBAIKAN DI SINI ---
-            'google_maps_url' => ['nullable', 'url'], // Menggunakan nama yang benar (semua huruf kecil)
-            // -------------------------
+            'google_maps_url' => ['nullable', 'url'],
             'is_unggulan' => ['sometimes', 'boolean'],
+            
+            // MODIFIKASI DIMULAI DI SINI
+            'gambar' => [
+                'nullable', 
+                'image', 
+                'mimes:jpeg,png,jpg,webp', 
+                'max:2048',
+                'dimensions:ratio=16/9' // Aturan untuk rasio aspek 16:9
+            ],
+            // AKHIR MODIFIKASI
+        ];
+    }
+
+    /**
+     * Menambahkan pesan error kustom agar lebih ramah pengguna.
+     */
+    public function messages(): array
+    {
+        return [
+            'gambar.dimensions' => 'Ukuran gambar tidak valid. Harap gunakan gambar dengan rasio aspek 16:9.',
         ];
     }
     

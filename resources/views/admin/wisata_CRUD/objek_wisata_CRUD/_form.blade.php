@@ -65,7 +65,6 @@
             required placeholder="Contoh: Desa Cijambe, Kecamatan Cijambe">
     </div>
 
-    {{-- [DIUBAH] Mengganti textarea dengan Trix Editor --}}
     <div class="md:col-span-2">
         <label for="deskripsi_singkat" class="block text-sm font-medium text-gray-700">Deskripsi Singkat <span
                 class="text-red-500">*</span></label>
@@ -82,7 +81,6 @@
             placeholder="https://maps.app.goo.gl/xxxx">
     </div>
 
-    {{-- [DIUBAH] Mengganti input gambar dengan preview interaktif --}}
     <div x-data="{
             previewUrl: '{{ isset($objekWisata) && $objekWisata->gambar ? asset('storage/' . $objekWisata->gambar) : '' }}',
             fileName: '{{ isset($objekWisata) && $objekWisata->gambar ? basename($objekWisata->gambar) : '' }}',
@@ -103,7 +101,8 @@
             }
         }">
         <label for="gambar" class="block text-sm font-medium text-gray-700">Gambar Banner</label>
-
+        
+        <p class="text-xs text-gray-500 mt-1">Rekomendasi ukuran: rasio 16:9 (contoh: 1280x720 pixels).</p>
         <div x-show="!previewUrl" style="display: none;" class="mt-1">
             <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput"
                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
@@ -131,18 +130,11 @@
     </div>
 
     <div class="flex items-center pt-6">
-        <input type="checkbox" name="is_unggulan" id="is_unggulan" value="1" @checked(
-            old(
-                'is_unggulan',
-                $objekWisata->is_unggulan ?? false
-            )
-        ) class="h-4 w-4 rounded border-gray-300 text-indigo-600
-        focus:ring-indigo-500">
+        <input type="checkbox" name="is_unggulan" id="is_unggulan" value="1" @checked(old('is_unggulan', $objekWisata->is_unggulan ?? false)) class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
         <label for="is_unggulan" class="ml-2 block text-sm text-gray-900">Jadikan Wisata Unggulan?</label>
     </div>
 </div>
 <div class="flex justify-end mt-8">
-    {{-- [PERBAIKAN] Tautan Batal sekarang menggunakan variabel yang benar --}}
     <a href="{{ route($crudRoutePrefix . '.index', $routeParameters) }}"
         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2 transition-colors">Batal</a>
     <button type="submit"

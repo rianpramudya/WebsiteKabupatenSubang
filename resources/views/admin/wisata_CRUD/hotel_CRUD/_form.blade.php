@@ -112,6 +112,7 @@
         }
     }">
         <label for="gambar" class="block text-sm font-medium text-gray-700">Gambar</label>
+        <p class="text-xs text-gray-500 mt-1">Rekomendasi ukuran: rasio 16:9 (contoh: 1280x720 pixels).</p>
 
         <div x-show="!previewUrl" style="display: none;" class="mt-1">
             <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput"

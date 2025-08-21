@@ -87,6 +87,7 @@
     }">
         <label for="gambar" class="block text-gray-700 text-sm font-bold mb-2">Upload Gambar:</label>
 
+        <p class="text-xs text-gray-500 mb-2">Rekomendasi ukuran: rasio 9:16 (contoh: 1080x1920 pixels).</p>
         <div x-show="!previewUrl" style="display: none;" class="mt-1">
             <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput"
                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"

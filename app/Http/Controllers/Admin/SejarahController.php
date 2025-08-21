@@ -14,7 +14,7 @@ use Illuminate\View\View;
 
 class SejarahController extends Controller
 {
-    // Helper methods (getTenant, getRouteName, getRouteParameters) tidak perlu diubah.
+    // Helper methods (getTenant, getRouteName, getRouteParameters) tidak diubah.
     private function getTenant(Request $request): ?Model
     {
         return $request->route('kecamatan') ?? $request->route('perangkatDaerah');
@@ -77,10 +77,7 @@ class SejarahController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        // 1. Dapatkan tenant (bisa Kecamatan, PerangkatDaerah, atau null)
         $tenant = $this->getTenant($request);
-
-        // Untuk otorisasi, kita butuh model meskipun level kabupaten
         $authTenant = $tenant ?? Kecamatan::where('slug', 'kabupaten-subang')->firstOrFail();
         $this->authorize('create', [Sejarah::class, $authTenant]);
 
@@ -91,20 +88,14 @@ class SejarahController extends Controller
             'urutan' => 'required|integer',
         ]);
 
-        // 2. [PERBAIKAN UTAMA] Logika baru untuk menentukan pemilik
         if ($tenant instanceof Kecamatan && $tenant->slug !== 'kabupaten-subang') {
             $validated['kecamatan_id'] = $tenant->id;
         } elseif ($tenant instanceof PerangkatDaerah) {
-            // Baris ini yang paling penting untuk kasus Anda
             $validated['perangkat_daerah_id'] = $tenant->id;
         }
-        // Jika $tenant null atau adalah "kabupaten-subang", maka tidak ada ID yang ditambahkan,
-        // sehingga data disimpan sebagai milik Kabupaten (kedua ID bernilai NULL).
 
-        // 3. Simpan data
         Sejarah::create($validated);
 
-        // 4. Redirect
         return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))
             ->with('success', 'Data timeline sejarah baru berhasil ditambahkan.');
     }
@@ -181,7 +172,6 @@ class SejarahController extends Controller
             ->with('success', 'Data timeline sejarah berhasil dihapus.');
     }
 
-    // Method editProfil dan updateProfil tidak perlu diubah karena sudah benar
     public function editProfil(Request $request): View
     {
         $tenant = $this->getTenant($request);
@@ -200,24 +190,37 @@ class SejarahController extends Controller
         }
         $this->authorize('update', $tenant);
 
+        // =================================================================
+        //                  MODIFIKASI VALIDASI DI SINI
+        // =================================================================
         $request->validate([
             'sejarah' => 'required|string',
             'arti_lambang' => 'nullable|string',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'sejarah_img_1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'sejarah_img_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'sejarah_img_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:ratio=1/1',
+            'sejarah_img_1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:ratio=16/9',
+            'sejarah_img_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:ratio=16/9',
+            'sejarah_img_3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|dimensions:ratio=16/9',
+        ], [
+            'logo.dimensions' => 'Rasio gambar Logo harus 1:1 (persegi).',
+            'sejarah_img_1.dimensions' => 'Rasio Gambar Sejarah 1 harus 16:9 (lanskap).',
+            'sejarah_img_2.dimensions' => 'Rasio Gambar Sejarah 2 harus 16:9 (lanskap).',
+            'sejarah_img_3.dimensions' => 'Rasio Gambar Sejarah 3 harus 16:9 (lanskap).',
         ]);
+        // =================================================================
+        //                         AKHIR MODIFIKASI
+        // =================================================================
 
         $tenantData = $request->only(['sejarah', 'arti_lambang']);
         if ($request->hasFile('logo')) {
-            if ($tenant->logo) Storage::disk('public')->delete($tenant->logo);
+            if ($tenant->logo)
+                Storage::disk('public')->delete($tenant->logo);
             $tenantData['logo'] = $request->file('logo')->store('logos', 'public');
         }
         $image_fields = ['sejarah_img_1', 'sejarah_img_2', 'sejarah_img_3'];
         foreach ($image_fields as $field) {
             if ($request->hasFile($field)) {
-                if ($tenant->{$field}) Storage::disk('public')->delete($tenant->{$field});
+                if ($tenant->{$field})
+                    Storage::disk('public')->delete($tenant->{$field});
                 $tenantData[$field] = $request->file($field)->store('sejarah_images', 'public');
             }
         }
@@ -249,7 +252,6 @@ class SejarahController extends Controller
             $message = "Gambar tidak ditemukan.";
         }
 
-        // Redirect langsung ke halaman edit profil sejarah
         return redirect()
             ->route($this->getRouteName($tenant, 'editProfil'), $this->getRouteParameters($tenant))
             ->with('success', $message);

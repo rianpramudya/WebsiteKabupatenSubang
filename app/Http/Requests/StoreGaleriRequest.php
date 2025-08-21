@@ -19,24 +19,27 @@ class StoreGaleriRequest extends FormRequest
 
         return [
             'judul' => 'required|string|max:255',
-            // [FIX] Menambahkan 'video_upload' ke dalam tipe yang valid
             'tipe' => 'required|string|in:foto,video_upload,video_yt',
             
             'file_foto' => [
                 Rule::requiredIf($this->input('tipe') === 'foto'),
                 'nullable',
                 'image',
-                'max:2048' // max 2MB
+                'mimes:jpeg,png,jpg,webp',
+                'max:2048', // max 2MB
+                'dimensions:ratio=4/3' // Aturan untuk rasio aspek 4:3
             ],
 
-            // [NEW] Menambahkan validasi untuk video upload
+            // MODIFIKASI DIMULAI DI SINI
             'file_video_upload' => [
                 Rule::requiredIf($this->input('tipe') === 'video_upload'),
                 'nullable',
                 'file',
                 'mimes:mp4,mov,webm',
-                'max:102400' // max 100MB
+                'max:102400', // max 100MB
+                'dimensions:ratio=16/9' // Aturan untuk rasio aspek 16:9
             ],
+            // AKHIR MODIFIKASI
 
             'file_video_yt' => [
                 Rule::requiredIf($this->input('tipe') === 'video_yt'),
@@ -62,6 +65,16 @@ class StoreGaleriRequest extends FormRequest
                 'nullable',
                 'exists:perangkat_daerahs,id'
             ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'file_foto.dimensions' => 'Ukuran foto tidak valid. Harap gunakan gambar dengan rasio aspek 4:3.',
+            // MODIFIKASI DIMULAI DI SINI
+            'file_video_upload.dimensions' => 'Rasio video tidak valid. Harap gunakan video dengan rasio aspek 16:9.',
+            // AKHIR MODIFIKASI
         ];
     }
 }

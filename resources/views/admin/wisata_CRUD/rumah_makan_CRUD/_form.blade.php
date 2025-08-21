@@ -1,49 +1,49 @@
 @push('styles')
-{{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
-<link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
-<style>
-    /* Styling agar Trix Editor menyatu dengan form Anda */
-    trix-toolbar [data-trix-button-group="file-tools"] {
-        display: none;
-        /* Sembunyikan tombol upload file */
-    }
+    {{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
+    <style>
+        /* Styling agar Trix Editor menyatu dengan form Anda */
+        trix-toolbar [data-trix-button-group="file-tools"] {
+            display: none;
+            /* Sembunyikan tombol upload file */
+        }
 
-    .trix-content {
-        min-height: 120px;
-        /* Tinggi default untuk editor */
-        border-color: #d1d5db;
-        border-radius: 0.375rem;
-        background-color: white;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
+        .trix-content {
+            min-height: 120px;
+            /* Tinggi default untuk editor */
+            border-color: #d1d5db;
+            border-radius: 0.375rem;
+            background-color: white;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
 
-    .trix-content.description {
-        min-height: 200px;
-        /* Tinggi khusus untuk deskripsi */
-    }
+        .trix-content.description {
+            min-height: 200px;
+            /* Tinggi khusus untuk deskripsi */
+        }
 
-    .trix-content:focus {
-        border-color: #4f46e5;
-        /* Warna focus indigo */
-        box-shadow: 0 0 0 1px #4f46e5;
-    }
-</style>
+        .trix-content:focus {
+            border-color: #4f46e5;
+            /* Warna focus indigo */
+            box-shadow: 0 0 0 1px #4f46e5;
+        }
+    </style>
 @endpush
 
 @push('scripts')
-{{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
-<script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
-<script src="//unpkg.com/alpinejs" defer></script>
+    {{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
+    <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
 
 
 @csrf
 @if ($errors->any())
-<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-    <strong class="font-bold">Oops!</strong> <span class="block sm:inline">Ada beberapa masalah dengan input
-        Anda.</span>
-    <ul class="mt-2 list-disc list-inside">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
-</div>
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Oops!</strong> <span class="block sm:inline">Ada beberapa masalah dengan input
+            Anda.</span>
+        <ul class="mt-2 list-disc list-inside">@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+    </div>
 @endif
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -105,7 +105,7 @@
         }
     }">
         <label for="gambar" class="block text-sm font-medium text-gray-700">Gambar</label>
-
+        <p class="text-xs text-gray-500 mt-1">Rekomendasi ukuran: rasio 16:9 (contoh: 1280x720 pixels).</p>
         <div x-show="!previewUrl" style="display: none;" class="mt-1">
             <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput"
                 class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
@@ -127,8 +127,8 @@
         </div>
 
         @if(isset($rumahMakan) && $rumahMakan->gambar)
-        <input type="checkbox" name="hapus_gambar" id="hapus_gambar" value="1" x-ref="hapusGambarCheckbox"
-            class="hidden">
+            <input type="checkbox" name="hapus_gambar" id="hapus_gambar" value="1" x-ref="hapusGambarCheckbox"
+                class="hidden">
         @endif
     </div>
 </div>

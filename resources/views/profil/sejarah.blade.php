@@ -249,7 +249,7 @@ $profil->sejarah_img_3,
                 <div class="timeline-item fade-in-up" style="transition-delay: {{ ($index + 1) * 0.15 }}s;">
                     <div class="rounded-lg shadow-lg overflow-hidden bg-white p-2">
                         <a href="{{ asset('storage/' . $image) }}" class="gallery-image-link">
-                            <div class="w-full aspect-square">
+                            <div class="w-full aspect-video">
                                 <img src="{{ asset('storage/' . $image) }}" alt="Gambar Sejarah {{ $index + 1 }}"
                                     class="w-full h-full object-cover transform hover:scale-105 transition-transform duration-300 rounded-md">
                             </div>
