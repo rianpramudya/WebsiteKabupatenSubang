@@ -126,7 +126,7 @@ class BeritaController extends Controller
     {
         // PERBAIKAN: Selalu bersihkan session di halaman indeks kecamatan.
         session()->forget('origin_page_url');
-        
+
         $beritas = $this->beritaRepository->getPaginatedForKecamatan($kecamatan, 9);
 
         return view('berita.index', [

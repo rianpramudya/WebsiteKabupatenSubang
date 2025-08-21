@@ -159,15 +159,12 @@ class StrukturPemerintahanController extends Controller
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
             'jabatan' => 'required|string|max:255',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048|dimensions:ratio=1/1',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'urutan' => 'required|integer|min:0',
-        ], [
-            'foto.dimensions' => 'Ukuran foto tidak valid. Harap gunakan foto dengan rasio 1:1 (persegi).'
         ]);
 
         if ($request->hasFile('foto')) {
-            if ($pejabat->foto)
-                Storage::disk('public')->delete($pejabat->foto);
+            if ($pejabat->foto) Storage::disk('public')->delete($pejabat->foto);
             $validated['foto'] = $request->file('foto')->store('pejabat', 'public');
         }
 
