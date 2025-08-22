@@ -13,7 +13,10 @@
 @section('title', 'Kelola Banner ' . $tenantType . ' ' . $tenant->name)
 
 @section('content')
-<div class="bg-gray-50 min-h-screen">
+{{-- ======================================================= --}}
+{{-- PERBAIKAN 1: x-data dipindahkan ke pembungkus utama --}}
+{{-- ======================================================= --}}
+<div class="bg-gray-50 min-h-screen" x-data="bannerData()">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-800 leading-tight">Kelola Banner</h1>
@@ -23,8 +26,7 @@
         </div>
 
         <div class="max-w-4xl mx-auto">
-            {{-- Form utama dengan scope AlpineJS --}}
-            <form x-data="bannerData()" action="{{ $updateRoute }}" method="POST"
+            <form action="{{ $updateRoute }}" method="POST"
                 enctype="multipart/form-data" class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg relative">
                 @csrf
                 @method('PUT')
@@ -46,9 +48,11 @@
                 @endif
 
                 <div class="space-y-8">
+                    {{-- File _form.blade.php sekarang tidak perlu x-data lagi --}}
                     @include('admin.banner_CRUD._form', ['tenant' => $tenant])
                 </div>
 
+                {{-- Modal untuk konfirmasi hapus --}}
                 @if($tenant->banner_url)
                 <div x-show="showDeleteModal" x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -57,13 +61,7 @@
                     class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center bg-gray-900 bg-opacity-75"
                     aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
                     
-                    {{-- Konten Modal --}}
-                    <div x-show="showDeleteModal" x-transition:enter="ease-out duration-300"
-                        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                        x-transition:leave="ease-in duration-200"
-                        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                    <div x-show="showDeleteModal" x-transition
                         class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                             <div class="sm:flex sm:items-start">
@@ -79,14 +77,11 @@
                             </div>
                         </div>
                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                            {{-- PERBAIKAN 1: Logika klik diubah menjadi JavaScript standar --}}
                             <button @click="document.getElementById('delete-banner-form').submit()" type="button"
-                                    {{-- PERBAIKAN 3: Efek Hover & Styling ditambahkan --}}
                                     class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors duration-300">
                                 Ya, Hapus
                             </button>
                             <button @click="showDeleteModal = false" type="button"
-                                    {{-- PERBAIKAN 4: Efek Hover & Styling ditambahkan --}}
                                     class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm transition-colors duration-300">
                                 Batal
                             </button>
@@ -97,7 +92,6 @@
             </form>
 
             @if($tenant->banner_url)
-            {{-- PERBAIKAN 2: Form hapus diberi ID agar bisa dipanggil oleh tombol modal --}}
             <form id="delete-banner-form" action="{{ $destroyRoute }}" method="POST" style="display: none;">
                 @csrf
                 @method('DELETE')
@@ -109,7 +103,9 @@
 @endsection
 
 @push('scripts-footer')
-{{-- Script AlpineJS tidak perlu diubah, sudah benar --}}
+{{-- ======================================================= --}}
+{{-- PERBAIKAN 2: Kode JavaScript yang lengkap dan berfungsi --}}
+{{-- ======================================================= --}}
 <script>
     function bannerData() {
         return {
@@ -118,25 +114,56 @@
             showDeleteModal: false,
             newImagePreview: null,
             newVideoPreview: null,
+            validationError: '',
 
-            handleFileSelect(event) { this.setFile(event.target.files[0]); },
+            handleFileSelect(event) {
+                this.validationError = '';
+                this.setFile(event.target.files[0]);
+            },
+
             handleDrop(event) {
-                event.preventDefault(); this.isDragging = false;
+                event.preventDefault();
+                this.isDragging = false;
                 if (event.dataTransfer.files.length > 0) {
                     const file = event.dataTransfer.files[0];
                     document.getElementById('banner_file').files = event.dataTransfer.files;
+                    this.validationError = '';
                     this.setFile(file);
                 }
             },
+
             setFile(file) {
-                if (!file) return;
-                this.newImagePreview = null; this.newVideoPreview = null;
+                if (!file) {
+                    this.validationError = ''; // Hapus error jika user batal pilih file
+                    return;
+                }
+                this.newImagePreview = null;
+                this.newVideoPreview = null;
+                
+                const targetAspectRatio = 3 / 1;
+                const tolerance = 0.05;
+                const fileInput = document.getElementById('banner_file');
+
                 if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => this.newImagePreview = e.target.result;
-                    reader.readAsDataURL(file);
+                    const img = new Image();
+                    img.onload = () => {
+                        const aspectRatio = img.width / img.height;
+                        if (Math.abs(aspectRatio - targetAspectRatio) > tolerance) {
+                            this.validationError = `Rasio gambar (${img.width}x${img.height}) tidak sesuai. Harap gunakan rasio 3:1.`;
+                            this.newImagePreview = null;
+                            fileInput.value = null;
+                        } else {
+                            this.validationError = ''; 
+                            this.newImagePreview = img.src;
+                        }
+                    };
+                    img.src = URL.createObjectURL(file);
                 } else if (file.type.startsWith('video/')) {
+                    this.validationError = '';
                     this.newVideoPreview = URL.createObjectURL(file);
+                } else {
+                    this.validationError = 'Tipe file tidak didukung.';
+                    fileInput.value = null;
                 }
             }
         }
