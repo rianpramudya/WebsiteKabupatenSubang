@@ -23,6 +23,10 @@
         opacity: 1;
         transform: translateY(0);
     }
+    /* Menambahkan transisi untuk max-height */
+    .collapsible-content {
+        transition: max-height 0.5s ease-in-out;
+    }
 </style>
 @endpush
 
@@ -36,14 +40,13 @@
             </h1>
         </div>
 
-        {{-- [FIX] Kondisi yang salah dihapus, sekarang menampilkan data untuk semua jenis tenant --}}
         @if($tenant)
             <div class="bg-white p-6 rounded-lg shadow-md mb-8 animated-fade">
                 <h2 class="text-2xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mr-3 text-[#1E4E7C]" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     Peta Wilayah
@@ -51,7 +54,7 @@
                 <div class="rounded-lg overflow-hidden bg-gray-200 h-[500px]">
                     @if ($tenant->peta_url)
                     <iframe src="{{ $tenant->peta_url }}" width="100%" height="100%" style="border:0;" allowfullscreen
-                        loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full h-full"></iframe>
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade" class="w-full h-full"></iframe>
                     @else
                     <div class="flex items-center justify-center h-full text-gray-500 text-center p-4 bg-gray-100">
                         <p>Peta wilayah untuk <strong>{{ $tenant->name }}</strong> belum tersedia.</p>
@@ -60,38 +63,77 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {{-- Iklim --}}
-                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                {{-- [MODIFIKASI] Blok Letak Geografis dengan Tombol "Read More" --}}
+                <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
+                    <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.707 4.293l.536-.536a2 2 0 012.828 0l.536.536m-2.121 4.243l.536.536a2 2 0 002.828 0l.536-.536m-6.364 6.364l.536.536a2 2 0 012.828 0l.536-.536m-2.121-4.243l-.536.536a2 2 0 000 2.828l.536.536" /></svg>
+                        Letak Geografis
+                    </h3>
+                    <div class="relative flex-grow">
+                        <div x-ref="content" class="text-gray-600 prose max-w-none overflow-hidden collapsible-content" :style="expanded ? 'max-height: ' + $refs.content.scrollHeight + 'px' : 'max-height: 96px'">
+                            {!! $tenant->letak_geografis ?: '<p>Informasi letak geografis untuk wilayah ini belum tersedia.</p>' !!}
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" x-show="!expanded && isLong"></div>
+                    </div>
+                    <button @click="expanded = !expanded" x-show="isLong" class="mt-4 text-sm font-semibold text-[#1E4E7C] hover:text-[#FF3B00] transition group self-start">
+                        <span x-text="expanded ? 'Tampilkan lebih sedikit' : 'Tampilkan selengkapnya'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1 transition-transform" :class="{ 'rotate-180': expanded }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
+                </div>
+
+                {{-- [MODIFIKASI] Blok Iklim dengan Tombol "Read More" --}}
+                <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>
                         Iklim
                     </h3>
-                    <div class="text-gray-600 prose max-w-none flex-grow">
-                        {!! $tenant->iklim ?: '<p>Informasi iklim untuk wilayah ini belum tersedia.</p>' !!}
+                    <div class="relative flex-grow">
+                        <div x-ref="content" class="text-gray-600 prose max-w-none overflow-hidden collapsible-content" :style="expanded ? 'max-height: ' + $refs.content.scrollHeight + 'px' : 'max-height: 96px'">
+                            {!! $tenant->iklim ?: '<p>Informasi iklim untuk wilayah ini belum tersedia.</p>' !!}
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" x-show="!expanded && isLong"></div>
                     </div>
+                    <button @click="expanded = !expanded" x-show="isLong" class="mt-4 text-sm font-semibold text-[#1E4E7C] hover:text-[#FF3B00] transition group self-start">
+                        <span x-text="expanded ? 'Tampilkan lebih sedikit' : 'Tampilkan selengkapnya'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1 transition-transform" :class="{ 'rotate-180': expanded }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
                 </div>
 
-                {{-- Demografi --}}
-                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
+                {{-- [MODIFIKASI] Blok Demografi dengan Tombol "Read More" --}}
+                <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                         Demografi
                     </h3>
-                    <div class="text-gray-600 prose max-w-none flex-grow">
-                        {!! $tenant->demografi ?: '<p>Informasi demografi untuk wilayah ini belum tersedia.</p>' !!}
+                    <div class="relative flex-grow">
+                        <div x-ref="content" class="text-gray-600 prose max-w-none overflow-hidden collapsible-content" :style="expanded ? 'max-height: ' + $refs.content.scrollHeight + 'px' : 'max-height: 96px'">
+                            {!! $tenant->demografi ?: '<p>Informasi demografi untuk wilayah ini belum tersedia.</p>' !!}
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" x-show="!expanded && isLong"></div>
                     </div>
+                    <button @click="expanded = !expanded" x-show="isLong" class="mt-4 text-sm font-semibold text-[#1E4E7C] hover:text-[#FF3B00] transition group self-start">
+                        <span x-text="expanded ? 'Tampilkan lebih sedikit' : 'Tampilkan selengkapnya'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1 transition-transform" :class="{ 'rotate-180': expanded }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
                 </div>
 
-                {{-- Topografi --}}
-                <div class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
+                {{-- [MODIFIKASI] Blok Topografi dengan Tombol "Read More" --}}
+                <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
                         Topografi
                     </h3>
-                    <div class="text-gray-600 prose max-w-none flex-grow">
-                        {!! $tenant->topografi ?: '<p>Informasi topografi untuk wilayah ini belum tersedia.</p>' !!}
+                    <div class="relative flex-grow">
+                        <div x-ref="content" class="text-gray-600 prose max-w-none overflow-hidden collapsible-content" :style="expanded ? 'max-height: ' + $refs.content.scrollHeight + 'px' : 'max-height: 96px'">
+                            {!! $tenant->topografi ?: '<p>Informasi topografi untuk wilayah ini belum tersedia.</p>' !!}
+                        </div>
+                        <div class="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" x-show="!expanded && isLong"></div>
                     </div>
+                    <button @click="expanded = !expanded" x-show="isLong" class="mt-4 text-sm font-semibold text-[#1E4E7C] hover:text-[#FF3B00] transition group self-start">
+                        <span x-text="expanded ? 'Tampilkan lebih sedikit' : 'Tampilkan selengkapnya'"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block ml-1 transition-transform" :class="{ 'rotate-180': expanded }" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                    </button>
                 </div>
             </div>
         @else
@@ -104,6 +146,8 @@
 @endsection
 
 @push('scripts')
+{{-- Menambahkan AlpineJS untuk fungsionalitas interaktif --}}
+<script src="//unpkg.com/alpinejs" defer></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const items = document.querySelectorAll('.animated-fade');

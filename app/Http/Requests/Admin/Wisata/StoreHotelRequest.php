@@ -19,7 +19,7 @@ class StoreHotelRequest extends FormRequest
             'deskripsi' => ['required', 'string'],
             'alamat' => ['required', 'string'], // Dihapus max:255 karena menggunakan Trix
             'telepon' => ['nullable', 'string', 'max:20'],
-            'url_website' => ['nullable', 'url', 'max:255'],
+            'website_url' => ['nullable', 'url', 'max:255'],
             
             // MODIFIKASI DIMULAI DI SINI
             'gambar' => [
