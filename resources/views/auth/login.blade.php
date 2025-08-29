@@ -25,11 +25,30 @@
 
 <body class="min-h-screen flex items-center justify-center p-4">
     <div class="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl p-8 md:p-10 w-full max-w-md animate-fade-in-up border border-gray-200">
-        <div class="text-center mb-8">
-            <img src="https://3.bp.blogspot.com/-ZWU-FSwZ4bc/VFZZ0UDcJZI/AAAAAAAAEns/0NNAGSfyoxA/s1600/logo-Pemerintah-Kabupaten-Subang.png" alt="Logo Kabupaten Subang" class="h-24 mx-auto mb-4" onerror="this.onerror=null;this.src='https://placehold.co/96x96/e2e8f0/e2e8f0?text=Logo';">
-            <h1 class="text-2xl font-bold text-[#1E4E7C]">Portal Administratif</h1>
-            <p class="text-sm text-gray-500 mt-1">Silakan login untuk melanjutkan</p>
+       <div class="mb-8">
+    {{-- Logo dan Nama Instansi --}}
+    <div class="flex justify-center">
+        {{-- Tag <a> diubah menjadi <div> agar tidak bisa diklik --}}
+        <div class="flex items-center space-x-4">
+            <img src="{{ asset('img/logo.png') }}" class="h-20 w-auto"
+                alt="Logo Pemerintah Kabupaten Subang"
+                onerror="this.onerror=null;this.src='https://placehold.co/80x80/e2e8f0/e2e8f0?text=Logo';">
+
+            <div class="font-bold text-[#1E4E7C] leading-tight text-left">
+                <div class="text-sm">Pemerintah Daerah</div>
+                <div class="text-xl">Kabupaten Subang</div>
+            </div>
         </div>
+    </div>
+
+    {{-- Judul Halaman Login --}}
+    <h1 class="text-center text-2xl font-bold text-[#1E4E7C] mt-6">
+        Portal Administratif
+    </h1>
+    <p class="text-center text-sm text-gray-500 mt-1">
+        Silakan login untuk melanjutkan
+    </p>
+</div>
 
         @if ($errors->any())
         <div class="bg-[#E20E0D]/10 border-l-4 border-[#E20E0D] text-[#c41a19] px-4 py-3 rounded-lg relative mb-6" role="alert">
