@@ -217,7 +217,7 @@ $video_id = $kabupaten->youtube_video_id ?? null;
 @endphp
 
 <div
-    class="relative w-full h-[60vh] md:h-[50vh] text-white flex items-center justify-center text-center overflow-hidden">
+    class="relative w-full min-h-[60vh] md:min-h-[50vh] text-white flex items-center justify-center text-center py-32 md:py-40">
 
     {{-- LAYER 1: Latar Belakang Dinamis (Paling Belakang) --}}
     <div class="absolute inset-0 w-full h-full bg-black z-0">
@@ -268,12 +268,13 @@ $video_id = $kabupaten->youtube_video_id ?? null;
 
 {{-- BAGIAN KONTEN UTAMA --}}
 <div class="bg-gray-100">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-32 relative z-10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-20 md:-mt-24 lg:-mt-32 relative z-10">
 
         {{-- BAGIAN BERITA TERKINI --}}
         <div class="mb-20">
-            <h2 class="text-3xl font-bold text-white drop-shadow text-center mb-10 anim-fade-in-up"
-                style="--anim-delay: 600ms;">Berita Terkini</h2>
+            <h2 class="text-3xl font-bold text-white/80 drop-shadow text-center mb-10 anim-fade-in-up" ...>
+                Berita Terkini
+            </h2>
             @if($beritaTerkini->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($beritaTerkini as $berita)
