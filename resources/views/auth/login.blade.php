@@ -24,7 +24,7 @@
 </head>
 
 <body class="min-h-screen flex items-center justify-center p-4">
-    <div class="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl p-8 md:p-10 w-full max-w-md animate-fade-in-up border border-gray-200">
+   <div class="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl p-8 md:p-10 w-full sm:w-[420px] animate-fade-in-up border border-gray-200">
        <div class="mb-8">
     {{-- Logo dan Nama Instansi --}}
     <div class="flex justify-center">
