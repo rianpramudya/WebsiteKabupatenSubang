@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class KontakController extends Controller
 {
-    // [PERBAIKAN] Izinkan return type untuk menjadi null
     private function getTenant(Request $request): ?Model
     {
         if ($perangkatDaerah = $request->route('perangkatDaerah')) {
@@ -19,13 +18,12 @@ class KontakController extends Controller
         return $request->route('kecamatan');
     }
 
-    // [DIPERBAIKI] Izinkan $tenant menjadi null
     private function getRouteName(?Model $tenant, string $action): string
     {
         if ($tenant instanceof Kecamatan) {
             return $tenant->slug === 'kabupaten-subang'
                 ? "admin.kabupaten.kontak.{$action}"
-                : "admin.kecamatan.kontak.{$action}"; // <-- PERBAIKAN DI SINI
+                : "admin.kecamatan.kontak.{$action}";
         }
         if ($tenant instanceof PerangkatDaerah) {
             return "admin.perangkat-daerah.kontak.{$action}";
@@ -33,7 +31,6 @@ class KontakController extends Controller
         return "admin.kabupaten.kontak.{$action}";
     }
 
-    // [DIPERBAIKI] Izinkan $tenant menjadi null
     private function getRouteParameters(?Model $tenant): array
     {
         if ($tenant instanceof Kecamatan && $tenant->slug !== 'kabupaten-subang') {
@@ -49,7 +46,6 @@ class KontakController extends Controller
     {
         $tenant = $this->getTenant($request);
 
-        // [PERBAIKAN] Jika tidak ada tenant dari rute, berarti ini konteks Kabupaten.
         if (!$tenant) {
             $tenant = Kecamatan::where('slug', 'kabupaten-subang')->firstOrFail();
         }
@@ -62,7 +58,6 @@ class KontakController extends Controller
     {
         $tenant = $this->getTenant($request);
 
-        // [PERBAIKAN] Jika tidak ada tenant dari rute, berarti ini konteks Kabupaten.
         if (!$tenant) {
             $tenant = Kecamatan::where('slug', 'kabupaten-subang')->firstOrFail();
         }

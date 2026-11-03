@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\PerangkatDaerah;
 use App\Models\Berita;
 use App\Repositories\BudayaRepository;
 use App\Repositories\HotelRepository;
@@ -31,9 +31,6 @@ class WisataController extends Controller
         $this->rumahMakanRepository = $rumahMakanRepository;
     }
 
-    /**
-     * [BARU] Helper function terpusat untuk mendapatkan konteks.
-     */
     private function getContext(Request $request): Kecamatan|PerangkatDaerah|null
     {
         if ($request->route('perangkatDaerah') instanceof PerangkatDaerah) {
@@ -49,9 +46,6 @@ class WisataController extends Controller
         return null;
     }
 
-    /**
-     * [MODIFIKASI] Helper untuk berita terkini yang sadar konteks.
-     */
     private function getBeritaTerkini(Kecamatan|PerangkatDaerah|null $context)
     {
         $query = Berita::query()->latest('published_at')->take(5);
@@ -62,14 +56,14 @@ class WisataController extends Controller
         if ($context instanceof Kecamatan) {
             return $query->where('kecamatan_id', $context->id)->get();
         }
-        
+
         return $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id')->get();
     }
 
     public function seniDanBudaya(Request $request): View
     {
         $context = $this->getContext($request);
-        
+
         if ($context instanceof PerangkatDaerah) {
             $budayas = $this->budayaRepository->getPaginatedForPerangkatDaerah($context);
         } elseif ($context instanceof Kecamatan) {
@@ -109,7 +103,7 @@ class WisataController extends Controller
     public function hotel(Request $request): View
     {
         $context = $this->getContext($request);
-        
+
         if ($context instanceof PerangkatDaerah) {
             $hotels = $this->hotelRepository->getPaginatedForPerangkatDaerah($context, $request);
         } elseif ($context instanceof Kecamatan) {
@@ -137,7 +131,7 @@ class WisataController extends Controller
         } else {
             $rumah_makans = $this->rumahMakanRepository->getPaginatedForKabupaten($request);
         }
-        
+
         return view('wisata.rumah_makan', [
             'rumah_makans'     => $rumah_makans,
             'berita_terkini'   => $this->getBeritaTerkini($context),

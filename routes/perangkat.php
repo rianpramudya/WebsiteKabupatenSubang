@@ -2,9 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// ==============================
-// Import Controller Publik
-// ==============================
 use App\Http\Controllers\{
     PerangkatController,
     BeritaController,
@@ -17,9 +14,6 @@ use App\Http\Controllers\{
     PortalController
 };
 
-// ==============================
-// Import Controller Admin (Lengkap)
-// ==============================
 use App\Http\Controllers\Admin\{
     ProfilController as AdminProfilController,
     BeritaController as AdminBeritaController,
@@ -38,24 +32,10 @@ use App\Http\Controllers\Admin\{
 };
 use App\Models\PerangkatDaerah;
 
-/*
-|--------------------------------------------------------------------------
-| RUTE SUBDOMAIN PERANGKAT DAERAH
-|--------------------------------------------------------------------------
-*/
-
 Route::domain('{perangkatDaerah}.' . env('APP_DOMAIN', 'subang.go.id'))
-    // ======================================================================
-    // === PERBAIKAN UTAMA ADA DI SINI ======================================
-    // ======================================================================
     ->whereIn('perangkatDaerah', PerangkatDaerah::pluck('slug')->all())
     ->group(function () {
 
-        /*
-    |--------------------------------------------------------------------------
-    | RUTE PUBLIK PERANGKAT DAERAH
-    |--------------------------------------------------------------------------
-    */
         Route::middleware('set.tenant.context:perangkat_daerah')
             ->group(function () {
                 Route::get('/', [PerangkatController::class, 'show'])->name('perangkat.show');
@@ -85,11 +65,6 @@ Route::domain('{perangkatDaerah}.' . env('APP_DOMAIN', 'subang.go.id'))
                 Route::get('/statistik', [PortalController::class, 'statistik'])->name('perangkat.statistik');
             });
 
-        /*
-    |--------------------------------------------------------------------------
-    | RUTE ADMIN PERANGKAT DAERAH
-    |--------------------------------------------------------------------------
-    */
         Route::middleware(['auth', 'set.tenant.context:perangkat_daerah', 'auth.perangkat_daerah'])
             ->prefix('admin')->name('admin.perangkat-daerah.')->group(function () {
                 Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil.index');

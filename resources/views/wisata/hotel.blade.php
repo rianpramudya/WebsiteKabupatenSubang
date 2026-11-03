@@ -38,7 +38,7 @@
                 </form>
 
                 @forelse ($hotels as $item)
-                {{-- PERBAIKAN 1: Menghapus e() agar HTML bisa dibaca JavaScript --}}
+
                 <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group cursor-pointer anim-fade-in-up hotel-card"
                     @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])
                     data-nama="{{ $item->nama }}"
@@ -64,7 +64,7 @@
                                 </div>
                                 @endif
                             </div>
-                            {{-- Menggunakan {!! !!} agar tag HTML tidak ikut ditampilkan di preview singkat --}}
+
                             <p class="text-sm text-gray-500 mt-1 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {!! Str::limit(strip_tags($item->alamat), 50) !!}</p>
                             <p class="text-sm text-gray-600 leading-relaxed">{!! Str::limit(strip_tags($item->deskripsi), 150) !!}</p>
                         </div>
@@ -102,7 +102,7 @@
                     </ul>
                 </div>
             </aside>
-            
+
         </div>
     </div>
 </div>
@@ -119,7 +119,7 @@
                     <span id="modal-bintang-text"></span>
                 </div>
             </div>
-            
+
             <div class="text-gray-600 space-y-4">
                 <div id="modal-alamat" class="prose max-w-none"></div>
                 <div id="modal-deskripsi" class="prose max-w-none mt-4"></div>
@@ -146,8 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!modal) return;
 
     const cards = document.querySelectorAll('.hotel-card');
-    
-    // Elemen di dalam Modal
+
     const modalNama = document.getElementById('modal-nama');
     const modalGambar = document.getElementById('modal-gambar');
     const modalBintangContainer = document.getElementById('modal-bintang-container');
@@ -166,15 +165,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const deskripsi = card.dataset.deskripsi || '<p>Deskripsi tidak tersedia.</p>';
         const telepon = card.dataset.telepon;
         const website = card.dataset.website;
-        
+
         modalNama.textContent = nama;
         modalGambar.src = gambar;
         modalGambar.alt = "Gambar " + nama;
-        
-        // PERBAIKAN 2: Menggunakan innerHTML agar tag <div>, <p>, dll. dirender
+
         modalAlamat.innerHTML = `<div class="flex items-start"><i class="fas fa-map-marker-alt mr-3 text-gray-400 mt-1"></i><div>${alamat}</div></div>`;
         modalDeskripsi.innerHTML = deskripsi;
-        
+
         if (bintang && bintang !== 'null' && bintang !== '0' && bintang !== '') {
             modalBintangText.textContent = bintang;
             modalBintangContainer.style.display = 'flex';
@@ -188,15 +186,14 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             modalTelepon.style.display = 'none';
         }
-        
-        // PERBAIKAN 3: Logika untuk menampilkan tombol website
+
         if (website && website.trim() !== '') {
             modalWebsite.href = website;
             modalWebsite.style.display = 'inline-flex';
         } else {
             modalWebsite.style.display = 'none';
         }
-        
+
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }

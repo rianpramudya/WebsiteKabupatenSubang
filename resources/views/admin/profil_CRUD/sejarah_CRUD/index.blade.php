@@ -1,17 +1,13 @@
 @extends('layouts.app')
 
 @php
-    // [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
     if ($tenant instanceof \App\Models\Kecamatan && $tenant->slug !== 'kabupaten-subang') {
-        // Ini untuk Kecamatan biasa
         $baseRouteName = 'admin.kecamatan.';
         $routeParameters = ['kecamatan' => $tenant->slug];
     } elseif ($tenant instanceof \App\Models\PerangkatDaerah) {
-        // Ini untuk Perangkat Daerah
         $baseRouteName = 'admin.perangkat-daerah.';
         $routeParameters = ['perangkatDaerah' => $tenant->slug];
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.';
         $routeParameters = []; // Rute kabupaten tidak butuh parameter
     }
@@ -21,8 +17,7 @@
 
 @section('content')
 <div id="page-content" class="container mx-auto px-4 py-8">
-    
-    {{-- [UI/UX] Kartu Sejarah Awal & Lambang dibuat lebih menarik --}}
+
     <div class="mb-8 p-6 bg-white shadow-lg rounded-xl border border-gray-200">
         <div class="flex justify-between items-center mb-4 pb-4 border-b">
             <h2 class="text-2xl font-bold text-gray-800">Sejarah Awal & Lambang</h2>
@@ -30,7 +25,7 @@
                 <i class="fas fa-pencil-alt mr-2"></i> Edit
             </a>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
             <div class="md:col-span-2">
                 <h3 class="text-xl font-semibold text-gray-700">Sejarah Awal</h3>
@@ -52,7 +47,6 @@
         </div>
     </div>
 
-    {{-- [UI/UX] Header untuk Timeline Sejarah --}}
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Kelola Timeline Sejarah</h1>
         <a href="{{ route($baseRouteName . 'profil.sejarah.create', $routeParameters) }}" class="bg-green-600 hover:bg-green-700 text-white rounded-lg font-bold py-2 px-4 transition-colors duration-300 shadow-sm flex items-center">
@@ -66,7 +60,6 @@
         </div>
     @endif
 
-    {{-- [UI/UX] Tabel dibuat lebih modern dengan hover effect --}}
     <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">

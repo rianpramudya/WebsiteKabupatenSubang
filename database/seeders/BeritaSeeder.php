@@ -20,7 +20,6 @@ class BeritaSeeder extends Seeder
         $kecamatanBinong = Kecamatan::where('slug', 'binong')->first();
         $pdArdapus = PerangkatDaerah::where('slug', 'ardapus')->first();
 
-        // === DATA UNTUK KABUPATEN ===
         Berita::create([
             'kategori_berita_id' => $kategoriPemerintahan->id,
             'kecamatan_id' => null,
@@ -32,7 +31,6 @@ class BeritaSeeder extends Seeder
             'published_at' => now()->subDays(1),
         ]);
 
-        // === DATA UNTUK KECAMATAN BINONG ===
         if ($kecamatanBinong) {
             Berita::create([
                 'kategori_berita_id' => $kategoriPemerintahan->id,
@@ -46,7 +44,6 @@ class BeritaSeeder extends Seeder
             ]);
         }
 
-        // === DATA UNTUK PERANGKAT DAERAH ARDAPUS ===
         if ($pdArdapus) {
             Berita::create([
                 'kategori_berita_id' => $kategoriPendidikan->id,

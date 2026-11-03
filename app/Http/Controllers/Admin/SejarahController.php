@@ -14,7 +14,7 @@ use Illuminate\View\View;
 
 class SejarahController extends Controller
 {
-    // Helper methods (getTenant, getRouteName, getRouteParameters) tidak diubah.
+
     private function getTenant(Request $request): ?Model
     {
         return $request->route('kecamatan') ?? $request->route('perangkatDaerah');
@@ -190,9 +190,6 @@ class SejarahController extends Controller
         }
         $this->authorize('update', $tenant);
 
-        // =================================================================
-        //                  MODIFIKASI VALIDASI DI SINI
-        // =================================================================
         $request->validate([
             'sejarah' => 'required|string',
             'arti_lambang' => 'nullable|string',
@@ -206,9 +203,6 @@ class SejarahController extends Controller
             'sejarah_img_2.dimensions' => 'Rasio Gambar Sejarah 2 harus 16:9 (lanskap).',
             'sejarah_img_3.dimensions' => 'Rasio Gambar Sejarah 3 harus 16:9 (lanskap).',
         ]);
-        // =================================================================
-        //                         AKHIR MODIFIKASI
-        // =================================================================
 
         $tenantData = $request->only(['sejarah', 'arti_lambang']);
         if ($request->hasFile('logo')) {

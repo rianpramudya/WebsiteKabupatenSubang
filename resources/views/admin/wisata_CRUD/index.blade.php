@@ -4,12 +4,10 @@
 $tenant = $kecamatan ?? null; // Tetap gunakan variabel tenant Anda
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 
-// Menentukan awalan rute yang benar
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.wisata.' : 'admin.kabupaten.wisata.';
 $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
 @endphp
 
-{{-- Judul halaman sudah dinamis dan aman dari error --}}
 @section('title', 'Kelola Wisata - ' . ($tenant ? $tenant->name : 'Kabupaten'))
 
 @section('content')
@@ -18,7 +16,6 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-800">Kelola Konten Wisata</h1>
 
-        {{-- Deskripsi dinamis ini juga sudah benar --}}
         @if ($tenant)
         <p class="text-gray-600 mt-1">Anda sedang mengelola konten untuk Kecamatan <span class="font-semibold">{{
                 $tenant->name }}</span></p>
@@ -33,13 +30,8 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
     </div>
     @endif
 
-    {{-- ========================================================================= --}}
-    {{-- PERUBAHAN UTAMA: Kartu navigasi sekarang selalu ditampilkan. --}}
-    {{-- Blok @if/@else yang membungkusnya telah dihapus. --}}
-    {{-- ========================================================================= --}}
     <div class="grid grid-cols-1 md-grid-cols-2 lg:grid-cols-2 gap-6">
 
-        {{-- KARTU 1: SENI DAN BUDAYA (Sudah Benar) --}}
         <a href="{{ route($baseRouteName . 'budaya.index', $routeParameters) }}"
             class="block p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
             <div class="flex items-center">
@@ -51,7 +43,6 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
             </div>
         </a>
 
-        {{-- KARTU 2: OBJEK WISATA (Perbaikan) --}}
         <a href="{{ route($baseRouteName . 'objek-wisata.index', $routeParameters) }}"
             class="block p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
             <div class="flex items-center">
@@ -63,7 +54,6 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
             </div>
         </a>
 
-        {{-- KARTU 3: HOTEL (Perbaikan) --}}
         <a href="{{ route($baseRouteName . 'hotel.index', $routeParameters) }}"
             class="block p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
             <div class="flex items-center">
@@ -76,7 +66,6 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
             </div>
         </a>
 
-        {{-- KARTU 4: RUMAH MAKAN (Perbaikan) --}}
         <a href="{{ route($baseRouteName . 'rumah-makan.index', $routeParameters) }}"
             class="block p-6 bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
             <div class="flex items-center">
@@ -92,7 +81,6 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
 </div>
 @endsection
 
-{{-- Kode Style dan Script dipindahkan ke dalam @push agar sesuai dengan standar Laravel --}}
 @push('styles')
 <style>
     @keyframes fadeIn {
@@ -115,21 +103,17 @@ $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : [];
 
 @push('scripts')
 <script>
-    // Script untuk fade out halaman saat link diklik agar transisi lebih mulus
     document.addEventListener('DOMContentLoaded', () => {
-        // Cek jika browser mendukung view transition API
         if (document.startViewTransition) {
             const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not([href*="javascript:void(0)"])');
             links.forEach(link => {
                 link.addEventListener('click', (event) => {
-                    // Cek link yang merupakan bagian dari form atau button submit
                     if (link.closest('form') || link.getAttribute('role') === 'button') {
                         return;
                     }
                     event.preventDefault();
                     const toUrl = new URL(link.href);
 
-                    // Lakukan transisi jika URL-nya sama origin
                     if (location.origin === toUrl.origin) {
                         document.startViewTransition(() => {
                             window.location.href = link.href;

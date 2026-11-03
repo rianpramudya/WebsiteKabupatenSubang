@@ -5,28 +5,25 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Agenda;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // Tambahkan model PerangkatDaerah
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class AgendaSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
-        // Kosongkan tabel sebelum mengisi data baru
+
         DB::table('agendas')->delete();
 
-        // === Seeding untuk Kecamatan ===
         $binong = Kecamatan::where('name', 'Binong')->first();
         $blanakan = Kecamatan::where('name', 'Blanakan')->first();
 
         if ($binong) {
             Agenda::create([
                 'kecamatan_id' => $binong->id,
-                'perangkat_daerah_id' => null, // Pastikan kolom lain diisi null
+                'perangkat_daerah_id' => null,
                 'judul' => 'Rapat Koordinasi Persiapan Lomba Desa Tingkat Kabupaten',
                 'deskripsi' => 'Rapat bersama para kepala desa di Kecamatan Binong untuk membahas persiapan lomba desa.',
                 'tanggal_mulai' => Carbon::parse('2025-07-15'),
@@ -40,7 +37,6 @@ class AgendaSeeder extends Seeder
                 'tanggal_mulai' => Carbon::parse('2025-08-05'),
                 'tanggal_selesai' => Carbon::parse('2025-08-07'),
             ]);
-            // [BARU] Menambahkan agenda di masa depan untuk demonstrasi
             Agenda::create([
                 'kecamatan_id' => $binong->id,
                 'perangkat_daerah_id' => null,
@@ -62,14 +58,13 @@ class AgendaSeeder extends Seeder
             ]);
         }
 
-        // === [PERBAIKAN] Seeding untuk Perangkat Daerah ===
         $ardapus = PerangkatDaerah::where('name', 'Ardapus')->first();
         $disdik = PerangkatDaerah::where('name', 'Dinas Pendidikan dan Kebudayaan')->first();
 
         if ($ardapus) {
             Agenda::create([
                 'perangkat_daerah_id' => $ardapus->id,
-                'kecamatan_id' => null, // Pastikan kolom lain diisi null
+                'kecamatan_id' => null,
                 'judul' => 'Workshop Literasi Digital untuk Pustakawan Sekolah',
                 'deskripsi' => 'Meningkatkan kemampuan pustakawan dalam mengelola sumber daya digital di perpustakaan.',
                 'tanggal_mulai' => Carbon::parse('2025-08-12'),

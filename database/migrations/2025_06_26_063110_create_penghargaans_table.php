@@ -11,10 +11,9 @@ return new class extends Migration
         Schema::create('penghargaans', function (Blueprint $table) {
             $table->id();
 
-            // [PERBAIKAN] Ganti tenant_id dengan relasi yang jelas
             $table->foreignId('perangkat_daerah_id')->nullable()->constrained('perangkat_daerahs')->onDelete('cascade');
             $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
-            
+
             $table->string('nama_penghargaan');
             $table->year('tahun');
             $table->string('tingkat');

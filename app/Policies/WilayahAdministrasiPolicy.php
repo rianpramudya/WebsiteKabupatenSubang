@@ -20,7 +20,7 @@ class WilayahAdministrasiPolicy
 
     public function viewAny(User $user): bool
     {
-        // Izinkan untuk kedua jenis admin
+
         return $user->hasAnyRole(['admin-kecamatan', 'admin-perangkat-daerah']);
     }
 
@@ -31,13 +31,13 @@ class WilayahAdministrasiPolicy
 
     public function create(User $user): bool
     {
-        // Izinkan untuk kedua jenis admin
+
         return $user->hasAnyRole(['admin-kecamatan', 'admin-perangkat-daerah']);
     }
 
     public function update(User $user, WilayahAdministrasi $wilayahAdministrasi): bool
     {
-        // Cek kepemilikan berdasarkan peran
+
         if ($user->hasRole('admin-kecamatan')) {
             return $user->kecamatan_id === $wilayahAdministrasi->kecamatan_id;
         }

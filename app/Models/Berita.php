@@ -20,7 +20,7 @@ class Berita extends Model
     protected $fillable = [
         'kategori_berita_id',
         'kecamatan_id',
-        'perangkat_daerah_id', // <-- INI YANG DITAMBAHKAN
+        'perangkat_daerah_id',
         'judul',
         'slug',
         'excerpt',
@@ -39,36 +39,24 @@ class Berita extends Model
         'published_at' => 'datetime',
     ];
 
-    /**
-     * Terapkan global scope Tenant untuk admin-kecamatan
-     */
     protected static function booted(): void
     {
         static::addGlobalScope(new TenantScope);
     }
 
-    /**
-     * Relasi: Berita milik satu Kategori Berita
-     */
     public function kategori(): BelongsTo
     {
         return $this->belongsTo(KategoriBerita::class, 'kategori_berita_id');
     }
 
-    /**
-     * Relasi: Berita milik satu Kecamatan
-     */
     public function kecamatan(): BelongsTo
     {
         return $this->belongsTo(Kecamatan::class, 'kecamatan_id');
     }
 
-    /**
-     * Relasi ke PerangkatDaerah (jika berita ini milik perangkat daerah).
-     */
     public function perangkatDaerah(): BelongsTo
     {
-        // Menambahkan tipe return BelongsTo untuk konsistensi
+
         return $this->belongsTo(PerangkatDaerah::class, 'perangkat_daerah_id');
     }
 }

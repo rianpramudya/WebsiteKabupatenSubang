@@ -1,5 +1,4 @@
 @php
-// [PERBAIKAN] Logika lengkap untuk menangani semua level peran
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $routePrefix = $isKecamatan ? 'admin.kecamatan.berita' : 'admin.perangkat-daerah.berita';

@@ -13,7 +13,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Super Admin
+
         $superAdmin = User::updateOrCreate(
             ['email' => 'superadmin@subang.go.id'],
             [
@@ -25,7 +25,6 @@ class UserSeeder extends Seeder
         );
         $superAdmin->assignRole('super-admin');
 
-        // 2. Admin Kecamatan
         $this->command->info('Membuat user untuk Admin Kecamatan...');
         $kecamatans = Kecamatan::where('slug', '!=', 'kabupaten-subang')->get();
 
@@ -43,7 +42,6 @@ class UserSeeder extends Seeder
         }
         $this->command->info('User Admin Kecamatan selesai dibuat.');
 
-        // 3. Admin Perangkat Daerah
         $this->command->info('Membuat user untuk Admin Perangkat Daerah...');
         $perangkatDaerahs = PerangkatDaerah::all();
 

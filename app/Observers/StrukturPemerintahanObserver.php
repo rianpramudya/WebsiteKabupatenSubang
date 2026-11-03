@@ -5,7 +5,7 @@ namespace App\Observers;
 use App\Models\Pejabat;
 use App\Repositories\StrukturPemerintahanRepository;
 
-class StrukturPemerintahanObserver // <-- NAMA KELAS DIUBAH
+class StrukturPemerintahanObserver
 {
     protected StrukturPemerintahanRepository $strukturPemerintahanRepository;
 
@@ -14,25 +14,16 @@ class StrukturPemerintahanObserver // <-- NAMA KELAS DIUBAH
         $this->strukturPemerintahanRepository = new StrukturPemerintahanRepository();
     }
 
-    /**
-     * Handle the Pejabat "created" event.
-     */
     public function created(Pejabat $pejabat): void
     {
         $this->strukturPemerintahanRepository->clearCache();
     }
 
-    /**
-     * Handle the Pejabat "updated" event.
-     */
     public function updated(Pejabat $pejabat): void
     {
         $this->strukturPemerintahanRepository->clearCache();
     }
 
-    /**
-     * Handle the Pejabat "deleted" event.
-     */
     public function deleted(Pejabat $pejabat): void
     {
         $this->strukturPemerintahanRepository->clearCache();

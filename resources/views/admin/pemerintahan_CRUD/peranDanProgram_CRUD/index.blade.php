@@ -1,31 +1,27 @@
 @php
-    // [PERBAIKAN] Blok ini dipindahkan ke baris paling atas dan disempurnakan
     if ($tenant) {
         $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
         $baseRouteName = $isKecamatan ? 'admin.kecamatan.pemerintahan.' : 'admin.perangkat-daerah.pemerintahan.';
         $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
         $tenantName = $tenant->name;
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.pemerintahan.';
         $routeParameters = [];
         $tenantName = 'Kabupaten';
     }
-    // Variabel spesifik untuk CRUD Peran & Program
     $crudRoutePrefix = $baseRouteName . 'peran-program';
 @endphp
 
 @extends('layouts.app')
 
-{{-- [FIXED] Sekarang menggunakan $tenantName yang sudah pasti ada --}}
 @section('title', 'Kelola Peran dan Program - ' . $tenantName)
 
 @section('content')
     <div id="page-content" class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="flex justify-between items-center mb-6">
-            {{-- [FIXED] Judul sekarang menggunakan $tenantName --}}
+
             <h1 class="text-2xl font-bold text-gray-800">Peran dan Program (Tupoksi) {{ $tenantName }}</h1>
-            {{-- [FIXED] Tautan sekarang menggunakan variabel yang aman --}}
+
             <a href="{{ route($crudRoutePrefix . '.create', $routeParameters) }}"
                class="bg-[#1E4E7C] hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                 <i class="fas fa-plus mr-2"></i> Tambah Data
@@ -54,7 +50,7 @@
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $item->judul }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ Str::limit(str_replace('&nbsp;', ' ', strip_tags($item->deskripsi)), 100) }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                    {{-- [FIXED] Tautan sekarang menggunakan variabel yang aman --}}
+
                                     <a href="{{ route($crudRoutePrefix . '.edit', array_merge($routeParameters, ['peranProgram' => $item->id])) }}"
                                        class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
                                     <form
@@ -77,9 +73,8 @@
         </div>
     </div>
 
-    
     <style>
-        /* Keyframes untuk animasi fade-in dan fade-out */
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -100,11 +95,11 @@
                 transform: translateY(10px);
             }
         }
-        /* Terapkan animasi fade-in saat halaman dimuat */
+
         #page-content {
             animation: fadeIn 0.5s ease-out forwards;
         }
-        /* Terapkan animasi fade-out saat body memiliki kelas 'fading-out' */
+
         body.fading-out #page-content {
             animation: fadeOut 0.5s ease-out forwards;
         }
@@ -117,7 +112,6 @@
 
             links.forEach(link => {
                 link.addEventListener('click', (event) => {
-                    // Cek jika link berada di dalam form atau tabel, jangan lakukan fade
                     if (link.closest('form') || link.closest('td')) {
                         return;
                     }

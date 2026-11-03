@@ -12,17 +12,16 @@ class InfografisSeeder extends Seeder
 {
     public function run(): void
     {
-        // Data untuk Kabupaten
+
         Infografis::create([
             'kecamatan_id' => null,
             'judul' => 'Alur Pelayanan Publik Kabupaten Subang',
             'slug' => Str::slug('Alur Pelayanan Publik Kabupaten Subang'),
             'deskripsi' => 'Infografis mengenai alur pelayanan publik terpadu di tingkat kabupaten.',
-            'gambar' => 'infografis/kabupaten-1.jpg', // Ganti dengan path gambar Anda
+            'gambar' => 'infografis/kabupaten-1.jpg',
             'published_at' => now(),
         ]);
 
-        // Data untuk Kecamatan Cibogo
         $kecamatanCibogo = Kecamatan::where('slug', 'cibogo')->first();
         if ($kecamatanCibogo) {
             Infografis::create([
@@ -30,7 +29,7 @@ class InfografisSeeder extends Seeder
                 'judul' => 'Jadwal Pelayanan Kecamatan Cibogo',
                 'slug' => Str::slug('Jadwal Pelayanan Kecamatan Cibogo'),
                 'deskripsi' => 'Jadwal lengkap jam operasional pelayanan administrasi di Kantor Kecamatan Cibogo.',
-                'gambar' => 'infografis/cibogo-1.jpg', // Ganti dengan path gambar Anda
+                'gambar' => 'infografis/cibogo-1.jpg',
                 'published_at' => now(),
             ]);
         }

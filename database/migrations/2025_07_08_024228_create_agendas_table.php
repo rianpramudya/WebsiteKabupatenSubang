@@ -6,25 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('agendas', function (Blueprint $table) {
             $table->id();
 
-            // [PERBAIKAN 1] Tambahkan kolom untuk Perangkat Daerah
-            // Dibuat nullable() karena agenda bisa jadi milik kecamatan ATAU perangkat daerah
             $table->foreignId('perangkat_daerah_id')
-                ->nullable() // Izinkan kolom ini untuk kosong (NULL)
-                ->constrained('perangkat_daerahs') // Hubungkan ke tabel 'perangkat_daerahs'
+                ->nullable()
+                ->constrained('perangkat_daerahs')
                 ->onDelete('cascade');
 
-            // [PERBAIKAN 2] Ubah kolom kecamatan_id agar bisa NULL
             $table->foreignId('kecamatan_id')
-                ->nullable() // Izinkan kolom ini untuk kosong (NULL)
-                ->constrained('kecamatans') // Hubungkan ke tabel 'kecamatans'
+                ->nullable()
+                ->constrained('kecamatans')
                 ->onDelete('cascade');
 
             $table->string('judul');
@@ -35,9 +30,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('agendas');

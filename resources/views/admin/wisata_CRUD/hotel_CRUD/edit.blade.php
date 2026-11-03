@@ -1,5 +1,4 @@
 @php
-    // [PERBAIKAN] Logika lengkap untuk menangani semua level peran
     if ($tenant) {
         $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
         $baseRouteName = $isKecamatan ? 'admin.kecamatan.wisata.' : 'admin.perangkat-daerah.wisata.';
@@ -35,7 +34,6 @@
     </div>
 </div>
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 <style>
     @keyframes fadeIn {
         from {

@@ -23,16 +23,13 @@ class ProfilController extends Controller
         $this->sejarahRepository = $sejarahRepository;
     }
 
-    /**
-     * Helper ini HANYA untuk mendapatkan data yang akan DITAMPILKAN di halaman.
-     */
     private function getProfilData(Request $request): Model
     {
         $tenant = $request->route('kecamatan') ?? $request->route('perangkatDaerah');
         if ($tenant) {
             return $tenant;
         }
-        // Jika tidak ada tenant dari URL, ini adalah halaman Kabupaten.
+
         return Kecamatan::where('slug', 'kabupaten-subang')->firstOrFail();
     }
 
@@ -41,7 +38,6 @@ class ProfilController extends Controller
         $profilData = $this->getProfilData($request);
         $sejarah_items = $this->sejarahRepository->getSejarahItems($profilData);
 
-        // Ambil konteks HANYA dari rute untuk navigasi
         $navContext = $request->route('kecamatan') ?? $request->route('perangkatDaerah');
 
         return view('profil.sejarah', [
@@ -58,7 +54,7 @@ class ProfilController extends Controller
         $navContext = $request->route('kecamatan') ?? $request->route('perangkatDaerah');
 
         return view('profil.wilayah', [
-            'tenant'                 => $profilData, // View ini menggunakan 'tenant' untuk menampilkan data
+            'tenant'                 => $profilData,
             'currentKecamatan'       => ($navContext instanceof Kecamatan) ? $navContext : null,
             'currentPerangkatDaerah' => ($navContext instanceof PerangkatDaerah) ? $navContext : null,
         ]);

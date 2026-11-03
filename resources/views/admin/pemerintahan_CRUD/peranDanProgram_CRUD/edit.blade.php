@@ -1,27 +1,23 @@
 @php
-// [PERBAIKAN] Blok ini dipindahkan ke baris paling atas dan disempurnakan
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.pemerintahan.' : 'admin.perangkat-daerah.pemerintahan.';
 $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
 $tenantName = $tenant->name;
 } else {
-// Ini untuk level Kabupaten
 $baseRouteName = 'admin.kabupaten.pemerintahan.';
 $routeParameters = [];
 $tenantName = 'Kabupaten';
 }
-// Variabel spesifik untuk CRUD Peran & Program
 $crudRoutePrefix = $baseRouteName . 'peran-program';
 @endphp
 
 @extends('layouts.app')
 
-{{-- [FIXED] Sekarang menggunakan $tenantName yang sudah pasti ada --}}
 @section('title', 'Edit Peran & Program - ' . $tenantName)
 
 @push('styles')
-{{-- Memuat CSS untuk Trix Editor --}}
+
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
 <style>
     trix-editor {
@@ -58,14 +54,13 @@ $crudRoutePrefix = $baseRouteName . 'peran-program';
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Data: {{ $peranProgram->judul }}</h1>
 
     <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md">
-        {{-- [FIXED] Rute update sekarang menggunakan variabel yang aman dan menyertakan ID --}}
+
         <form
             action="{{ route($crudRoutePrefix . '.update', array_merge($routeParameters, ['peranProgram' => $peranProgram->id])) }}"
             method="POST">
             @csrf
             @method('PUT')
 
-            {{-- Mengirim semua variabel yang dibutuhkan ke form partial --}}
             @include('admin.pemerintahan_CRUD.peranDanProgram_CRUD._form', [
             'peranProgram' => $peranProgram,
             'tenant' => $tenant,
@@ -78,10 +73,9 @@ $crudRoutePrefix = $baseRouteName . 'peran-program';
 @endsection
 
 @push('scripts')
-{{-- Memuat JavaScript untuk Trix Editor --}}
+
 <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
 
-{{-- Script untuk animasi fade out saat pindah halaman --}}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(form a)').forEach(link => {
@@ -94,8 +88,7 @@ $crudRoutePrefix = $baseRouteName . 'peran-program';
                 });
             });
         });
-        
-        // CSS untuk animasi fadeOut ditambahkan melalui script agar lebih terpusat
+
         const style = document.createElement('style');
         style.textContent = `
             @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }

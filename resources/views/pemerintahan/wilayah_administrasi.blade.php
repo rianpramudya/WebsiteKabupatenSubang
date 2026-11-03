@@ -79,9 +79,9 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="min-w-full text-sm text-left text-gray-600 fade-in-up">
-                    {{-- [PERBAIKAN] Logika diubah agar bisa menampilkan data untuk semua konteks --}}
+
                     @if($is_kabupaten)
-                    {{-- Tampilan untuk tingkat Kabupaten --}}
+
                     <thead class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
                         <tr>
                             <th scope="col" class="px-6 py-4">No</th>
@@ -112,7 +112,7 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
                         @endforelse
                     </tbody>
                     @else
-                    {{-- Tampilan untuk Tingkat Kecamatan DAN Perangkat Daerah --}}
+
                     <thead class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
                         <tr>
                             <th scope="col" class="px-6 py-4">No</th>

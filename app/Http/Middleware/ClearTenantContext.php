@@ -10,7 +10,6 @@ class ClearTenantContext
 {
     public function handle(Request $request, Closure $next): Response
     {
-        // [PERBAIKAN] Hapus semua session yang berhubungan dengan tenant
         $request->session()->forget([
             'tenant', 
             'active_kecamatan_id', 

@@ -26,9 +26,9 @@
 <body class="min-h-screen flex items-center justify-center p-4">
    <div class="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl p-8 md:p-10 w-full sm:w-[420px] animate-fade-in-up border border-gray-200">
        <div class="mb-8">
-    {{-- Logo dan Nama Instansi --}}
+
     <div class="flex justify-center">
-        {{-- Tag <a> diubah menjadi <div> agar tidak bisa diklik --}}
+
         <div class="flex items-center space-x-4">
             <img src="{{ asset('img/logo.png') }}" class="h-20 w-auto"
                 alt="Logo Pemerintah Kabupaten Subang"
@@ -41,7 +41,6 @@
         </div>
     </div>
 
-    {{-- Judul Halaman Login --}}
     <h1 class="text-center text-2xl font-bold text-[#1E4E7C] mt-6">
         Portal Administratif
     </h1>
@@ -68,8 +67,6 @@
                     <input type="email" name="email" id="email" value="{{ old('email') }}" required autofocus class="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#1E4E7C] focus:border-[#1E4E7C] transition">
                 </div>
             </div>
-            
-            {{-- BAGIAN ROLE DAN KECAMATAN DIHAPUS --}}
 
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>

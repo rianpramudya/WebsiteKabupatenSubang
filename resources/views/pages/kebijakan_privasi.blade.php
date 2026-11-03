@@ -3,24 +3,24 @@
 @section('title', 'Kebijakan Privasi - Pemerintah Kabupaten Subang')
 
 @push('styles')
-{{-- Menambahkan style khusus untuk halaman ini --}}
+
 <style>
-    /* Style untuk banner baru */
+
     .hero-banner {
         width: 100%;
-        background-image: url('https://hatirakyat.com/wp-content/uploads/2024/09/privacy-policy.jpg'); /* Ganti dengan URL gambar Anda */
+        background-image: url('https://hatirakyat.com/wp-content/uploads/2024/09/privacy-policy.jpg');
         background-size: cover;
         background-position: center;
         position: relative;
-        /* Padding lebih besar untuk membuat banner lebih panjang */
+
         padding-top: 8rem;
         padding-bottom: 18rem;
-        /* Tinggi minimum agar gambar tidak terlalu terpotong */
+
         min-height: 300px;
         color: #fff;
-        background-color: #0d47a1; /* Fallback color jika gambar tidak termuat */
+        background-color: #0d47a1;
     }
-    
+
     .hero-banner::before {
         content: '';
         position: absolute;
@@ -28,7 +28,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 51, 102, 0.7); /* Warna overlay biru gelap dengan opacity */
+        background-color: rgba(0, 51, 102, 0.7);
     }
     .hero-banner-content {
         position: relative;
@@ -36,7 +36,7 @@
         text-align: center;
     }
     .hero-banner-content h1 {
-        font-size: 2.5rem; /* Ukuran font judul */
+        font-size: 2.5rem;
         font-weight: 800;
         margin: 0;
         padding: 0;
@@ -47,33 +47,32 @@
         opacity: 0.9;
     }
 
-    /* Style untuk konten halaman */
     .privacy-content h1, .privacy-content h2, .privacy-content h3 {
-        text-align: left; /* Mengembalikan perataan default untuk judul */
+        text-align: left;
     }
-    /* Mengubah style h1 untuk judul di dalam card konten */
+
     .privacy-content h1 {
         color: #1E4E7C;
-        font-size: 2.25rem; /* 36px */
-        font-weight: 800; /* extrabold */
+        font-size: 2.25rem;
+        font-weight: 800;
         text-align: center;
         margin-bottom: 0.5rem;
     }
     .privacy-content .subtitle {
         text-align: center;
-        font-size: 1rem; /* 16px */
+        font-size: 1rem;
         margin-top: 0;
-        margin-bottom: 2.5rem; /* 40px */
-        color: #4B5563; /* gray-600 */
+        margin-bottom: 2.5rem;
+        color: #4B5563;
     }
     .privacy-content h2 {
         color: #1E4E7C;
-        font-size: 1.75rem; /* 28px */
-        font-weight: 700; /* bold */
-        margin-top: 2.5rem; /* 40px */
-        margin-bottom: 1rem; /* 16px */
-        padding-bottom: 0.5rem; /* 8px */
-        border-bottom: 1px solid #E5E7EB; /* gray-200 */
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #E5E7EB;
     }
     .privacy-content p,
     .privacy-content li {
@@ -92,14 +91,13 @@
         padding-left: 1.5rem;
     }
     .privacy-content ol[type="a"] {
-        list-style-type: lower-alpha; /* Mengatur tipe list ke huruf kecil */
+        list-style-type: lower-alpha;
     }
     .privacy-content ol ol {
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
     }
-    
-    /* Responsive adjustments for the main container */
+
     @media (max-width: 768px) {
         .container-wrapper {
             padding-top: 1rem;
@@ -107,36 +105,36 @@
         }
         .privacy-card {
             padding: 1rem;
-            border-radius: 0.75rem; /* rounded-xl */
+            border-radius: 0.75rem;
         }
         .privacy-content h1 {
-            font-size: 1.875rem; /* text-3xl */
+            font-size: 1.875rem;
         }
         .privacy-content h2 {
-            font-size: 1.5rem; /* text-2xl */
+            font-size: 1.5rem;
         }
         .privacy-content .subtitle {
-            font-size: 0.875rem; /* text-sm */
+            font-size: 0.875rem;
         }
     }
 </style>
 @endpush
 
 @section('content')
-{{-- Bagian Banner Hero baru --}}
+
 <div class="hero-banner">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 hero-banner-content">
-        {{-- Menghapus judul dari banner, hanya menyisakan subtitle jika ada --}}
+
         <h1 class="text-white font-extrabold text-4xl sm:text-5xl md:text-6xl hidden">Kebijakan Privasi</h1>
         <p class="text-white text-md sm:text-lg mt-2 font-medium"></p>
     </div>
 </div>
 
-<div class="bg-gray-50 py-12 sm:py-16 container-wrapper"> {{-- Wrapper luar --}}
+<div class="bg-gray-50 py-12 sm:py-16 container-wrapper">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg privacy-card"> {{-- Card utama --}}
+        <div class="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-lg privacy-card">
             <div id="privacy-policy-content" class="privacy-content">
-                <!-- Konten kebijakan privasi akan dimuat secara dinamis di sini -->
+
                 <div class="text-center py-10">
                     <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 mx-auto"></div>
                     <p class="text-gray-500">Memuat konten...</p>
@@ -149,8 +147,6 @@
 
 @push('scripts')
 <script>
-    // Contoh data kebijakan privasi dalam format JSON
-    // Di aplikasi nyata, data ini akan diambil dari endpoint API
     const privacyPolicyData = {
         title: "KEBIJAKAN PRIVASI",
         intro: [
@@ -377,7 +373,6 @@
         const container = document.getElementById('privacy-policy-content');
         container.innerHTML = ''; // Membersihkan konten yang ada
 
-        // Render judul utama dan subtitle
         if (data.title) {
             const h1 = document.createElement('h1');
             h1.textContent = data.title;
@@ -390,7 +385,6 @@
             container.appendChild(p);
         }
 
-        // Render paragraf intro
         if (data.intro && data.intro.length > 0) {
             data.intro.forEach(text => {
                 const p = document.createElement('p');
@@ -399,7 +393,6 @@
             });
         }
 
-        // Render daftar isi
         if (data.tableOfContents && data.tableOfContents.length > 0) {
             const tocTitle = document.createElement('h2');
             tocTitle.textContent = "Kebijakan Privasi ini mencakup hal-hal sebagai berikut:";
@@ -414,7 +407,6 @@
             container.appendChild(tocList);
         }
 
-        // Render setiap bagian konten
         if (data.sections && data.sections.length > 0) {
             data.sections.forEach(section => {
                 if (section.title) {
@@ -458,16 +450,7 @@
     }
 
     window.addEventListener('load', () => {
-        // Dalam skenario nyata, Anda akan melakukan fetch ke API di sini
-        // fetch('/api/privacy-policy')
-        //     .then(response => response.json())
-        //     .then(data => renderPrivacyPolicy(data))
-        //     .catch(error => {
-        //         console.error('Error fetching privacy policy:', error);
-        //         document.getElementById('privacy-policy-content').innerHTML = '<p class="text-center text-red-500">Gagal memuat kebijakan privasi. Silakan coba lagi nanti.</p>';
-        //     });
 
-        // Untuk contoh ini, kita gunakan data statis di atas
         renderPrivacyPolicy(privacyPolicyData);
     });
 </script>

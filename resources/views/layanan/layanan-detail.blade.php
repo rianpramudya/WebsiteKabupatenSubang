@@ -3,10 +3,10 @@
 @section('title', $layanan->nama)
 
 @push('styles')
-{{-- Push CSS untuk Trix Editor dan Animasi --}}
+
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
 <style>
-    /* Animasi fade-in dan fade-out */
+
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -39,7 +39,6 @@
         animation: fadeOut 0.5s ease-out forwards;
     }
 
-    /* Styling untuk konten Trix */
     .trix-content h1 {
         font-size: 1.5em;
     }
@@ -57,15 +56,14 @@
 @endpush
 
 @section('content')
-{{-- Wrapper utama untuk target animasi --}}
+
 <div id="page-content">
     <main>
         <div class="container mx-auto px-4 py-8 md:py-12">
             <article class="prose lg:prose-xl max-w-4xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
 
-                {{-- Bagian Header --}}
                 <div class="flex flex-col sm:flex-row items-center gap-6 mb-6 not-prose">
-                    {{-- Ikon Layanan --}}
+
                     @if($layanan->icon)
                     <div
                         class="flex-shrink-0 bg-[#1E4E7C]/10 text-[#1E4E7C] w-24 h-24 rounded-full flex items-center justify-center">
@@ -74,12 +72,11 @@
                     @endif
 
                     <div class="flex-grow text-center sm:text-left">
-                        {{-- JUDUL HALAMAN --}}
+
                         <h1 class="text-3xl md:text-4xl font-bold text-gray-800">{{ $layanan->nama }}</h1>
                     </div>
                 </div>
 
-                {{-- INFORMASI TAMBAHAN --}}
                 <div class="text-sm text-gray-500 mb-8 border-b border-t pt-4 pb-4">
                     @if($layanan->kecamatan)
                     <span>Layanan oleh: <strong>Kecamatan {{ $layanan->kecamatan->name }}</strong></span>
@@ -88,12 +85,10 @@
                     <span>Diperbarui pada: {{ $layanan->updated_at->format('d F Y') }}</span>
                 </div>
 
-                {{-- KONTEN UTAMA DARI TRIX EDITOR --}}
                 <div class="trix-content">
                     {!! $layanan->deskripsi !!}
                 </div>
 
-                {{-- Tombol Kunjungi Situs Eksternal --}}
                 @if($layanan->link_url)
                 <div class="mt-8 pt-8 border-t text-center not-prose">
                     <a href="{{ $layanan->link_url }}" target="_blank" rel="noopener noreferrer"
@@ -104,15 +99,10 @@
                 </div>
                 @endif
 
-                {{-- ================================================================= --}}
-                {{-- KODE BARU: Tombol kembali ke daftar layanan --}}
-                {{-- ================================================================= --}}
                 <div class="mt-12 text-center not-prose">
                     @php
-                    // Tentukan "pemilik" dari layanan ini
                     $owner = $layanan->kecamatan ?? $layanan->perangkatDaerah;
 
-                    // Siapkan nama rute dan parameter yang benar secara dinamis
                     if ($owner instanceof \App\Models\Kecamatan) {
                     $backRouteName = 'kecamatan.layanan.index';
                     $backRouteParams = ['kecamatan' => $owner->slug];
@@ -122,7 +112,6 @@
                     }
                     @endphp
 
-                    {{-- Pastikan ada pemilik sebelum membuat tautan --}}
                     @if(isset($backRouteName))
                     <a href="{{ route($backRouteName, $backRouteParams) }}"
                         class="text-sm font-semibold text-[#1E4E7C] hover:text-[#FF3B00] transition group">
@@ -138,27 +127,22 @@
 </div>
 @endsection
 
-{{-- Push JavaScript untuk animasi --}}
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])');
 
         links.forEach(link => {
             link.addEventListener('click', (event) => {
-                // Mencegah navigasi langsung
-                event.preventDefault(); 
-                // Menambahkan class untuk memicu animasi fade-out
+                event.preventDefault();
                 document.body.classList.add('fading-out');
-                // Menunggu animasi selesai sebelum pindah halaman
                 setTimeout(() => {
                     window.location.href = link.href;
                 }, fadeOutDuration);
             });
         });
 
-        // Menghapus class fade-out jika pengguna kembali menggunakan tombol back browser
         window.addEventListener('pageshow', (event) => {
             if (event.persisted) {
                 document.body.classList.remove('fading-out');

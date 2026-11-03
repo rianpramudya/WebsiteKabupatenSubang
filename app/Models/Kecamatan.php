@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne; // <-- DITAMBAHKAN
-use Illuminate\Database\Eloquent\Relations\HasManyThrough; // <-- DITAMBAHKAN
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -14,9 +14,6 @@ class Kecamatan extends Model
 {
     use HasFactory;
 
-    /**
-     * Field yang dapat diisi massal.
-     */
     protected $fillable = [
         'name',
         'slug',
@@ -54,22 +51,11 @@ class Kecamatan extends Model
         return 'slug';
     }
 
-    // =================================================================
-    // RELASI DATABASE
-    // =================================================================
-
-    /**
-     * Relasi satu-ke-satu dari Kecamatan ke Tenant.
-     */
     public function tenant(): HasOne
     {
         return $this->hasOne(Tenant::class);
     }
 
-    /**
-     * Relasi untuk mendapatkan LaporanKeuangan melalui Tenant.
-     * Ini menggantikan relasi hasMany yang lama.
-     */
     public function laporanKeuangans(): HasManyThrough
     {
         return $this->hasManyThrough(LaporanKeuangan::class, Tenant::class);
@@ -150,13 +136,6 @@ class Kecamatan extends Model
         return $query->where('slug', '!=', 'kabupaten-subang');
     }
 
-    // =================================================================
-    // ACCESSOR & MUTATOR
-    // =================================================================
-
-    /**
-     * URL logo kecamatan (mendukung URL eksternal & storage).
-     */
     public function getLogoUrlAttribute(): string
     {
         if ($this->logo && Str::startsWith($this->logo, ['http://', 'https://'])) {
@@ -168,9 +147,6 @@ class Kecamatan extends Model
         return 'https://placehold.co/100x100/e2e8f0/64748b?text=Logo';
     }
 
-    /**
-     * Menentukan tipe banner: image_default, youtube, video_file, image_file.
-     */
     public function getBannerTypeAttribute(): string
     {
         $banner = $this->banner_url;
@@ -186,10 +162,6 @@ class Kecamatan extends Model
         return 'image_file';
     }
 
-
-    /**
-     * Mengambil ID video YouTube dari banner_url (jika tipe youtube).
-     */
     public function getYoutubeVideoIdAttribute(): ?string
     {
         if ($this->banner_type !== 'youtube') {
@@ -199,10 +171,6 @@ class Kecamatan extends Model
         preg_match($pattern, (string) $this->banner_url, $matches);
         return $matches[1] ?? null;
     }
-
-    // =================================================================
-    // EVENTS (opsional) – auto generate slug
-    // =================================================================
 
     protected static function booted(): void
     {

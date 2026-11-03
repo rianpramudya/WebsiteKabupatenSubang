@@ -1,8 +1,8 @@
 @push('styles')
-    {{-- Menggunakan versi dan styling yang sama dengan halaman Berita --}}
+
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
-        /* Styling agar Trix Editor menyatu dengan form Anda */
+
         trix-toolbar [data-trix-button-group="file-tools"] { display: none; }
         .trix-content { min-height: 200px; border-color: #d1d5db; border-radius: 0.375rem; background-color: white; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
         .trix-content:focus { border-color: #4f46e5; box-shadow: 0 0 0 1px #4f46e5; }
@@ -10,12 +10,11 @@
 @endpush
 
 @push('scripts')
-    {{-- Menggunakan file Javascript UMD yang terbukti berfungsi --}}
+
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
-    {{-- Menambahkan script Alpine.js untuk preview gambar --}}
+
     <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
-
 
 @csrf
 @if ($errors->any())
@@ -57,7 +56,7 @@
         }
     }">
         <label for="gambar" class="block text-sm font-medium text-gray-700">Gambar</label>
-        
+
         <p class="text-xs text-gray-500 mt-1">Rekomendasi ukuran: rasio 4:3 (contoh: 800x600 pixels).</p>
         <div x-show="!previewUrl" style="display: none;" class="mt-1">
             <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">

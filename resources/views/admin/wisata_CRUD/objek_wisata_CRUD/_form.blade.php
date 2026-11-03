@@ -1,16 +1,16 @@
 @push('styles')
-    {{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
+
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
-        /* Styling agar Trix Editor menyatu dengan form Anda */
+
         trix-toolbar [data-trix-button-group="file-tools"] {
             display: none;
-            /* Sembunyikan tombol upload file */
+
         }
 
         .trix-content {
             min-height: 200px;
-            /* Atur tinggi minimal editor */
+
             border-color: #d1d5db;
             border-radius: 0.375rem;
             background-color: white;
@@ -19,18 +19,17 @@
 
         .trix-content:focus {
             border-color: #4f46e5;
-            /* Warna focus indigo */
+
             box-shadow: 0 0 0 1px #4f46e5;
         }
     </style>
 @endpush
 
 @push('scripts')
-    {{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
+
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
-
 
 @csrf
 @if ($errors->any())
@@ -101,7 +100,7 @@
             }
         }">
         <label for="gambar" class="block text-sm font-medium text-gray-700">Gambar Banner</label>
-        
+
         <p class="text-xs text-gray-500 mt-1">Rekomendasi ukuran: rasio 16:9 (contoh: 1280x720 pixels).</p>
         <div x-show="!previewUrl" style="display: none;" class="mt-1">
             <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput"

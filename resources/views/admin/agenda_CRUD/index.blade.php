@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-// [PERBAIKAN] Semua logika disatukan di sini agar bersih dan konsisten
 $hasTenant = isset($tenant);
 $pageTitle = 'Kelola Agenda';
 $routePrefix = 'admin.kabupaten.agenda'; // Default untuk Kabupaten
@@ -43,7 +42,6 @@ $createUrl = route($routePrefix . '.create', $routeParameters);
     @endif
 
     <div class="bg-white shadow-xl rounded-lg overflow-hidden">
-        {{-- Anda bisa menempatkan kembali form filter Anda di sini jika diperlukan --}}
 
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -80,7 +78,6 @@ $createUrl = route($routePrefix . '.create', $routeParameters);
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end space-x-4">
                                 @php
-                                // Logika ini menentukan rute edit/destroy berdasarkan pemilik asli dari item agenda
                                 $itemTenant = $agenda->kecamatan ?? $agenda->perangkatDaerah;
                                 $itemRoutePrefix = 'admin.kabupaten.agenda';
                                 $itemRouteParams = [];
@@ -128,7 +125,6 @@ $createUrl = route($routePrefix . '.create', $routeParameters);
     </div>
 </div>
 
-{{-- Blok CSS dan JavaScript untuk animasi dikembalikan di sini --}}
 <style>
     @keyframes fadeIn {
         from {

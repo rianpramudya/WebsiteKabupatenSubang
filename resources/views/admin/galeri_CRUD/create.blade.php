@@ -3,7 +3,7 @@
 
 @push('styles')
     <style>
-        /* CSS untuk area drag & drop */
+
         .file-drop-zone {
             border: 2px dashed #cbd5e1;
             transition: all 0.3s ease-in-out;
@@ -14,15 +14,14 @@
             background-color: rgba(30, 78, 124, 0.05);
         }
 
-        /* CSS untuk preview gambar diubah menjadi thumbnail kecil */
         .preview-thumbnail {
             width: 64px;
-            /* 4rem */
+
             height: 64px;
-            /* 4rem */
+
             object-fit: cover;
             border-radius: 0.5rem;
-            /* rounded-lg */
+
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
         }
     </style>
@@ -49,9 +48,6 @@
                 @endif
 
                 @php
-                    // ======================================================================
-                    // PERBAIKAN 1: Membuat action form menjadi dinamis
-                    // ======================================================================
                     $formAction = '#';
                     if (isset($kecamatan)) {
                         $formAction = route('admin.kecamatan.galeri.store', $kecamatan);
@@ -60,7 +56,7 @@
                     }
                 @endphp
                 <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data"
-                    class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg" x-data="{ 
+                    class="bg-white p-6 sm:p-8 rounded-2xl shadow-lg" x-data="{
                           mediaType: '{{ old('tipe', 'foto') }}',
                           imagePreview: null,
                           isDragover: false,
@@ -69,7 +65,7 @@
                       }">
                     @csrf
                     <div class="space-y-8">
-                        {{-- LANGKAH 1: Informasi Dasar --}}
+
                         <div class="space-y-6">
                             <div class="flex items-center">
                                 <div
@@ -96,7 +92,6 @@
                             </div>
                         </div>
 
-                        {{-- LANGKAH 2: Upload File atau Link --}}
                         <div>
                             <div class="flex items-center mb-6">
                                 <div
@@ -106,7 +101,6 @@
                                     x-text="mediaType === 'video_yt' ? 'Masukkan Link' : 'Upload File'"></h2>
                             </div>
 
-                            {{-- Input Foto --}}
                             <div x-show="mediaType === 'foto'" class="space-y-4">
                                 <p class="text-xs text-gray-500">Rekomendasi ukuran: rasio 4:3 (contoh: 1200x900 pixels).
                                 </p>
@@ -151,7 +145,6 @@
                                 </div>
                             </div>
 
-                            {{-- Input Video Direct --}}
                             <div x-show="mediaType === 'video_upload'">
                                 <label for="file_video_upload" class="block text-sm font-medium text-gray-700">Pilih File
                                     Video (Upload)</label>
@@ -162,7 +155,6 @@
                                 <p class="text-xs text-gray-500 mt-1">Maksimal ukuran file: 100MB.</p>
                             </div>
 
-                            {{-- Input Video via URL --}}
                             <div x-show="mediaType === 'video_yt'">
                                 <label for="file_video_yt" class="block text-sm font-medium text-gray-700">URL Video
                                     YouTube</label>
@@ -236,9 +228,6 @@
                     </div>
                     <div class="mt-10 pt-6 border-t border-gray-200 flex justify-end space-x-4">
                         @php
-                            // ======================================================================
-                            // PERBAIKAN 2: Membuat tautan "Batal" menjadi dinamis
-                            // ======================================================================
                             $backRoute = '#';
                             if (isset($kecamatan)) {
                                 $backRoute = route('admin.kecamatan.galeri.index', $kecamatan);
@@ -257,7 +246,6 @@
         </div>
     </div>
 
-    {{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
     <style>
         @keyframes fadeIn {
             from {

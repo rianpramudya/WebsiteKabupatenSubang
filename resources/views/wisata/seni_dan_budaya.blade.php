@@ -20,7 +20,7 @@
 
 <div class="w-full relative text-center bg-cover bg-center py-24 md:py-28"
     style="background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1606819717115-9159c900370b?q=80&w=2370&auto=format&fit=crop');">
-    {{-- WARNA DIUBAH --}}
+
     <h1 class="text-4xl md:text-5xl font-extrabold text-[#FCE405] drop-shadow-lg anim-fade-in-down" style="--anim-delay: 200ms;">Seni dan Budaya</h1>
     <p class="mt-3 text-lg md:text-xl text-gray-200 anim-fade-in-up" style="--anim-delay: 400ms;">
         {{ isset($currentKecamatan) ? 'Kecamatan ' . $currentKecamatan->name : 'Kabupaten Subang' }}
@@ -33,7 +33,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <form action="{{ url()->current() }}" method="GET" class="bg-white p-4 rounded-lg shadow-sm anim-fade-in-left" style="--anim-delay: 600ms;">
                     <div class="relative">
-                        {{-- WARNA DIUBAH --}}
+
                         <input type="text" name="search" placeholder="Cari Seni Budaya..." value="{{ request('search') }}"
                             class="w-full border-gray-300 rounded-md focus:ring-[#1E4E7C] focus:border-[#1E4E7C] pl-10">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -54,7 +54,7 @@
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}" alt="{{ $item->nama }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                         </div>
                         <div class="flex-1">
-                            {{-- WARNA DIUBAH --}}
+
                             <h2 class="text-2xl font-bold text-gray-800 group-hover:text-[#FF3B00] transition-colors">{{ $item->nama }}</h2>
                             <p class="text-xs text-gray-500 mt-1 mb-3"><i class="far fa-calendar-alt mr-1"></i> Dipublikasikan pada {{ $item->published_at->translatedFormat('d F Y') }}</p>
                             <p class="text-sm text-gray-600 leading-relaxed">{{ Str::limit(strip_tags($item->deskripsi), 200) }}</p>
@@ -113,20 +113,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cards.forEach(card => {
         card.addEventListener('click', function () {
-            // 1. Ambil data dari atribut data-* kartu yang diklik
             const nama = this.dataset.nama;
             const gambar = this.dataset.gambar;
             const tanggal = this.dataset.tanggal;
             const deskripsi = this.dataset.deskripsi;
 
-            // 2. Masukkan data ke dalam elemen-elemen di modal
             modalNama.textContent = nama;
             modalGambar.src = gambar;
             modalGambar.alt = "Gambar " + nama;
             modalTanggal.textContent = tanggal;
             modalDeskripsi.textContent = deskripsi;
 
-            // 3. Tampilkan modal
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Mencegah scrolling di belakang modal
         });
@@ -137,17 +134,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = 'auto'; // Mengembalikan scrolling
     }
 
-    // Event listener untuk tombol close
     closeModalBtn.addEventListener('click', closeModal);
 
-    // Event listener untuk menutup modal saat mengklik area gelap di luar
     modal.addEventListener('click', function (event) {
         if (event.target === modal) {
             closeModal();
         }
     });
 
-    // Event listener untuk menutup modal dengan tombol 'Escape'
     document.addEventListener('keydown', function (event) {
         if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
             closeModal();

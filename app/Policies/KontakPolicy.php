@@ -9,9 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class KontakPolicy
 {
-    /**
-     * Memberikan akses penuh kepada super-admin.
-     */
+
     public function before(User $user, string $ability): ?bool
     {
         if ($user->hasRole('super-admin')) {
@@ -20,9 +18,6 @@ class KontakPolicy
         return null;
     }
 
-    /**
-     * Tentukan apakah user bisa memperbarui data kontak tenant.
-     */
     public function update(User $user, Model $tenant): bool
     {
         if ($tenant instanceof Kecamatan) {

@@ -3,23 +3,22 @@
 namespace App\Http\Controllers\Admin\Wisata;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Kecamatan, ObjekWisata, PerangkatDaerah}; // Tambahkan PerangkatDaerah
+use App\Models\{Kecamatan, ObjekWisata, PerangkatDaerah};
 use App\Http\Requests\Admin\Wisata\{StoreObjekWisataRequest, UpdateObjekWisataRequest};
-use Illuminate\Database\Eloquent\Model; // Tambahkan Model
-use Illuminate\Http\Request; // Tambahkan Request
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 class ObjekWisataController extends Controller
 {
-    // Helper untuk mendapatkan tenant
+
     private function getTenant(Request $request): ?Model
     {
         return $request->route('kecamatan') ?? $request->route('perangkatDaerah');
     }
 
-    // Helper untuk mendapatkan parameter rute
     private function getRouteParameters(?Model $tenant, array $additionalParams = []): array
     {
         if ($tenant instanceof Kecamatan) {
@@ -32,7 +31,6 @@ class ObjekWisataController extends Controller
         return array_merge($tenantParam, $additionalParams);
     }
 
-    // Helper untuk mendapatkan nama rute
     private function getRouteName(?Model $tenant, string $action): string
     {
         if ($tenant instanceof PerangkatDaerah) {
@@ -44,7 +42,6 @@ class ObjekWisataController extends Controller
         return 'admin.kabupaten.wisata.objek-wisata.' . $action;
     }
 
-    // Method CRUD yang sudah diperbaiki total
     public function index(Request $request)
     {
         $tenant = $this->getTenant($request);

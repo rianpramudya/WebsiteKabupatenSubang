@@ -12,7 +12,7 @@ class HotelSeeder extends Seeder
 {
     public function run(): void
     {
-        // Data untuk Kabupaten
+
         Hotel::create([
             'kecamatan_id' => null,
             'nama' => 'Laska Hotel Subang',
@@ -23,7 +23,6 @@ class HotelSeeder extends Seeder
             'published_at' => now(),
         ]);
 
-        // Data untuk Kecamatan Cibogo
         $kecamatanCibogo = Kecamatan::where('slug', 'cibogo')->first();
         if ($kecamatanCibogo) {
             Hotel::create([

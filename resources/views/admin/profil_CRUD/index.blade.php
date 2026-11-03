@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
 @php
-// Cek apakah ada tenant (Kecamatan/Perangkat Daerah) yang dikirim dari Controller.
 $hasTenant = isset($tenant);
 
-// Siapkan semua variabel yang dibutuhkan berdasarkan konteks.
 if ($hasTenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $routePrefix = $isKecamatan ? 'admin.kecamatan.profil' : 'admin.perangkat-daerah.profil';
@@ -13,7 +11,6 @@ $pageTitle = 'Kelola Profil ' . $tenant->name;
 $headerTitle = 'Kelola Profil: ' . $tenant->name;
 $headerSubtitle = 'Pilih bagian profil yang ingin Anda kelola.';
 } else {
-// Konfigurasi khusus untuk Superadmin di level Kabupaten.
 $routePrefix = 'admin.kabupaten.profil';
 $routeParameters = []; // Rute kabupaten tidak butuh parameter slug.
 $pageTitle = 'Kelola Profil Kabupaten';
@@ -26,7 +23,7 @@ $headerSubtitle = 'Menu ini berisi item-item profil yang berlaku secara global u
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-{{-- Sisipkan style animasi Anda di sini jika perlu --}}
+
 @endpush
 
 @section('content')
@@ -86,7 +83,6 @@ $headerSubtitle = 'Menu ini berisi item-item profil yang berlaku secara global u
     </div>
 </div>
 
-{{-- Blok CSS dan JavaScript untuk animasi (tidak ada perubahan) --}}
 <style>
     @keyframes fadeIn {
         from {
@@ -123,7 +119,7 @@ $headerSubtitle = 'Menu ini berisi item-item profil yang berlaku secara global u
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])');
 
         links.forEach(link => {
@@ -131,7 +127,7 @@ $headerSubtitle = 'Menu ini berisi item-item profil yang berlaku secara global u
                 if (link.closest('form[onsubmit]')) {
                     return;
                 }
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => {
                     window.location.href = link.href;

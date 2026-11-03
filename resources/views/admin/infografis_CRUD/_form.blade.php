@@ -1,16 +1,16 @@
 @push('styles')
-{{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
+
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
 <style>
-    /* Styling agar Trix Editor menyatu dengan form Anda */
+
     trix-toolbar [data-trix-button-group="file-tools"] {
         display: none;
-        /* Sembunyikan tombol upload file */
+
     }
 
     .trix-content {
         min-height: 200px;
-        /* Atur tinggi minimal editor */
+
         border-color: #d1d5db;
         border-radius: 0.375rem;
         background-color: white;
@@ -19,14 +19,14 @@
 
     .trix-content:focus {
         border-color: #4f46e5;
-        /* Warna focus indigo */
+
         box-shadow: 0 0 0 1px #4f46e5;
     }
 </style>
 @endpush
 
 @push('scripts')
-{{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
+
 <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
 <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
@@ -117,7 +117,7 @@
 </div>
 
 <div class="flex items-center justify-end mt-8">
-    {{-- [FIXED] Link Batal sekarang dinamis menggunakan variabel yang dikirim dari parent view --}}
+
     <a href="{{ route($routePrefix . '.index', $routeParameters) }}"
         class="text-gray-600 hover:text-gray-800 font-bold py-2 px-4 mr-4">Batal</a>
     <button type="submit"

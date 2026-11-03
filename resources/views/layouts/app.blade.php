@@ -5,11 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {{-- Variabel dari View Composer sekarang bisa digunakan di sini --}}
     <title>@yield('title', $isPerangkatDaerahContext ? $activePerangkatDaerah->name : ($isKecamatanContext ? 'Kecamatan
         ' . $activeKecamatan->name : 'Portal Resmi Kabupaten Subang'))</title>
 
-    {{-- Memuat Vite dan Alpine.js --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 
@@ -26,7 +24,6 @@
             background-color: #f4f5f7;
         }
 
-        /* Animasi untuk search bar */
         #search-input {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0;
@@ -41,10 +38,9 @@
             padding: 0.5rem 1rem;
             border: 1px solid #d1d5db;
             background-color: #ffffff;
-            /* PENAMBAHAN BARU: Agar input tidak transparan */
+
         }
 
-        /* PENAMBAHAN BARU: Memberi z-index agar search bar muncul di atas elemen lain */
         #search-container {
             z-index: 20;
         }
@@ -55,7 +51,6 @@
             }
         }
 
-        /* Animasi untuk menu mobile */
         .mobile-menu {
             transform: translateX(100%);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -76,7 +71,6 @@
             visibility: visible;
         }
 
-        /* Gaya untuk hasil pencarian */
         .search-results {
             max-height: 400px;
             overflow-y: auto;
@@ -92,7 +86,6 @@
             transform: translateX(2px);
         }
 
-        /* Animasi untuk ikon hamburger */
         .hamburger-line {
             transition: all 0.3s ease;
         }
@@ -109,7 +102,6 @@
             transform: rotate(-45deg) translate(7px, -6px);
         }
 
-        /* Gaya untuk banner persetujuan cookie */
         .cookie-banner {
             animation: slideUp 0.5s ease-out;
         }
@@ -126,7 +118,6 @@
             }
         }
 
-        /* Fix untuk dropdown menu */
         .dropdown-menu {
             display: none;
             opacity: 0;
@@ -140,7 +131,6 @@
             transform: translateY(0);
         }
 
-        /* Z-index hierarchy */
         .cookie-banner {
             z-index: 9999;
         }
@@ -165,17 +155,14 @@
             z-index: 1002;
         }
 
-        /* Perbaikan untuk layout header */
         .header-container {
             max-width: 1280px;
         }
 
-        /* Perbaikan untuk footer */
         .footer-grid {
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         }
 
-        /* Animasi untuk tombol */
         .btn-animate {
             transition: all 0.2s ease;
         }
@@ -185,7 +172,6 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
-        /* Efek hover untuk link navigasi */
         .nav-link {
             position: relative;
         }
@@ -205,7 +191,6 @@
             width: 100%;
         }
 
-        /* Responsive header improvements */
         @media (max-width: 1024px) {
             .desktop-nav {
                 display: none !important;
@@ -221,7 +206,6 @@
                 width: auto;
             }
 
-            /* Perbaikan tumpang tindih tombol logout dan search bar */
             .header-right-section {
                 display: flex;
                 align-items: center;
@@ -235,18 +219,18 @@
                 align-items: center;
                 gap: 0.5rem;
                 order: 2;
-                /* Mengatur urutan elemen */
+
             }
 
             #search-container {
                 position: relative;
                 order: 1;
-                /* Mengatur urutan elemen */
+
             }
 
             .mobile-menu-button {
                 order: 3;
-                /* Mengatur urutan elemen */
+
             }
 
             @media (min-width: 1024px) {
@@ -268,16 +252,15 @@
                 }
             }
 
-            /* Perbaikan khusus untuk tampilan mobile */
             @media (max-width: 1023px) {
                 .auth-buttons {
                     display: none;
-                    /* Sembunyikan tombol logout di mobile (sudah ada di menu mobile) */
+
                 }
 
                 #search-container {
                     margin-left: auto;
-                    /* Dorong search bar ke kanan */
+
                 }
             }
         }
@@ -288,7 +271,6 @@
             }
         }
 
-        /* Improved search bar for mobile */
         @media (max-width: 640px) {
             #search-input.active {
                 width: 150px;
@@ -299,7 +281,6 @@
             }
         }
 
-        /* KELAS BARU UNTUK MEMAKSA TAMPILAN MOBILE BERDASARKAN ZOOM */
         body.force-mobile-view .desktop-nav,
         body.force-mobile-view .desktop-auth-menu {
             display: none !important;
@@ -309,7 +290,6 @@
             display: flex !important;
         }
 
-        /* PERBAIKAN FINAL: Pastikan panel menu mobile juga bisa tampil di layar lebar */
         body.force-mobile-view #mobile-menu-overlay {
             display: block !important;
         }
@@ -320,7 +300,7 @@
     data-user-role="{{ Auth::check() ? (Auth::user()->hasRole(['super-admin', 'admin']) ? 'admin' : 'user') : 'guest' }}">
 
     <header class="bg-white shadow-sm sticky top-0 z-50">
-        {{-- Bar waktu real-time --}}
+
         <div class="bg-gray-800 text-white text-xs">
             <div class="container mx-auto px-4 sm:px-6 py-1.5 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-[#FCE405]" fill="none"
@@ -332,10 +312,9 @@
             </div>
         </div>
 
-        {{-- Header utama --}}
         <div class="container mx-auto px-4 sm:px-6">
             <div class="flex justify-between items-center py-4">
-                {{-- Logo dan nama instansi --}}
+
                 <a href="{{ $logoHomeUrl }}" class="flex items-center space-x-2 sm:space-x-3">
                     <img src="{{ asset('img/logo.png') }}" class="h-12 sm:h-16 w-auto"
                         alt="Logo Pemerintah Kabupaten Subang"
@@ -355,15 +334,13 @@
                     </div>
                 </a>
 
-                {{-- Bagian kanan header: Navigasi, Search, dan Menu Pengguna --}}
                 <div class="flex items-center space-x-2 sm:space-x-4 header-right-section">
-                    {{-- Navigasi desktop --}}
+
                     <nav
                         class="hidden xl:flex items-center space-x-3 xl:space-x-4 text-sm font-medium text-gray-500 desktop-nav">
                         <a href="{{ $publicHomeUrl }}"
                             class="nav-link hover:text-[#FF3B00] transition-colors duration-200 whitespace-nowrap">Beranda</a>
 
-                        {{-- Dropdown Profil --}}
                         <div class="relative" data-dropdown>
                             <button
                                 class="nav-link dropdown-toggle flex items-center hover:text-[#FF3B00] transition-colors duration-200 whitespace-nowrap">
@@ -388,7 +365,6 @@
                             </div>
                         </div>
 
-                        {{-- Dropdown Pemerintahan --}}
                         <div class="relative" data-dropdown>
                             <button
                                 class="nav-link dropdown-toggle flex items-center hover:text-[#FF3B00] transition-colors duration-200 whitespace-nowrap">
@@ -413,10 +389,8 @@
                             </div>
                         </div>
 
-                        {{-- Hanya tampilkan dropdown Wisata jika BUKAN konteks Perangkat Daerah --}}
                         @if(!$isPerangkatDaerahContext)
 
-                        {{-- Dropdown Wisata --}}
                         <div class="relative" data-dropdown>
                             <button
                                 class="nav-link dropdown-toggle flex items-center hover:text-[#FF3B00] transition-colors duration-200 whitespace-nowrap">
@@ -429,8 +403,7 @@
                             </button>
                             <div
                                 class="dropdown-menu absolute mt-2 w-48 bg-white rounded-md shadow-xl z-20 py-1 border">
-                                {{-- Logika di dalam link ini sudah benar, tetapi sekarang kita perlu menyederhanakannya
-                                karena kita sudah tahu ini bukan konteks Perangkat Daerah --}}
+
                                 <a href="{{ $isKecamatanContext ? route('wisata.senibudaya.kecamatan', ['kecamatan' => $kecamatanSlug]) : route('wisata.senibudaya.kabupaten') }}"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-[#FF3B00] transition-colors">Seni
                                     dan Budaya</a>
@@ -454,7 +427,6 @@
                             class="nav-link hover:text-[#FF3B00] transition-colors duration-200 whitespace-nowrap">Infografis</a>
                     </nav>
 
-                    {{-- Search bar --}}
                     <div id="search-container" class="relative flex items-center">
                         <input type="text" id="search-input" placeholder="Cari konten..."
                             class="absolute right-0 rounded-full focus:outline-none focus:ring-2 focus:ring-[#1E4E7C] text-sm">
@@ -471,7 +443,6 @@
                         </div>
                     </div>
 
-                    {{-- Menu pengguna (desktop) --}}
                     <div class="hidden xl:flex items-center desktop-auth-menu">
                         @auth
                         <div class="relative" data-dropdown>
@@ -506,7 +477,6 @@
                         @endauth
                     </div>
 
-                    {{-- Tombol menu mobile --}}
                     <button id="mobile-menu-button"
                         class="lg:hidden p-2 rounded-md hover:bg-gray-100 transition-colors mobile-menu-button"
                         title="Buka menu navigasi">
@@ -521,8 +491,6 @@
         </div>
     </header>
 
-
-    {{-- Menu mobile --}}
     <div id="mobile-menu-overlay" class="mobile-menu-overlay fixed inset-0 z-40 lg:hidden">
         <div id="mobile-menu"
             class="mobile-menu fixed top-0 right-0 h-full w-80 bg-white shadow-xl z-50 overflow-y-auto">
@@ -543,7 +511,6 @@
                         <i class="fas fa-home w-5 mr-3"></i>Beranda
                     </a>
 
-                    {{-- Dropdown Profil --}}
                     <div class="mobile-dropdown">
                         <button
                             class="mobile-dropdown-toggle w-full flex items-center justify-between py-2 text-gray-700 hover:text-[#FF3B00] font-medium transition-colors">
@@ -567,7 +534,6 @@
                         </div>
                     </div>
 
-                    {{-- Dropdown Pemerintahan --}}
                     <div class="mobile-dropdown">
                         <button
                             class="mobile-dropdown-toggle w-full flex items-center justify-between py-2 text-gray-700 hover:text-[#FF3B00] font-medium transition-colors">
@@ -591,9 +557,6 @@
                         </div>
                     </div>
 
-                    {{-- ====================================================================== --}}
-                    {{-- PERBAIKAN DI SINI: Seluruh blok Wisata dibungkus dengan @if --}}
-                    {{-- ====================================================================== --}}
                     @if(!$isPerangkatDaerahContext)
                     <div class="mobile-dropdown">
                         <button
@@ -620,9 +583,6 @@
                         </div>
                     </div>
                     @endif
-                    {{-- ====================================================================== --}}
-                    {{-- AKHIR PERBAIKAN --}}
-                    {{-- ====================================================================== --}}
 
                     <a href="{{ $isKecamatanContext ? route('transparansi.kecamatan', ['kecamatan' => $kecamatanSlug]) : ($isPerangkatDaerahContext ? route('perangkat.transparansi', ['perangkatDaerah' => $perangkatDaerahSlug]) : route('transparansi.kabupaten')) }}"
                         class="block py-2 text-gray-700 hover:text-[#FF3B00] font-medium transition-colors">
@@ -653,17 +613,15 @@
         </div>
     </div>
 
-
     <main class="flex-grow mb-12 relative z-10">
         @yield('content')
     </main>
 
     <footer class="bg-[#1E4E7C] text-white border-t-4 border-yellow-400">
         <div class="container mx-auto px-6 py-16">
-            {{-- [MODIFIKASI] Menggunakan grid yang lebih sederhana dan responsif --}}
+
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-y-10 gap-x-8">
 
-                {{-- Kolom 1: Logo dan Tentang --}}
                 <div class="flex flex-col items-center text-center md:items-start md:text-left xl:col-span-1">
                     <div class="flex items-center space-x-4 mb-4">
                         <img src="{{ asset('img/logo.png') }}" class="h-14 w-auto" alt="Logo Kabupaten Subang"
@@ -683,15 +641,11 @@
                         Portal Digital terintegrasi untuk layanan dan informasi publik.
                     </p>
 
-                    {{-- Ikon sosial media --}}
                     <div class="flex space-x-3 mt-6">
                         @php
-                        // [PERBAIKAN] Tentukan satu sumber data yang benar untuk semua link sosial media.
-                        // Prioritas: tenant aktif. Jika tidak ada, gunakan data kontak kabupaten.
                         $sosmed = $activeKecamatan ?? $activePerangkatDaerah ?? $kontakKabupaten;
                         @endphp
 
-                        {{-- Facebook --}}
                         @if(isset($sosmed) && $sosmed->link_facebook)
                         <a href="{{ $sosmed->link_facebook }}" target="_blank" rel="noopener noreferrer"
                             aria-label="Facebook"
@@ -706,7 +660,6 @@
                         </span>
                         @endif
 
-                        {{-- Twitter (X) --}}
                         @if(isset($sosmed) && $sosmed->link_twitter)
                         <a href="{{ $sosmed->link_twitter }}" target="_blank" rel="noopener noreferrer"
                             aria-label="X (Twitter)"
@@ -721,7 +674,6 @@
                         </span>
                         @endif
 
-                        {{-- YouTube --}}
                         @if(isset($sosmed) && $sosmed->link_youtube)
                         <a href="{{ $sosmed->link_youtube }}" target="_blank" rel="noopener noreferrer"
                             aria-label="YouTube"
@@ -736,7 +688,6 @@
                         </span>
                         @endif
 
-                        {{-- Instagram --}}
                         @if(isset($sosmed) && $sosmed->link_instagram)
                         <a href="{{ $sosmed->link_instagram }}" target="_blank" rel="noopener noreferrer"
                             aria-label="Instagram"
@@ -753,7 +704,6 @@
                     </div>
                 </div>
 
-                {{-- Kolom Link Terkait --}}
                 <div class="text-center md:text-left">
                     <h3 class="font-semibold text-base mb-4 uppercase tracking-wider">Link Terkait</h3>
                     <ul class="space-y-3 text-sm text-gray-300">
@@ -767,13 +717,10 @@
                     </ul>
                 </div>
 
-                {{-- Kolom Hubungi Kami --}}
                 <div class="text-center md:text-left">
                     <h3 class="font-semibold text-base mb-4 uppercase tracking-wider">Hubungi Kami</h3>
 
                     @php
-                    // [PERBAIKAN] Tentukan sumber data kontak yang benar secara dinamis
-                    // Prioritas: tenant aktif. Jika tidak ada, gunakan data kontak kabupaten.
                     $kontak = $activeKecamatan ?? $activePerangkatDaerah ?? $kontakKabupaten;
                     @endphp
 
@@ -781,7 +728,7 @@
                     <ul class="space-y-4 text-sm text-gray-300">
                         <li class="flex items-start justify-center md:justify-start">
                             <i class="fas fa-phone w-4 mr-3 mt-1 flex-shrink-0 text-gray-400"></i>
-                            {{-- [PERBAIKAN] Kode menjadi jauh lebih sederhana --}}
+
                             <span>{{ $kontak->telepon ?? 'Belum diatur' }}</span>
                         </li>
                         <li class="flex items-start justify-center md:justify-start">
@@ -796,7 +743,6 @@
                     @endif
                 </div>
 
-                {{-- Kolom Statistik Pengunjung --}}
                 <div class="text-center md:text-left">
                     <h3 class="font-semibold text-base mb-4 uppercase tracking-wider">Statistik</h3>
                     <ul class="space-y-3 text-sm text-gray-300">
@@ -824,7 +770,7 @@
             <div class="container mx-auto px-6 text-center text-xs text-gray-400">
                 <div class="flex flex-col sm:flex-row justify-center items-center gap-2">
                     <span>Hak Cipta © {{ date('Y') }} Pemerintah Kabupaten Subang. Dikelola oleh Diskominfo.</span>
-                    {{-- Tambahan Tautan Kebijakan Privasi --}}
+
                     <span>|</span>
                     <a href="{{ route('privacy.policy') }}" class="hover:text-white transition-colors duration-200">  Kebijakan Privasi
                     </a>
@@ -833,11 +779,6 @@
         </div>
     </footer>
 
-
-
-
-
-    {{-- Cookie banner --}}
     <div x-data="{
         showBanner: !localStorage.getItem('cookieConsent'),
         acceptCookies() {
@@ -882,7 +823,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Fungsi untuk menampilkan jam waktu nyata ---
             const clockElement = document.getElementById('realtime-clock');
             if (clockElement) {
                 function updateClock() {
@@ -921,7 +861,6 @@
                     1280 :
                     (userRole === 'guest' ? 480 : 1024);
 
-                // Jika lebar layar saat ini lebih kecil dari breakpoint, paksa tampilan mobile
                 if (currentWidth < breakpoint) {
                     bodyElement.classList.add('force-mobile-view');
                 } else {
@@ -929,13 +868,10 @@
                 }
             }
 
-            // Panggil fungsi saat event resize (zoom-in/out memicu resize)
             window.addEventListener('resize', handleZoomChange);
 
-            // Panggil fungsi sekali saat halaman pertama kali dimuat
             handleZoomChange();
 
-            // --- Fungsi pencarian yang diperbaiki dan aman ---
             const searchContainer = document.getElementById('search-container');
             const searchToggle = document.getElementById('search-toggle');
             const searchInput = document.getElementById('search-input');
@@ -1050,7 +986,6 @@
                 }
             });
 
-            // Tutup hasil pencarian saat klik di luar
             document.addEventListener('click', function(e) {
                 if (!searchContainer.contains(e.target)) {
                     searchInput.classList.remove('active');
@@ -1058,7 +993,6 @@
                 }
             });
 
-            // --- Fungsionalitas menu mobile ---
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
             const mobileMenu = document.getElementById('mobile-menu');
@@ -1099,57 +1033,42 @@
                 });
             });
 
-            // =======================================================================
-            // PERBAIKAN UTAMA: LOGIKA DROPDOWN DESKTOP BERBASIS KLIK YANG LEBIH BAIK
-            // =======================================================================
-
-            // 1. Tambahkan event listener ke setiap tombol dropdown
             document.querySelectorAll('[data-dropdown]').forEach(dropdownContainer => {
                 const toggleButton = dropdownContainer.querySelector('.dropdown-toggle');
                 const menu = dropdownContainer.querySelector('.dropdown-menu');
 
                 toggleButton.addEventListener('click', function(event) {
-                    // Mencegah link default dan menghentikan event agar tidak langsung ditangapi oleh document
                     event.preventDefault();
                     event.stopPropagation();
 
                     const isCurrentlyOpen = menu.classList.contains('show');
 
-                    // Pertama, tutup semua dropdown lain yang mungkin sedang terbuka
                     document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
                         openMenu.classList.remove('show');
                     });
 
-                    // Jika dropdown yang diklik tadi belum terbuka, maka buka sekarang.
-                    // Jika sudah terbuka, langkah di atas sudah menutupnya.
                     if (!isCurrentlyOpen) {
                         menu.classList.add('show');
                     }
                 });
             });
 
-            // 2. Tambahkan satu event listener global untuk menutup dropdown saat klik di luar area
             document.addEventListener('click', function(event) {
-                // Jika target klik BUKAN di dalam sebuah container dropdown...
                 if (!event.target.closest('[data-dropdown]')) {
-                    // ...maka tutup semua dropdown yang sedang terbuka.
                     document.querySelectorAll('.dropdown-menu.show').forEach(openMenu => {
                         openMenu.classList.remove('show');
                     });
                 }
             });
 
-            // Event listener untuk tombol 'Escape'
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     hideSearchResults();
                     closeMobileMenu();
-                    // Tutup juga semua dropdown desktop yang terbuka
                     document.querySelectorAll('.dropdown-menu.show').forEach(menu => menu.classList.remove('show'));
                 }
             });
 
-            // Event listener untuk resize window
             window.addEventListener('resize', () => {
                 if (window.innerWidth >= 1024) closeMobileMenu();
             });

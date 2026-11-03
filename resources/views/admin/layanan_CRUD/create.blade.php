@@ -4,7 +4,6 @@
 @section('content')
 <div id="page-content" class="container mx-auto px-4 py-8">
     @php
-        // [PERBAIKAN] Membuat judul halaman dan link menjadi dinamis
         $tenant = $kecamatan ?? $perangkatDaerah;
         $pageTitle = 'Tambah Layanan Baru';
         $backUrl = '#';
@@ -30,7 +29,7 @@
     <div class="bg-white p-6 md:p-8 rounded-lg shadow-md">
         <form action="{{ $formActionUrl }}" method="POST">
             @csrf
-            {{-- [PERBAIKAN] Meneruskan semua variabel yang dibutuhkan oleh _form --}}
+
             @include('admin.layanan_CRUD._form', [
                 'layanan' => new \App\Models\Layanan(),
                 'kecamatan' => $kecamatan ?? null,
@@ -42,9 +41,8 @@
     </div>
 </div>
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 <style>
-    /* Keyframes untuk animasi fade-in dan fade-out */
+
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
@@ -54,12 +52,10 @@
         to { opacity: 0; transform: translateY(10px); }
     }
 
-    /* Terapkan animasi fade-in saat halaman dimuat */
     #page-content {
         animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Terapkan animasi fade-out saat body memiliki kelas 'fading-out' */
     body.fading-out #page-content {
         animation: fadeOut 0.5s ease-out forwards;
     }
@@ -67,12 +63,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(form a)');
 
         links.forEach(link => {
             link.addEventListener('click', (event) => {
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => {
                     window.location.href = link.href;

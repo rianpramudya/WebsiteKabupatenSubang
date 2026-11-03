@@ -17,24 +17,20 @@ class StoreRumahMakanRequest extends FormRequest
             'nama' => ['required', 'string', 'max:255'],
             'jenis_kuliner' => ['nullable', 'string', 'max:255'],
             'deskripsi' => ['required', 'string'],
-            'alamat' => ['required', 'string'], // Dihapus max:255 karena menggunakan Trix
+            'alamat' => ['required', 'string'],
             'telepon' => ['nullable', 'string', 'max:20'],
 
-            // MODIFIKASI DIMULAI DI SINI
             'gambar' => [
                 'nullable',
                 'image',
                 'mimes:jpeg,png,jpg,webp',
                 'max:2048',
-                'dimensions:ratio=16/9' // Aturan untuk rasio aspek 16:9
+                'dimensions:ratio=16/9'
             ],
-            // AKHIR MODIFIKASI
+
         ];
     }
 
-    /**
-     * Menambahkan pesan error kustom agar lebih ramah pengguna.
-     */
     public function messages(): array
     {
         return [

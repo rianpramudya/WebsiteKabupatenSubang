@@ -1,6 +1,6 @@
 <div class="bg-white rounded-lg shadow-sm p-4 hover:shadow-lg transition-shadow duration-300 border border-gray-100">
     <div class="flex flex-col sm:flex-row items-start gap-4">
-        {{-- Info Tanggal --}}
+
         <div class="flex-shrink-0 w-full sm:w-40 text-center sm:text-left mb-3 sm:mb-0 sm:border-r sm:pr-4">
             <div class="text-lg font-bold text-[#1E4E7C]">
                 {{ \Carbon\Carbon::parse($agenda->tanggal_mulai)->translatedFormat('d F') }}
@@ -14,7 +14,6 @@
             </div>
         </div>
 
-        {{-- Info Detail Agenda --}}
         <div class="pl-0 sm:pl-4 flex-grow">
             <h3 class="text-xl font-bold text-gray-800">{{ $agenda->judul }}</h3>
             <p class="text-gray-600 mt-1">{{ strip_tags(html_entity_decode($agenda->deskripsi)) }}</p>

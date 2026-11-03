@@ -1,15 +1,11 @@
 @php
-    // [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
     if ($tenant instanceof \App\Models\Kecamatan && $tenant->slug !== 'kabupaten-subang') {
-        // Ini untuk Kecamatan biasa
         $baseRouteName = 'admin.kecamatan.';
         $routeParameters = ['kecamatan' => $tenant->slug];
     } elseif ($tenant instanceof \App\Models\PerangkatDaerah) {
-        // Ini untuk Perangkat Daerah
         $baseRouteName = 'admin.perangkat-daerah.';
         $routeParameters = ['perangkatDaerah' => $tenant->slug];
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.';
         $routeParameters = []; // Rute kabupaten tidak butuh parameter
     }
@@ -37,7 +33,7 @@
 </div>
 
 <div class="flex items-center justify-end mt-8 pt-5 border-t border-gray-200 space-x-3">
-    {{-- [FIX] Cancel link is now dynamic --}}
+
     <a href="{{ route($baseRouteName . 'profil.sejarah.index', $routeParameters) }}" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">Batal</a>
     <button type="submit" class="bg-[#1E4E7C] hover:bg-[#163a5f] text-white font-bold py-2 px-4 rounded-lg transition-colors">Simpan</button>
 </div>

@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-// [Disederhanakan] Penentuan nama konteks menjadi lebih ringkas
 $namaKonteks = 'Kabupaten Subang'; // Default
 if (isset($currentPerangkatDaerah)) {
 $namaKonteks = $currentPerangkatDaerah->name;
@@ -14,7 +13,7 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
 
 @push('styles')
 <style>
-    /* Lightbox Styles */
+
     .lightbox {
         position: fixed;
         top: 0;
@@ -74,7 +73,6 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         line-height: 1;
     }
 
-    /* Timeline Styles */
     .timeline-item {
         opacity: 0;
         transform: translateY(50px);
@@ -152,8 +150,6 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
 
 @section('content')
 @php
-// [PERBAIKAN] Variabel logoUrl didefinisikan di sini agar bisa mengakses $profil
-// dan variabel lain yang dikirim dari controller
 $logoUrl = $profil->logo_url ?? asset('img/logo-subang-color.png');
 
 $galleryImages = isset($profil) ? array_filter([
@@ -164,7 +160,7 @@ $profil->sejarah_img_3,
 @endphp
 
 <div class="bg-gray-100">
-    {{-- Banner Section --}}
+
     <div class="bg-gray-800 text-white py-16 text-center bg-cover bg-center"
         style="background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aGlzdG9yeXxlbnwwfHwwfHx8MA%D%D');">
         <div class="container mx-auto px-4">
@@ -173,7 +169,6 @@ $profil->sejarah_img_3,
         </div>
     </div>
 
-    {{-- Main Content: Timeline and Sidebar --}}
     <div class="container mx-auto px-4 sm:px-6 py-16">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div class="lg:col-span-2">
@@ -235,7 +230,6 @@ $profil->sejarah_img_3,
         </div>
     </div>
 
-    {{-- Section Galeri Gambar Utama Sejarah --}}
     @if(!empty($galleryImages))
     <div class="bg-white py-16">
         <div class="container mx-auto px-4 sm:px-6 md:px-12 lg:px-24">
@@ -263,7 +257,6 @@ $profil->sejarah_img_3,
     @endif
 </div>
 
-{{-- Lightbox Modal --}}
 <div id="lightbox" class="lightbox">
     <span class="lightbox-close">&times;</span>
     <div class="lightbox-content">
@@ -275,7 +268,6 @@ $profil->sejarah_img_3,
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Intersection Observer for animations
         const items = document.querySelectorAll('.timeline-item');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
@@ -293,7 +285,6 @@ $profil->sejarah_img_3,
             observer.observe(item);
         });
 
-        // Lightbox functionality
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const galleryLinks = document.querySelectorAll('.gallery-image-link');
@@ -303,7 +294,7 @@ $profil->sejarah_img_3,
             galleryLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const imgSrc = this.getAttribute('href'); 
+                    const imgSrc = this.getAttribute('href');
                     lightboxImg.setAttribute('src', imgSrc);
                     lightbox.classList.add('show');
                 });

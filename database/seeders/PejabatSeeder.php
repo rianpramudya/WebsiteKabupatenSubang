@@ -22,7 +22,6 @@ class PejabatSeeder extends Seeder
             return;
         }
 
-        // Data Pejabat untuk Kabupaten Subang
         $pejabat_kabupaten = [
             ['nama' => 'Dr. Drs. H. Imran, M.Si., MA.Cd', 'jabatan' => 'Pj. Bupati Subang', 'urutan' => 1, 'foto' => 'https://placehold.co/400x400/1E4E7C/ffffff?text=Foto'],
             ['nama' => 'H. Asep Nuroni, S.Sos., M.Si.', 'jabatan' => 'Sekretaris Daerah', 'urutan' => 2, 'foto' => 'https://placehold.co/400x400/1E4E7C/ffffff?text=Foto'],
@@ -31,19 +30,16 @@ class PejabatSeeder extends Seeder
             ['nama' => 'Drs. H. Dadang Kurnianudin, M.Si.', 'jabatan' => 'Asisten Administrasi Umum', 'urutan' => 5],
         ];
 
-        // Data Pejabat untuk Kecamatan Binong
         $pejabat_kecamatan = [
             ['nama' => 'Nama Camat Binong', 'jabatan' => 'Camat', 'urutan' => 1, 'foto' => 'https://placehold.co/400x400/1E4E7C/ffffff?text=Foto'],
             ['nama' => 'Nama Sekretaris Camat', 'jabatan' => 'Sekretaris Camat', 'urutan' => 2],
         ];
 
-        // Proses data Kabupaten menggunakan updateOrCreate
         foreach ($pejabat_kabupaten as $pejabat) {
             Pejabat::updateOrCreate(
                 [
-                    // --- PERBAIKAN KUNCI UNIK ---
-                    'kecamatan_id' => null, // Kunci untuk data kabupaten
-                    'nama' => $pejabat['nama'], 
+                    'kecamatan_id' => null,
+                    'nama' => $pejabat['nama'],
                 ],
                 [
                     'jabatan' => $pejabat['jabatan'],
@@ -53,7 +49,6 @@ class PejabatSeeder extends Seeder
             );
         }
 
-        // Proses data Kecamatan Binong menggunakan updateOrCreate
         foreach ($pejabat_kecamatan as $pejabat) {
             Pejabat::updateOrCreate(
                 [
@@ -67,7 +62,7 @@ class PejabatSeeder extends Seeder
                 ]
             );
         }
-        
+
         $this->command->info('PejabatSeeder berhasil dijalankan.');
     }
 }

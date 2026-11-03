@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-// [PERBAIKAN] Logika ini sekarang menangani 3 konteks dengan benar
 if ($tenant instanceof \App\Models\PerangkatDaerah) {
 $routePrefix = 'admin.perangkat-daerah.profil';
 $routeParameters = ['perangkatDaerah' => $tenant->slug];
@@ -9,7 +8,6 @@ $routeParameters = ['perangkatDaerah' => $tenant->slug];
 $routePrefix = 'admin.kecamatan.profil';
 $routeParameters = ['kecamatan' => $tenant->slug];
 } else {
-// Ini adalah konteks Kabupaten untuk Superadmin
 $routePrefix = 'admin.kabupaten.profil';
 $routeParameters = []; // Rute kabupaten tidak butuh parameter
 }

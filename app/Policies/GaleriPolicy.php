@@ -41,7 +41,7 @@ class GaleriPolicy
 
     public function update(User $user, Galeri $galeri): bool
     {
-        // Meskipun tidak ada halaman edit, policy ini baik untuk konsistensi
+
         return $this->isOwner($user, $galeri);
     }
 

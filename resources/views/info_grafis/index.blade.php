@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk judul dinamis --}}
 @php
     $judulHalaman = 'Infografis Kabupaten Subang'; // Default
 
@@ -29,9 +28,9 @@
 @endpush
 
 @section('content')
-{{-- [DIKEMBALIKAN] Menggunakan Alpine.js sederhana hanya untuk membuka/menutup modal --}}
+
 <div x-data="{ openModal: false, imageUrl: '', imageTitle: '' }">
-    {{-- Banner --}}
+
     <div class="w-full relative text-center bg-cover bg-center py-24 md:py-28"
         style="background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1566378246598-5b11a0d486cc?w=900&auto=format&fit=crop&q=60');">
         <h1 class="text-4xl md:text-5xl font-extrabold text-[#FCE405] drop-shadow-lg anim-fade-in-down" style="--anim-delay: 200ms;">
@@ -42,7 +41,6 @@
         </p>
     </div>
 
-    {{-- Konten --}}
     <div class="bg-gray-100">
         <div class="container mx-auto px-4 sm:px-6 py-12">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -97,7 +95,6 @@
         </div>
     </div>
 
-    {{-- [PERBAIKAN] Mengubah posisi modal agar tidak tertutup navbar --}}
     <div x-show="openModal" @keydown.escape.window="openModal = false"
          x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
@@ -112,7 +109,6 @@
              x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
              class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[calc(100vh-12rem)] flex flex-col">
 
-            {{-- Header Modal yang Selalu Terlihat --}}
             <div class="p-5 border-b flex justify-between items-center flex-shrink-0">
                 <h3 class="font-semibold text-lg text-gray-800 truncate max-w-[85%]" x-text="imageTitle"></h3>
                 <button @click="openModal = false" class="text-gray-400 hover:text-gray-600 transition">
@@ -120,12 +116,10 @@
                 </button>
             </div>
 
-            {{-- Kontainer Gambar dengan Scroll --}}
             <div class="flex-1 overflow-auto p-5 bg-gray-50">
                 <img :src="imageUrl" alt="Infografis" class="w-full h-auto rounded-lg shadow" loading="lazy">
             </div>
 
-            {{-- Footer Modal yang Selalu Terlihat --}}
             <div class="p-4 border-t text-right bg-white flex-shrink-0">
                 <button @click="openModal = false" class="bg-[#1E4E7C] hover:brightness-90 text-white px-4 py-2 rounded-lg transition">Tutup</button>
             </div>
@@ -135,6 +129,6 @@
 @endsection
 
 @push('scripts')
-{{-- Menambahkan AlpineJS untuk fungsionalitas interaktif --}}
+
 <script src="//unpkg.com/alpinejs" defer></script>
 @endpush

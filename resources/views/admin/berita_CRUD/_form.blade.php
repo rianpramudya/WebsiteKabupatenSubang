@@ -23,7 +23,7 @@
 
 @push('scripts')
 <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
-{{-- Memastikan AlpineJS dimuat untuk fungsionalitas interaktif --}}
+
 <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
 
@@ -40,7 +40,7 @@
 @endif
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {{-- Kolom Utama (Form) --}}
+
     <div class="md:col-span-2 bg-white p-8 rounded-lg shadow-md space-y-6">
         <div class="mb-6">
             <label for="judul" class="block text-sm font-medium text-gray-700 mb-2">Judul Berita <span
@@ -57,7 +57,6 @@
         </div>
     </div>
 
-    {{-- Kolom Samping (Pengaturan) --}}
     <div class="md:col-span-1 space-y-6">
         <div class="bg-white p-8 rounded-lg shadow-md">
             <h3 class="text-lg font-semibold mb-4 text-[#1E4E7C]">Pengaturan</h3>
@@ -133,7 +132,7 @@
 
             <div x-data="imageUploader('{{ $berita->gambar ? asset('storage/' . $berita->gambar) : '' }}', '{{ $berita->gambar ? basename($berita->gambar) : '' }}')">
                 <label for="gambar" class="block text-sm font-medium text-gray-700 mb-2">Gambar Utama</label>
-                
+
                 <div x-show="!previewUrl" style="display: none;">
                     <input type="file" id="gambar" name="gambar" @change="handleFileChange" x-ref="gambarInput"
                         class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#1E4E7C]/10 file:text-[#1E4E7C] hover:file:bg-[#1E4E7C]/20">
@@ -204,7 +203,7 @@
                             this.fileName = initialFileName;
                             fileInput.value = null;
                         } else {
-                            this.validationError = ''; 
+                            this.validationError = '';
                             this.previewUrl = URL.createObjectURL(file);
                             this.fileName = file.name;
                             if (this.$refs.hapusGambarCheckbox) { this.$refs.hapusGambarCheckbox.checked = false; }

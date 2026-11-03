@@ -14,7 +14,6 @@ class BeritaRepository
 {
     protected int $cacheDurationHours = 1;
 
-    // ... (metode untuk Kecamatan tetap sama) ...
     public function getBeritaTerkiniForKecamatan(Kecamatan $kecamatan, int $count = 5): Collection
     {
         $cacheKey = "berita.kecamatan.{$kecamatan->id}.terkini.{$count}";
@@ -30,11 +29,6 @@ class BeritaRepository
             return $kecamatan->beritas()->whereNotNull('published_at')->orderByDesc('views')->take($count)->get();
         });
     }
-
-
-    // ======================================================================
-    // === PENAMBAHAN METODE BARU UNTUK PERANGKAT DAERAH ====================
-    // ======================================================================
 
     public function getBeritaTerkiniForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $count = 5): Collection
     {
@@ -60,7 +54,6 @@ class BeritaRepository
         });
     }
 
-    // ... (metode paginasi dan lainnya tetap sama) ...
     public function getPaginatedForTag(Tag $tag, int $perPage = 9): LengthAwarePaginator
     {
         $page = request('page', 1);
@@ -130,7 +123,7 @@ class BeritaRepository
 
     public function clearCacheForPerangkatDaerah(PerangkatDaerah $perangkatDaerah): void
     {
-        // Menghapus cache yang spesifik untuk perangkat daerah ini
+
         Cache::forget("berita.perangkatdaerah.{$perangkatDaerah->id}.terkini.5");
         Cache::forget("berita.perangkatdaerah.{$perangkatDaerah->id}.populer.5");
         for ($i = 1; $i <= 10; $i++) {

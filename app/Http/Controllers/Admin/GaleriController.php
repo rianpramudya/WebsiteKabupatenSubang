@@ -27,7 +27,7 @@ class GaleriController extends Controller
         if ($tenant instanceof PerangkatDaerah) {
             return 'admin.perangkat-daerah.galeri.' . $action;
         }
-        return 'admin.kabupaten.galeri.' . $action; // Fallback
+        return 'admin.kabupaten.galeri.' . $action;
     }
 
     private function getRouteParameters(?Model $tenant): array
@@ -84,7 +84,6 @@ class GaleriController extends Controller
         $data = $request->validated();
         $user = Auth::user();
 
-        // [FIX] Menambahkan logika untuk 'video_upload'
         if ($data['tipe'] === 'foto' && $request->hasFile('file_foto')) {
             $data['file_url'] = $request->file('file_foto')->store('images/galeri', 'public');
         } elseif ($data['tipe'] === 'video_upload' && $request->hasFile('file_video_upload')) {
@@ -126,11 +125,10 @@ class GaleriController extends Controller
     {
         $this->authorize('delete', $galeri);
 
-        // [FIX] Menambahkan logika untuk menghapus file 'video_upload'
         if (in_array($galeri->tipe, ['foto', 'video_upload']) && $galeri->file_url) {
             Storage::disk('public')->delete($galeri->file_url);
         }
-        
+
         $galeri->delete();
 
         return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))

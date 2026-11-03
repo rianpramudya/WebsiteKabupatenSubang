@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-// [PERBAIKAN] Tambahkan model yang relevan jika ingin membuat data spesifik
 use App\Models\Kecamatan;
 use App\Models\PerangkatDaerah;
 
@@ -15,10 +14,8 @@ class LaporanKeuanganSeeder extends Seeder
     {
         DB::table('laporan_keuangans')->delete();
 
-        // Data ini diasumsikan milik tingkat Kabupaten,
-        // jadi kecamatan_id dan perangkat_daerah_id diatur ke null.
         $laporanKabupaten = [
-            // === TAHUN 2025 (3 laporan) ===
+
             [
                 'tahun' => 2025,
                 'judul_laporan' => 'Laporan Realisasi APBD Semester I',
@@ -40,7 +37,7 @@ class LaporanKeuanganSeeder extends Seeder
                 'deskripsi_singkat' => 'Pertanggungjawaban penggunaan anggaran tahun 2024.',
                 'file_url' => '/storage/laporan/lpj_2024.pdf',
             ],
-            // ... data lainnya dari seeder asli Anda ...
+
             [
                 'tahun' => 2022,
                 'judul_laporan' => 'Laporan Realisasi APBD Semester II',
@@ -50,7 +47,6 @@ class LaporanKeuanganSeeder extends Seeder
             ],
         ];
 
-        // [PERBAIKAN] Loop dan tambahkan kolom yang benar
         foreach ($laporanKabupaten as $laporan) {
             DB::table('laporan_keuangans')->insert([
                 'kecamatan_id' => null,
@@ -64,8 +60,7 @@ class LaporanKeuanganSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
-        
-        // Contoh jika Anda ingin menambahkan laporan spesifik untuk tenant
+
         $kecamatanBinong = Kecamatan::where('slug', 'binong')->first();
         if ($kecamatanBinong) {
             DB::table('laporan_keuangans')->insert([

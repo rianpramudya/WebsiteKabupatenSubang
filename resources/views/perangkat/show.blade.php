@@ -1,18 +1,15 @@
 @extends('layouts.app')
 
-{{-- Ganti 'Kecamatan' menjadi nama Perangkat Daerah --}}
 @section('title', $currentPerangkatDaerah->name . ' - Portal Kabupaten Subang')
 
 @push('styles')
-{{-- CSS Libraries (Sama seperti halaman kecamatan) --}}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
 <style>
-    /* ============================= */
-    /* ANIMASI */
-    /* ============================= */
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -49,9 +46,6 @@
         animation-delay: var(--anim-delay, 0ms);
     }
 
-    /* ============================= */
-    /* SLIDER BERITA (HERO) */
-    /* ============================= */
     .hero-news-slider .swiper-slide a {
         position: relative;
         display: block;
@@ -110,9 +104,6 @@
         text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
     }
 
-    /* ============================= */
-    /* GALERI VIDEO DAN FOTO */
-    /* ============================= */
     .video-gallery-slider,
     .photo-gallery-slider {
         width: 100%;
@@ -150,12 +141,9 @@
         font-size: 18px;
     }
 
-    /* ============================= */
-    /* KALENDER AGENDA */
-    /* ============================= */
     #calendar-dates .is-selected {
         background-color: #1f2937;
-        /* Tailwind bg-gray-800 */
+
         color: white;
         transform: scale(1.1);
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
@@ -166,19 +154,15 @@
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
-        /* Batasi hingga 3 baris */
+
         word-break: break-all;
-        /* Paksa potong kata yang panjang */
+
     }
 </style>
 @endpush
 
-
 @section('content')
 
-{{-- ====================================================================== --}}
-{{-- Panel Kontrol Admin (Disesuaikan untuk Perangkat Daerah) --}}
-{{-- ====================================================================== --}}
 @can('update', $currentPerangkatDaerah)
 <div class="bg-[#1e4e7c] text-white shadow-lg">
     <div
@@ -201,7 +185,7 @@
                 style="display: none;">
                 <div class="py-1">
                     <div class="px-4 py-2 text-xs text-gray-400">Halaman Utama Perangkat Daerah</div>
-                    {{-- Rute admin sekarang menggunakan parameter 'perangkatDaerah' --}}
+
                     <a href="{{ route('admin.perangkat-daerah.berita.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Berita</a>
                     <a href="{{ route('admin.perangkat-daerah.agenda.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Agenda</a>
                     <a href="{{ route('admin.perangkat-daerah.layanan.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Layanan</a>
@@ -214,7 +198,7 @@
                     <div class="px-4 py-2 text-xs text-gray-400">Navigasi</div>
                     <a href="{{ route('admin.perangkat-daerah.profil.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Halaman Profil</a>
                     <a href="{{ route('admin.perangkat-daerah.pemerintahan.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Halaman Pemerintahan</a>
-                    {{-- Halaman Wisata tidak ada untuk Perangkat Daerah --}}
+
                     <a href="{{ route('admin.perangkat-daerah.laporan-keuangan.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Laporan Keuangan</a>
                     <a href="{{ route('admin.perangkat-daerah.profil.infografis.index', ['perangkatDaerah' => $currentPerangkatDaerah->slug]) }}" class="block px-4 py-2 text-sm hover:bg-gray-100">Kelola Halaman Infografis</a>
                 </div>
@@ -224,17 +208,15 @@
 </div>
 @endcan
 
-{{-- Banner --}}
 <div class="w-full anim-fade-in-down">
     @php
-    // Logika banner sekarang menggunakan $currentPerangkatDaerah
     $banner = $currentPerangkatDaerah->banner_url;
     $banner_type = $currentPerangkatDaerah->banner_type; // Menggunakan accessor dari model
     $video_id = $currentPerangkatDaerah->youtube_video_id; // Menggunakan accessor dari model
     @endphp
 
     <div class="relative w-full h-[60vh] md:h-[50vh] bg-black shadow-lg overflow-hidden">
-        {{-- Logika tampilan banner sama, hanya sumber datanya yang berubah --}}
+
         @if ($banner_type === 'image_file')
         <div class="absolute inset-0 w-full h-full bg-cover bg-center"
             style="background-image: url('{{ asset('storage/' . $banner) }}');"></div>
@@ -257,7 +239,7 @@
 
         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
         <div class="relative z-10 h-full flex flex-col items-center justify-end text-white text-center p-6 sm:p-10">
-            {{-- Ganti judul dari 'Kecamatan' --}}
+
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white drop-shadow-lg">
                 {{ $currentPerangkatDaerah->name }}
             </h1>
@@ -269,13 +251,11 @@
     </div>
 </div>
 
-{{-- Konten Utama --}}
 <div class="bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 py-12">
 
-        {{-- Bagian Berita dan Populer --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-            {{-- PALING POPULER --}}
+
             <div class="lg:col-span-1 anim-fade-in-up" style="--anim-delay: 200ms;">
                 <div class="bg-white border border-gray-200 rounded-lg p-5 h-full shadow-sm">
                     <h3 class="font-bold mb-4 text-[#1E4E7C]">PALING POPULER</h3>
@@ -285,7 +265,7 @@
                             <span
                                 class="bg-[#1E4E7C] text-white text-xs font-bold w-6 h-6 flex items-center justify-center rounded-md mr-3 mt-0.5 flex-shrink-0">{{
                                 $loop->iteration }}</span>
-                            {{-- Route berita.show bersifat global, jadi tidak perlu diubah --}}
+
                             <a href="{{ route('berita.show', $populer->slug) }}"
                                 class="text-gray-800 font-medium group-hover:text-[#FF3B00] transition">{{
                                 $populer->judul }}</a>
@@ -296,7 +276,7 @@
                     </ul>
                 </div>
             </div>
-            {{-- BERITA TERKINI --}}
+
             <div class="lg:col-span-2 anim-fade-in-up" style="--anim-delay: 300ms;">
                 <div class="bg-white border border-gray-200 rounded-lg p-5 h-full shadow-sm">
                     <div class="flex justify-between items-center mb-4">
@@ -332,7 +312,6 @@
             </div>
         </div>
 
-        {{-- Bagian Agenda dan Kalender --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12 anim-fade-in-up" style="--anim-delay: 400ms;">
             <div class="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-5 h-full shadow-sm">
                 <div class="flex justify-between items-center mb-4">
@@ -377,7 +356,6 @@
             </div>
         </div>
 
-        <!-- BAGIAN LAYANAN -->
         <div class="mb-12 anim-fade-in-up" style="--anim-delay: 500ms;">
             <div class="flex justify-between items-center mb-8 px-2">
                 <h3 class="font-bold text-2xl text-[#1E4E7C]">Layanan Publik</h3>
@@ -414,11 +392,10 @@
             @endif
         </div>
 
-        {{-- Bagian Galeri --}}
         <div class="anim-fade-in-up pb-12" style="--anim-delay: 600ms;">
             <h3 class="font-bold text-2xl text-center mb-6 text-[#1E4E7C]">Galeri</h3>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {{-- Video Unggulan --}}
+
                 <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6 flex flex-col">
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="font-bold text-xl text-gray-800">Video Unggulan</h4>
@@ -475,7 +452,7 @@
                         @endif
                     </div>
                 </div>
-                {{-- Koleksi Foto --}}
+
                 <div class="lg:col-span-1 bg-white rounded-xl shadow-lg p-6 flex flex-col">
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="font-bold text-xl text-gray-800">Koleksi Foto</h4>
@@ -520,14 +497,13 @@
 @endsection
 
 @push('scripts')
-{{-- Script untuk Lightbox & Swiper --}}
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
 @php
-// Variabel untuk JS sekarang menggunakan data dari $currentPerangkatDaerah
-$agendaDataForJs = $agendaDataForJs ?? (object)[]; // Perbaikan: gunakan $agendaDataForJs
+$agendaDataForJs = $agendaDataForJs ?? (object)[];
 $loopBerita = ($beritaTerkini ?? collect())->count() > 1;
 $loopVideo = ($galeriVideo ?? collect())->count() > 1;
 $loopFoto = ($galeriFoto ?? collect())->count() > 1;
@@ -535,12 +511,7 @@ $loopFoto = ($galeriFoto ?? collect())->count() > 1;
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Semua logika JavaScript dari kecamatan/show.blade.php
-        // bisa disalin langsung ke sini karena struktur HTML-nya sama.
 
-        // ============================================================
-        // KALENDER AGENDA
-        // ============================================================
         const monthYearTitle = document.getElementById('month-year-title');
         const calendarDatesContainer = document.getElementById('calendar-dates');
         const prevMonthBtn = document.getElementById('prev-month-btn');
@@ -650,9 +621,6 @@ $loopFoto = ($galeriFoto ?? collect())->count() > 1;
             initializeView();
         }
 
-        // ============================================================
-        // SWIPER & LIGHTBOX INISIALISASI
-        // ============================================================
         lightbox.option({ 'albumLabel': 'Gambar %1 dari %2', 'wrapAround': true });
 
         if (document.querySelector('.hero-news-slider')) {

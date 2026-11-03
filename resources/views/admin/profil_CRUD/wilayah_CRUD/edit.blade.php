@@ -1,15 +1,11 @@
 @php
-// [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
 if ($tenant instanceof \App\Models\Kecamatan && $tenant->slug !== 'kabupaten-subang') {
-// Ini untuk Kecamatan biasa
 $baseRouteName = 'admin.kecamatan.';
 $routeParameters = ['kecamatan' => $tenant->slug];
 } elseif ($tenant instanceof \App\Models\PerangkatDaerah) {
-// Ini untuk Perangkat Daerah
 $baseRouteName = 'admin.perangkat-daerah.';
 $routeParameters = ['perangkatDaerah' => $tenant->slug];
 } else {
-// Ini untuk level Kabupaten
 $baseRouteName = 'admin.kabupaten.';
 $routeParameters = []; // Rute kabupaten tidak butuh parameter
 }
@@ -58,46 +54,42 @@ $routeParameters = []; // Rute kabupaten tidak butuh parameter
 <div id="page-content" class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Informasi Wilayah: {{ $tenant->name }}</h1>
     <div class="bg-white p-8 rounded-lg shadow-md">
-        {{-- [FIX] Form action sekarang dinamis --}}
+
         <form action="{{ route($baseRouteName . 'profil.wilayah.update', $routeParameters) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="space-y-6">
 
-                {{-- Field Letak Geografis --}}
                 <div>
                     <label for="letak_geografis" class="block text-sm font-medium text-gray-700 mb-1">Letak
                         Geografis</label>
-                    {{-- [FIX] Menggunakan variabel $tenant --}}
+
                     <input id="letak_geografis" type="hidden" name="letak_geografis"
                         value="{{ old('letak_geografis', $tenant->letak_geografis) }}">
                     <trix-editor input="letak_geografis" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </trix-editor>
                 </div>
 
-                {{-- Field Iklim --}}
                 <div>
                     <label for="iklim" class="block text-sm font-medium text-gray-700 mb-1">Iklim</label>
-                    {{-- [FIX] Menggunakan variabel $tenant --}}
+
                     <input id="iklim" type="hidden" name="iklim" value="{{ old('iklim', $tenant->iklim) }}">
                     <trix-editor input="iklim" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </trix-editor>
                 </div>
 
-                {{-- Field Demografi --}}
                 <div>
                     <label for="demografi" class="block text-sm font-medium text-gray-700 mb-1">Demografi</label>
-                    {{-- [FIX] Menggunakan variabel $tenant --}}
+
                     <input id="demografi" type="hidden" name="demografi"
                         value="{{ old('demografi', $tenant->demografi) }}">
                     <trix-editor input="demografi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
                     </trix-editor>
                 </div>
 
-                {{-- Field Topografi --}}
                 <div>
                     <label for="topografi" class="block text-sm font-medium text-gray-700 mb-1">Topografi</label>
-                    {{-- [FIX] Menggunakan variabel $tenant --}}
+
                     <input id="topografi" type="hidden" name="topografi"
                         value="{{ old('topografi', $tenant->topografi) }}">
                     <trix-editor input="topografi" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
@@ -106,7 +98,7 @@ $routeParameters = []; // Rute kabupaten tidak butuh parameter
 
             </div>
             <div class="flex items-center justify-end mt-8 pt-5 border-t border-gray-200 space-x-3">
-                {{-- [FIX] Link Batal sekarang dinamis --}}
+
                 <a href="{{ route($baseRouteName . 'profil.index', $routeParameters) }}"
                     class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors">Batal</a>
                 <button type="submit"

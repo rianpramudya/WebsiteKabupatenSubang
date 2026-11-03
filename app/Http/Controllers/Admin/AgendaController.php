@@ -47,7 +47,6 @@ class AgendaController extends Controller
 
         $query = Agenda::query();
 
-       
         if ($tenant) {
             $query->where($tenant instanceof Kecamatan ? 'kecamatan_id' : 'perangkat_daerah_id', $tenant->id);
         } else {
@@ -63,7 +62,7 @@ class AgendaController extends Controller
     {
         $this->authorize('create', Agenda::class);
         $tenant = $this->getTenant($request);
-        
+
         $kecamatans = Auth::user()->hasRole('super-admin') ? Kecamatan::where('slug', '!=', 'kabupaten-subang')->orderBy('name')->get() : collect();
         $perangkatDaerahs = Auth::user()->hasRole('super-admin') ? PerangkatDaerah::orderBy('name')->get() : collect();
 
@@ -88,12 +87,12 @@ class AgendaController extends Controller
                 $data['kecamatan_id'] = $request->kecamatan_id;
                 $data['perangkat_daerah_id'] = null;
                 $redirectTenant = Kecamatan::find($data['kecamatan_id']);
-            } else { // Termasuk 'kabupaten'
+            } else {
                 $data['kecamatan_id'] = null;
                 $data['perangkat_daerah_id'] = null;
                 $redirectTenant = null;
             }
-        } else { // Untuk admin kecamatan atau PD
+        } else {
             if ($tenant instanceof Kecamatan) {
                 $data['kecamatan_id'] = $tenant->id;
             } elseif ($tenant instanceof PerangkatDaerah) {
@@ -116,7 +115,7 @@ class AgendaController extends Controller
         if ($tenant) {
             $query->where($tenant instanceof Kecamatan ? 'kecamatan_id' : 'perangkat_daerah_id', $tenant->id);
         } else {
-            // Pastikan hanya agenda level kabupaten yang bisa diakses tanpa tenant
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
         $agenda = $query->firstOrFail();

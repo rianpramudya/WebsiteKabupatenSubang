@@ -12,7 +12,7 @@
 @endpush
 
 @section('content')
-    {{-- Komponen Notifikasi Pop-up (Toast) --}}
+
     <div x-data="{ show: false, message: '', type: '' }" x-init="@if (session('success')) show = true; message = '{{ session('success') }}'; type = 'success'; setTimeout(() => show = false, 5000); @endif @if (session('error')) show = true; message = '{{ session('error') }}'; type = 'error'; setTimeout(() => show = false, 5000); @endif" x-show="show" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-2" class="fixed bottom-5 right-5 z-50 p-4 rounded-xl shadow-lg text-white font-semibold backdrop-blur-sm" :class="{ 'bg-[#1E4E79]/90': type === 'success', 'bg-[#E20E0D]/90': type === 'error' }" style="display: none;">
         <div class="flex items-center">
             <i class="fas" :class="{ 'fa-check-circle': type === 'success', 'fa-times-circle': type === 'error' }"></i>
@@ -21,7 +21,7 @@
     </div>
 
     <div id="page-content" class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {{-- Header Halaman --}}
+
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-10 pb-4 border-b border-gray-200">
             <div>
                 <h1 class="text-3xl font-bold text-[#1E4E79]">Galeri Media</h1>
@@ -58,7 +58,6 @@
             }
         @endphp
 
-        {{-- SECTION 1: FOTO --}}
         <div class="bg-white p-6 rounded-lg shadow-md mb-10">
             <h2 class="text-2xl font-bold text-slate-800 border-l-4 border-[#FCE405] pl-4 mb-6">Foto</h2>
             @if ($fotoItems->isNotEmpty())
@@ -69,9 +68,6 @@
                             <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
                                 @can('delete', $item)
                                     @php
-                                        // ======================================================================
-                                        // PERBAIKAN: Membuat action form "Hapus" menjadi dinamis
-                                        // ======================================================================
                                         $destroyRoute = '#';
                                         if (isset($kecamatan)) {
                                             $destroyRoute = route('admin.kecamatan.galeri.destroy', ['kecamatan' => $kecamatan, 'galeri' => $item]);
@@ -94,7 +90,6 @@
             @endif
         </div>
 
-        {{-- SECTION 2: VIDEO UPLOAD --}}
         <div class="bg-white p-6 rounded-xl shadow-lg mb-12">
             <h2 class="text-2xl font-bold text-slate-800 border-l-4 border-[#FCE405] pl-4 mb-6">Video (Upload)</h2>
             @if ($videoUploadItems->isNotEmpty())
@@ -112,9 +107,6 @@
                                 <i class="fas fa-play-circle text-white text-4xl opacity-100 group-hover:opacity-0 transition-opacity"></i>
                                 @can('delete', $item)
                                     @php
-                                        // ======================================================================
-                                        // PERBAIKAN: Membuat action form "Hapus" menjadi dinamis
-                                        // ======================================================================
                                         $destroyRoute = '#';
                                         if (isset($kecamatan)) {
                                             $destroyRoute = route('admin.kecamatan.galeri.destroy', ['kecamatan' => $kecamatan, 'galeri' => $item]);
@@ -136,7 +128,6 @@
             @endif
         </div>
 
-        {{-- SECTION 3: VIDEO YOUTUBE --}}
         <div class="bg-white p-6 rounded-xl shadow-lg">
             <h2 class="text-2xl font-bold text-slate-800 border-l-4 border-[#FCE405] pl-4 mb-6">Video (YouTube)</h2>
             @if ($videoYTItems->isNotEmpty())
@@ -156,9 +147,6 @@
                                 <i class="fab fa-youtube text-red-600 text-5xl opacity-80 group-hover:opacity-100 transition-opacity"></i>
                                 @can('delete', $item)
                                     @php
-                                        // ======================================================================
-                                        // PERBAIKAN: Membuat action form "Hapus" menjadi dinamis
-                                        // ======================================================================
                                         $destroyRoute = '#';
                                         if (isset($kecamatan)) {
                                             $destroyRoute = route('admin.kecamatan.galeri.destroy', ['kecamatan' => $kecamatan, 'galeri' => $item]);
@@ -207,7 +195,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(form a)');
 
         links.forEach(link => {
@@ -215,7 +203,7 @@
                 if (link.closest('form[onsubmit]')) {
                     return;
                 }
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => {
                     window.location.href = link.href;

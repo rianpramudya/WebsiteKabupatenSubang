@@ -26,7 +26,7 @@ class LayananController extends Controller
         if ($tenant instanceof PerangkatDaerah) {
             return 'admin.perangkat-daerah.layanan.' . $action;
         }
-        return 'admin.kabupaten.layanan.' . $action; // Fallback
+        return 'admin.kabupaten.layanan.' . $action;
     }
 
     private function getRouteParameters(?Model $tenant): array
@@ -51,7 +51,7 @@ class LayananController extends Controller
         }
 
         $layanans = $query->orderBy('urutan')->paginate(10);
-        
+
         return view('admin.layanan_CRUD.index', [
             'layanans' => $layanans,
             'tenant' => $tenant,
@@ -78,11 +78,11 @@ class LayananController extends Controller
         ]);
     }
 
-    public function store(StoreLayananRequest $request) 
+    public function store(StoreLayananRequest $request)
     {
         $this->authorize('create', Layanan::class);
         $tenant = $this->getTenant($request);
-        
+
         $data = $request->validated();
         $user = Auth::user();
         $redirectTenant = $tenant;
@@ -110,7 +110,7 @@ class LayananController extends Controller
         }
 
         Layanan::create($data);
-        
+
         return redirect()->route($this->getRouteName($redirectTenant, 'index'), $this->getRouteParameters($redirectTenant))
                          ->with('success', 'Layanan berhasil ditambahkan.');
     }
@@ -118,7 +118,7 @@ class LayananController extends Controller
     public function edit($tenant, Layanan $layanan)
     {
         $this->authorize('update', $layanan);
-        
+
         $kecamatans = Auth::user()->hasRole('super-admin') ? Kecamatan::where('slug', '!=', 'kabupaten-subang')->orderBy('name')->get() : collect();
         $perangkatDaerahs = Auth::user()->hasRole('super-admin') ? PerangkatDaerah::orderBy('name')->get() : collect();
 
@@ -162,9 +162,9 @@ class LayananController extends Controller
     public function destroy($tenant, Layanan $layanan)
     {
         $this->authorize('delete', $layanan);
-        
+
         $layanan->delete();
-        
+
         return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))
                          ->with('success', 'Layanan berhasil dihapus.');
     }

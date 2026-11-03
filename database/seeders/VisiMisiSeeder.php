@@ -4,24 +4,21 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Kecamatan; // Pastikan model Kecamatan digunakan
+use App\Models\Kecamatan;
 
 class VisiMisiSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
-        // 1. Mengisi Visi & Misi untuk Kabupaten Subang
+
         Kecamatan::updateOrCreate(
             [
-                'slug' => 'kabupaten-subang' // Kunci untuk mencari data
+                'slug' => 'kabupaten-subang'
             ],
             [
-                // [PERBAIKAN] Tambahkan 'name' di sini agar tidak error
                 'name' => 'Kabupaten Subang',
-                
+
                 'visi' => 'Terwujudnya Kabupaten Subang yang bersih, maju, sejahtera, dan berkarakter.',
                 'misi' => '<li>Meningkatkan kualitas sumber daya manusia yang berdaya saing.</li>
                            <li>Mewujudkan tata kelola pemerintahan yang baik dan bersih.</li>
@@ -31,7 +28,6 @@ class VisiMisiSeeder extends Seeder
             ]
         );
 
-        // 2. Mengisi Visi & Misi untuk Kecamatan Binong
         $kecamatanBinong = Kecamatan::where('slug', 'binong')->first();
         if ($kecamatanBinong) {
             $kecamatanBinong->update([

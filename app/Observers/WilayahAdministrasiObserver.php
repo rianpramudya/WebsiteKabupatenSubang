@@ -7,15 +7,12 @@ use Illuminate\Support\Facades\Cache;
 
 class WilayahAdministrasiObserver
 {
-    /**
-     * Membersihkan cache terkait setelah data diubah.
-     */
+
     private function clearCache(WilayahAdministrasi $wilayahAdministrasi)
     {
-        // Hapus cache untuk kecamatan terkait
+
         Cache::forget('wilayah_administrasi_' . $wilayahAdministrasi->kecamatan_id);
 
-        // Hapus cache untuk data agregat tingkat kabupaten
         Cache::forget('wilayah_administrasi_kabupaten');
     }
 

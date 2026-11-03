@@ -12,10 +12,6 @@ class StrukturPemerintahanRepository
 {
     protected int $cacheDurationHours = 24;
 
-    /**
-     * [MODIFIKASI]
-     * Mengambil semua data pejabat untuk halaman struktur pemerintahan.
-     */
     public function getAllPejabat(Kecamatan|PerangkatDaerah|null $context): Collection
     {
         $cacheKey = "struktur_pemerintahan.";
@@ -42,10 +38,6 @@ class StrukturPemerintahanRepository
         });
     }
 
-    /**
-     * Membersihkan semua cache.
-     * Metode ini akan dipanggil oleh PejabatObserver.
-     */
     public function clearCache(): void
     {
         Cache::flush();

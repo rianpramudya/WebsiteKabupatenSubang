@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Tambahkan import
+use App\Models\PerangkatDaerah;
 use App\Repositories\LaporanKeuanganRepository;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -35,7 +35,7 @@ class TransparansiController extends Controller
     public function index(Request $request): View
     {
         $context = $this->getContext($request);
-        // Anda perlu mengupdate LaporanKeuanganRepository agar bisa menerima $context
+
         $laporanPerTahun = $this->laporanKeuanganRepository->getGroupedByYear($context);
 
         return view('transparansi_keuangan.index', [

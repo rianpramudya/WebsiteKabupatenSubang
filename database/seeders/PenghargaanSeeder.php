@@ -17,7 +17,7 @@ class PenghargaanSeeder extends Seeder
         $disdukcapil = PerangkatDaerah::where('slug', 'disdukcapil')->first();
 
         $penghargaans = [
-            // Penghargaan Tingkat Kabupaten (tidak terikat tenant)
+
             [
                 'kecamatan_id' => null,
                 'perangkat_daerah_id' => null,
@@ -35,7 +35,6 @@ class PenghargaanSeeder extends Seeder
                 'instansi_pemberi' => 'Kementerian Pemberdayaan Perempuan dan Perlindungan Anak',
             ],
 
-            // Penghargaan spesifik untuk Kecamatan Binong
             [
                 'kecamatan_id' => $binong->id ?? null,
                 'perangkat_daerah_id' => null,
@@ -45,7 +44,6 @@ class PenghargaanSeeder extends Seeder
                 'instansi_pemberi' => 'DPMD Kabupaten Subang',
             ],
 
-            // Penghargaan spesifik untuk Perangkat Daerah Disdukcapil
             [
                 'kecamatan_id' => null,
                 'perangkat_daerah_id' => $disdukcapil->id ?? null,
@@ -56,7 +54,6 @@ class PenghargaanSeeder extends Seeder
             ],
         ];
 
-        // Masukkan semua data ke database
         foreach ($penghargaans as $penghargaan) {
             DB::table('penghargaans')->insert([
                 'kecamatan_id' => $penghargaan['kecamatan_id'],

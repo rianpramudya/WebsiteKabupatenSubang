@@ -9,12 +9,10 @@ use App\Models\Kecamatan;
 
 class PeranDanProgramSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
-        // Data untuk tingkat Kabupaten
+
         PeranDanProgram::create([
             'kecamatan_id' => null,
             'judul' => 'Sekretariat Daerah',
@@ -29,7 +27,6 @@ class PeranDanProgramSeeder extends Seeder
             'urutan' => 2,
         ]);
 
-        // Data untuk Kecamatan Binong (contoh)
         $kecamatanBinong = Kecamatan::where('slug', 'binong')->first();
         if ($kecamatanBinong) {
             PeranDanProgram::create([

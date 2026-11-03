@@ -19,8 +19,8 @@ class BeritaTerkiniComposer
 
     public function compose(View $view)
     {
-        $beritaTerkini = collect(); // Default collection kosong
-        $limit = 5; // Jumlah berita yang ingin ditampilkan
+        $beritaTerkini = collect();
+        $limit = 5;
 
         $kecamatan = $this->request->route('kecamatan');
         $perangkatDaerah = $this->request->route('perangkatDaerah');

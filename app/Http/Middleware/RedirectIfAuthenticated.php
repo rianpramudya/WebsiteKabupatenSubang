@@ -27,9 +27,6 @@ class RedirectIfAuthenticated
                     return redirect(route('dashboard'));
                 }
 
-                // ======================================================================
-                // PERBAIKAN: Tambahkan logika redirect untuk admin perangkat daerah
-                // ======================================================================
                 if ($user->hasRole('admin-perangkat-daerah') && $user->perangkatDaerah) {
                     return redirect(route('perangkat.show', ['perangkatDaerah' => $user->perangkatDaerah->slug]));
                 }
@@ -38,7 +35,6 @@ class RedirectIfAuthenticated
                     return redirect(route('kecamatan.show', ['kecamatan' => $user->kecamatan->slug]));
                 }
 
-                // Fallback redirect ke halaman utama jika ada kasus lain
                 return redirect(route('home'));
             }
         }

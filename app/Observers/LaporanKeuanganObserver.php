@@ -14,25 +14,16 @@ class LaporanKeuanganObserver
         $this->laporanKeuanganRepository = new LaporanKeuanganRepository();
     }
 
-    /**
-     * Handle the LaporanKeuangan "created" event.
-     */
     public function created(LaporanKeuangan $laporanKeuangan): void
     {
         $this->laporanKeuanganRepository->clearCache();
     }
 
-    /**
-     * Handle the LaporanKeuangan "updated" event.
-     */
     public function updated(LaporanKeuangan $laporanKeuangan): void
     {
         $this->laporanKeuanganRepository->clearCache();
     }
 
-    /**
-     * Handle the LaporanKeuangan "deleted" event.
-     */
     public function deleted(LaporanKeuangan $laporanKeuangan): void
     {
         $this->laporanKeuanganRepository->clearCache();

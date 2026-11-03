@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk judul dinamis --}}
 @php
 $namaKonteks = 'Kabupaten Subang'; // Default
 if (isset($currentPerangkatDaerah)) {
@@ -15,16 +14,16 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
 <style>
     :root {
         --org-line-color: #d1d5db;
-        /* Warna garis konektor (gray-300) */
+
         --org-card-bg: #ffffff;
         --org-card-border: #1E4E7C;
-        /* Warna utama (biru Subang) */
+
         --org-text-title: #1f2937;
-        /* gray-800 */
+
         --org-text-body: #4b5563;
-        /* gray-600 */
+
         --org-gap: 50px;
-        /* Jarak vertikal antar level */
+
     }
 
     .org-chart {
@@ -51,13 +50,10 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         flex-direction: column;
         align-items: center;
         padding: 0 1.5rem;
-        /* Jarak horizontal antar kartu */
+
         position: relative;
     }
 
-    /* === LOGIKA KONEKTOR BARU === */
-
-    /* Garis Vertikal dari ATAS ke kartu */
     .org-chart li::before {
         content: '';
         position: absolute;
@@ -69,7 +65,6 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         background-color: var(--org-line-color);
     }
 
-    /* Garis Vertikal dari BAWAH kartu */
     .org-chart li::after {
         content: '';
         position: absolute;
@@ -81,9 +76,8 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         background-color: var(--org-line-color);
     }
 
-    /* Garis Horizontal yang menghubungkan SIBLING */
     .org-chart li:not(:only-child)::after {
-        /* Sembunyikan garis bawah jika kartu punya sibling, karena koneksi lewat garis horizontal */
+
         display: none;
     }
 
@@ -103,14 +97,13 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         position: absolute;
         top: calc(0px - var(--org-gap) / 2);
         left: 15%;
-        /* Mulai dari sebagian kartu pertama */
+
         right: 15%;
-        /* Berakhir di sebagian kartu terakhir */
+
         height: 2px;
         background-color: var(--org-line-color);
     }
 
-    /* Sembunyikan konektor yang tidak perlu */
     .org-chart>ul:first-child>li::before {
         display: none;
     }
@@ -123,9 +116,6 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         display: none;
     }
 
-
-    /* === AKHIR LOGIKA KONEKTOR === */
-
     .org-card {
         background-color: var(--org-card-bg);
         border-radius: 0.75rem;
@@ -136,7 +126,7 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         border-top: 5px solid var(--org-card-border);
         z-index: 1;
-        /* Agar kartu di atas garis */
+
     }
 
     .org-card:hover {
@@ -165,7 +155,6 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         margin-top: 0.25rem;
     }
 
-    /* Animasi */
     .animated-item {
         opacity: 0;
         transform: scale(0.95) translateY(20px);
@@ -187,7 +176,7 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
             <h1 class="text-4xl md:text-5xl font-extrabold text-[#1E4E7C] tracking-tight">
                 Struktur Organisasi
             </h1>
-            {{-- 2. Gunakan nama konteks dinamis --}}
+
             <p class="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
                 {{ $namaKonteks }}
             </p>

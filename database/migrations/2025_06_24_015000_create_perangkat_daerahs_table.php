@@ -6,18 +6,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
-        // Perintah ini hanya untuk membuat tabel 'perangkat_daerahs'
+
         Schema::create('perangkat_daerahs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
 
-            // Kolom-kolom ini meniru struktur dari tabel 'kecamatans'
             $table->string('logo')->nullable();
             $table->string('banner_type')->nullable();
             $table->string('banner_url')->nullable();
@@ -49,9 +46,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('perangkat_daerahs');

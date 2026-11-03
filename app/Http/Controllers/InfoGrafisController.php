@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\PerangkatDaerah;
 use App\Models\Berita;
 use App\Repositories\InfografisRepository;
 use Illuminate\Http\Request;

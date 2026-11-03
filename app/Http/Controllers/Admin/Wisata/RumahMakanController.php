@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin\Wisata;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Kecamatan, RumahMakan, PerangkatDaerah}; // Tambahkan PerangkatDaerah
+use App\Models\{Kecamatan, RumahMakan, PerangkatDaerah};
 use App\Http\Requests\Admin\Wisata\{StoreRumahMakanRequest, UpdateRumahMakanRequest};
-use Illuminate\Database\Eloquent\Model; // Tambahkan Model
-use Illuminate\Http\Request; // Tambahkan Request
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;

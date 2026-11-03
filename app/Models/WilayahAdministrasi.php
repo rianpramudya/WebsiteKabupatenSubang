@@ -20,22 +20,14 @@ class WilayahAdministrasi extends Model
         'jumlah_penduduk',
     ];
 
-    /**
-     * Mendefinisikan relasi bahwa setiap wilayah administrasi
-     * dimiliki oleh satu kecamatan.
-     */
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class);
     }
 
-    /**
-     * Relasi ke PerangkatDaerah (jika berita ini milik perangkat daerah).
-     */
     public function perangkatDaerah()
     {
         return $this->belongsTo(PerangkatDaerah::class);
     }
-    // --------------------------------
-    
+
 }

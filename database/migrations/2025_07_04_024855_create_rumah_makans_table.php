@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('rumah_makans', function (Blueprint $table) {
@@ -16,7 +14,7 @@ return new class extends Migration
             $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
             $table->string('nama');
             $table->string('slug')->unique();
-            $table->string('jenis_kuliner')->nullable(); // Contoh: Sunda, Seafood, Bakso
+            $table->string('jenis_kuliner')->nullable();
             $table->text('deskripsi');
             $table->string('alamat');
             $table->string('gambar')->nullable();
@@ -26,9 +24,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('rumah_makans');

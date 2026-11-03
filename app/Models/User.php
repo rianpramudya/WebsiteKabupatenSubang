@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'kecamatan_id',
-        'perangkat_daerah_id', // <-- PERBAIKAN 1: Tambahkan ini
+        'perangkat_daerah_id',
     ];
 
     /**
@@ -48,20 +48,11 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Relasi ke Kecamatan (jika admin terikat pada satu kecamatan).
-     */
     public function kecamatan(): BelongsTo
     {
         return $this->belongsTo(Kecamatan::class);
     }
 
-    /**
-     * ======================================================================
-     * PERBAIKAN 2: Tambahkan relasi ke model PerangkatDaerah.
-     * ======================================================================
-     * Relasi: Seorang pengguna (admin) bisa jadi milik satu Perangkat Daerah.
-     */
     public function perangkatDaerah(): BelongsTo
     {
         return $this->belongsTo(PerangkatDaerah::class);

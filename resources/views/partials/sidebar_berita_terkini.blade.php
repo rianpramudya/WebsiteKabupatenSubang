@@ -2,12 +2,11 @@
     <div class="bg-white p-5 rounded-lg shadow-sm sticky top-24 anim-fade-in-right" style="--anim-delay: 600ms;">
         <h3 class="font-bold text-lg border-b pb-3 mb-4 text-[#1E4E7C]">Berita Terkini</h3>
 
-        {{-- Pastikan variabel $berita_terkini ada sebelum me-looping --}}
         @if(isset($berita_terkini) && $berita_terkini->isNotEmpty())
             <ul class="space-y-4">
                 @foreach ($berita_terkini as $berita)
                     <li class="anim-fade-in-up" style="--anim-delay: {{ 700 + ($loop->iteration * 150) }}ms;">
-                        {{-- Link sudah diperbaiki di sini --}}
+
                         <a href="{{ route('berita.show', $berita->slug) }}" class="flex items-center gap-4 group">
                             <img src="{{ $berita->gambar ? asset('storage/' . $berita->gambar) : 'https://placehold.co/150x150/e2e8f0/64748b?text=Berita' }}"
                                 alt="{{ $berita->judul }}"

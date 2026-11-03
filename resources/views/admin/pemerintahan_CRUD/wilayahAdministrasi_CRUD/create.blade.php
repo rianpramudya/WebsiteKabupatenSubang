@@ -1,5 +1,4 @@
 @php
-// [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.pemerintahan.' : 'admin.perangkat-daerah.pemerintahan.';
@@ -21,9 +20,9 @@ $crudRoutePrefix = $baseRouteName . 'wilayah-administrasi';
 <div id="page-content" class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Tambah Data Desa/Kelurahan Baru untuk {{ $tenantName }}</h1>
     <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md">
-        {{-- [PERBAIKAN] Action form sekarang menggunakan variabel yang benar --}}
+
         <form action="{{ route($crudRoutePrefix . '.store', $routeParameters) }}" method="POST">
-            {{-- [PERBAIKAN] Mengirim variabel yang dibutuhkan ke _form --}}
+
             @include('admin.pemerintahan_CRUD.wilayahAdministrasi_CRUD._form', [
             'wilayahAdministrasi' => new \App\Models\WilayahAdministrasi(),
             'tenant' => $tenant,

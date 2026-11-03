@@ -45,7 +45,7 @@
             </h1>
 
             <div class="flex items-center text-sm text-gray-500 mb-8 pb-8 border-b">
-                {{-- Menggunakan isoFormat untuk nama bulan dalam Bahasa Indonesia --}}
+
                 <span>Dipublikasikan pada {{ \Carbon\Carbon::parse($berita->published_at)->isoFormat('D MMMM YYYY,
                     HH:mm') }}</span>
                 <span class="mx-2">|</span>
@@ -73,19 +73,16 @@
                     @foreach($berita->tags as $tag)
                     @php
                     $route = '';
-                    // Cek apakah berita ini milik sebuah Kecamatan
                     if ($berita->kecamatan) {
                     $route = route('berita.tags.kecamatan.index', [
                     'kecamatan' => $berita->kecamatan->slug,
                     'tag' => $tag->slug
                     ]);
-                    // Cek apakah berita ini milik sebuah Perangkat Daerah
                     } elseif ($berita->perangkatDaerah) {
                     $route = route('berita.tags.perangkat.index', [
                     'perangkatDaerah' => $berita->perangkatDaerah->slug,
                     'tag' => $tag->slug
                     ]);
-                    // Jika bukan keduanya, gunakan route global (Kabupaten)
                     } else {
                     $route = route('berita.tags.index', ['tag' => $tag->slug]);
                     }
@@ -125,17 +122,13 @@
                     <div class="flex items-center space-x-3">
                         @can('update', $berita)
                         @php
-                        // Cek apakah berita ini memiliki kecamatan atau tidak
                         if ($berita->kecamatan) {
-                        // [PERBAIKAN] Gunakan nama rute yang benar: 'admin.kecamatan.berita.edit'
                         $editRoute = route('admin.kecamatan.berita.edit', ['kecamatan' => $berita->kecamatan->slug,
                         'berita' => $berita]);
                         } elseif ($berita->perangkatDaerah) {
-                        // [PERBAIKAN] Tambahkan logika untuk Perangkat Daerah
                         $editRoute = route('admin.perangkat-daerah.berita.edit', ['perangkatDaerah' =>
                         $berita->perangkatDaerah->slug, 'berita' => $berita]);
                         } else {
-                        // Jika tidak keduanya, gunakan route edit untuk tingkat kabupaten
                         $editRoute = route('admin.kabupaten.berita.edit', $berita);
                         }
                         @endphp

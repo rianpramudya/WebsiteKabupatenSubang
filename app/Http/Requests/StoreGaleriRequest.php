@@ -20,26 +20,24 @@ class StoreGaleriRequest extends FormRequest
         return [
             'judul' => 'required|string|max:255',
             'tipe' => 'required|string|in:foto,video_upload,video_yt',
-            
+
             'file_foto' => [
                 Rule::requiredIf($this->input('tipe') === 'foto'),
                 'nullable',
                 'image',
                 'mimes:jpeg,png,jpg,webp',
-                'max:2048', // max 2MB
-                'dimensions:ratio=4/3' // Aturan untuk rasio aspek 4:3
+                'max:2048',
+                'dimensions:ratio=4/3'
             ],
 
-            // MODIFIKASI DIMULAI DI SINI
             'file_video_upload' => [
                 Rule::requiredIf($this->input('tipe') === 'video_upload'),
                 'nullable',
                 'file',
                 'mimes:mp4,mov,webm',
-                'max:102400', // max 100MB
-                'dimensions:ratio=16/9' // Aturan untuk rasio aspek 16:9
+                'max:102400',
+                'dimensions:ratio=16/9'
             ],
-            // AKHIR MODIFIKASI
 
             'file_video_yt' => [
                 Rule::requiredIf($this->input('tipe') === 'video_yt'),
@@ -53,13 +51,13 @@ class StoreGaleriRequest extends FormRequest
                 'string',
                 Rule::in(['kecamatan', 'pd', 'kabupaten']),
             ],
-            
+
             'kecamatan_id' => [
                 Rule::requiredIf(fn() => $isSuperAdmin && $this->input('owner_type') === 'kecamatan'),
                 'nullable',
                 'exists:kecamatans,id'
             ],
-            
+
             'perangkat_daerah_id' => [
                 Rule::requiredIf(fn() => $isSuperAdmin && $this->input('owner_type') === 'pd'),
                 'nullable',
@@ -72,9 +70,9 @@ class StoreGaleriRequest extends FormRequest
     {
         return [
             'file_foto.dimensions' => 'Ukuran foto tidak valid. Harap gunakan gambar dengan rasio aspek 4:3.',
-            // MODIFIKASI DIMULAI DI SINI
+
             'file_video_upload.dimensions' => 'Rasio video tidak valid. Harap gunakan video dengan rasio aspek 16:9.',
-            // AKHIR MODIFIKASI
+
         ];
     }
 }

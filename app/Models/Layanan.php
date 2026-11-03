@@ -18,7 +18,7 @@ class Layanan extends Model
      */
     protected $fillable = [
         'kecamatan_id',
-        'perangkat_daerah_id', // <-- [PERBAIKAN] Tambahkan ini
+        'perangkat_daerah_id',
         'nama',
         'deskripsi',
         'icon',
@@ -26,27 +26,17 @@ class Layanan extends Model
         'urutan',
     ];
 
-    /**
-     * Mendefinisikan relasi "milik" ke model Kecamatan.
-     * Setiap Layanan dimiliki oleh satu Kecamatan.
-     */
     public function kecamatan(): BelongsTo
     {
         return $this->belongsTo(Kecamatan::class);
     }
 
-    /**
-     * Terapkan global scope Tenant untuk admin-kecamatan.
-     */
     protected static function booted(): void
     {
         static::addGlobalScope(new TenantScope);
     }
 
-    /**
-     * Relasi ke PerangkatDaerah (jika layanan ini milik perangkat daerah).
-     */
-    public function perangkatDaerah(): BelongsTo // <-- [PERBAIKAN] Menambahkan tipe return
+    public function perangkatDaerah(): BelongsTo
     {
         return $this->belongsTo(PerangkatDaerah::class, 'perangkat_daerah_id');
     }

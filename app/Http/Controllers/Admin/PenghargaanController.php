@@ -8,7 +8,7 @@ use App\Models\PerangkatDaerah;
 use App\Models\Penghargaan;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth; // <-- [FIX] Import the Auth facade
+use Illuminate\Support\Facades\Auth;
 
 class PenghargaanController extends Controller
 {
@@ -25,7 +25,7 @@ class PenghargaanController extends Controller
         if ($tenant instanceof PerangkatDaerah) {
             return 'admin.perangkat-daerah.profil.penghargaan.' . $action;
         }
-        // Fallback untuk Kabupaten
+
         return 'admin.kabupaten.profil.penghargaan.' . $action;
     }
 
@@ -37,7 +37,7 @@ class PenghargaanController extends Controller
         if ($tenant instanceof PerangkatDaerah) {
             return ['perangkatDaerah' => $tenant->slug];
         }
-        // Untuk Kabupaten, kembalikan array kosong
+
         return [];
     }
 

@@ -8,12 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class AgendaRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
-        return true; // Otorisasi ditangani oleh Policy di controller
+        return true;
     }
 
     /**
@@ -31,7 +29,6 @@ class AgendaRequest extends FormRequest
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
 
-            // Hanya validasi owner_type jika super-admin
             'owner_type' => [
                 Rule::requiredIf($isSuperAdmin),
                 'nullable',
@@ -39,14 +36,12 @@ class AgendaRequest extends FormRequest
                 Rule::in(['kecamatan', 'pd', 'kabupaten']),
             ],
 
-            // Wajib diisi jika super-admin memilih 'kecamatan'
             'kecamatan_id' => [
                 Rule::requiredIf(fn() => $isSuperAdmin && $this->input('owner_type') === 'kecamatan'),
                 'nullable',
                 'exists:kecamatans,id'
             ],
 
-            // Wajib diisi jika super-admin memilih 'pd'
             'perangkat_daerah_id' => [
                 Rule::requiredIf(fn() => $isSuperAdmin && $this->input('owner_type') === 'pd'),
                 'nullable',

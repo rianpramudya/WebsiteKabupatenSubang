@@ -4,21 +4,16 @@ namespace App\Repositories;
 
 use App\Models\Budaya;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class BudayaRepository
 {
-    /**
-     * Durasi cache default dalam jam.
-     */
+
     protected int $cacheDurationHours = 1;
 
-    /**
-     * Mengambil data budaya terbaru untuk halaman utama kecamatan (dengan cache).
-     */
     public function getLatestForKecamatan(Kecamatan $kecamatan, int $count = 3): Collection
     {
         $cacheKey = "budaya.kecamatan.{$kecamatan->id}.latest.{$count}";
@@ -32,10 +27,6 @@ class BudayaRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil data budaya terbaru untuk halaman utama Perangkat Daerah (dengan cache).
-     */
     public function getLatestForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $count = 3): Collection
     {
         $cacheKey = "budaya.perangkat_daerah.{$perangkatDaerah->id}.latest.{$count}";
@@ -49,9 +40,6 @@ class BudayaRepository
         });
     }
 
-    /**
-     * Mengambil data budaya dengan paginasi untuk halaman daftar budaya kecamatan (dengan cache).
-     */
     public function getPaginatedForKecamatan(Kecamatan $kecamatan, int $perPage = 12): LengthAwarePaginator
     {
         $page = request('page', 1);
@@ -65,10 +53,6 @@ class BudayaRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil data budaya dengan paginasi untuk halaman daftar budaya Perangkat Daerah (dengan cache).
-     */
     public function getPaginatedForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $perPage = 12): LengthAwarePaginator
     {
         $page = request('page', 1);
@@ -82,25 +66,19 @@ class BudayaRepository
         });
     }
 
-    /**
-     * Mengambil data budaya dengan paginasi untuk tingkat kabupaten (dengan cache).
-     */
     public function getPaginatedForKabupaten(int $perPage = 12): LengthAwarePaginator
     {
         $page = request('page', 1);
         $cacheKey = "budaya.kabupaten.paginated.page-{$page}";
 
         return Cache::remember($cacheKey, now()->addHours($this->cacheDurationHours), function () use ($perPage) {
-            return Budaya::whereNull('kecamatan_id')->whereNull('perangkat_daerah_id') // <-- Ditambahkan
+            return Budaya::whereNull('kecamatan_id')->whereNull('perangkat_daerah_id')
                 ->whereNotNull('published_at')
                 ->latest('published_at')
                 ->paginate($perPage);
         });
     }
 
-    /**
-     * Membersihkan semua cache.
-     */
     public function clearCache(): void
     {
         Cache::flush();

@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk menentukan judul, subjudul, dan URL kembali secara dinamis --}}
 @php
     $judulHalaman = 'Layanan Publik';
     $subJudul = 'Semua layanan publik yang tersedia.'; // Default
@@ -40,7 +39,7 @@
             display: -webkit-box;
             -webkit-box-orient: vertical;
             -webkit-line-clamp: 2;
-            line-height: 1.5; 
+            line-height: 1.5;
             max-height: calc(1.5em * 2);
             word-break: break-all;
         }
@@ -53,7 +52,7 @@
         <div class="container mx-auto px-4 sm:px-6">
 
             <div class="text-center mb-10">
-                {{-- 2. Gunakan judul dan subjudul dinamis --}}
+
                 <h1 class="text-3xl md:text-4xl font-extrabold text-[#1E4E7C]">{{ $judulHalaman }}</h1>
                 <p class="mt-2 text-lg text-gray-600">{{ $subJudul }}</p>
             </div>
@@ -73,7 +72,6 @@
                                 {{ strip_tags(html_entity_decode($layanan->deskripsi)) ?? 'Informasi lebih lanjut tersedia di link berikut.' }}
                             </p>
 
-                            {{-- 3. Logika rute dinamis untuk tombol "Lihat Detail" --}}
                             @php
                                 $detailUrl = '#';
                                 if (isset($currentPerangkatDaerah)) {
@@ -92,7 +90,6 @@
                     @endforeach
                 </div>
 
-                {{-- Bagian Paginasi --}}
                 <div class="mt-12">
                     {{ $layanans->links() }}
                 </div>
@@ -105,9 +102,9 @@
             @endif
 
             <div class="text-center mt-12">
-                {{-- 4. Gunakan URL kembali yang dinamis --}}
+
                 <a href="{{ $kembaliUrl }}" class="text-sm font-semibold text-[#1E4E7C] hover:text-[#FF3B00] transition group">
-                    <span class="group-hover:-translate-x-1 inline-block transition-transform">&larr;</span> 
+                    <span class="group-hover:-translate-x-1 inline-block transition-transform">&larr;</span>
                     @if(isset($currentPerangkatDaerah))
                         Kembali ke Halaman {{ $currentPerangkatDaerah->name }}
                     @elseif(isset($currentKecamatan))
@@ -126,12 +123,12 @@
 @push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const fadeOutDuration = 500; 
+            const fadeOutDuration = 500;
             const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(.pagination a)');
 
             links.forEach(link => {
                 link.addEventListener('click', (event) => {
-                    event.preventDefault(); 
+                    event.preventDefault();
                     document.body.classList.add('fading-out');
                     setTimeout(() => {
                         window.location.href = link.href;

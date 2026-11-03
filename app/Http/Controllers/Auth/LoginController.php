@@ -8,16 +8,6 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | Controller ini menangani autentikasi pengguna dan redirect
-    | ke halaman yang sesuai. Trait AuthenticatesUsers menyediakan
-    | fungsionalitas yang diperlukan, termasuk proteksi brute force.
-    |
-    */
 
     use AuthenticatesUsers;
 
@@ -39,9 +29,6 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Menampilkan form login.
-     */
     public function showLoginForm()
     {
         return view('auth.login');
@@ -71,9 +58,6 @@ class LoginController extends Controller
             return redirect()->intended(route('dashboard'));
         }
 
-        // ======================================================================
-        // PERBAIKAN: Tambahkan logika redirect untuk admin perangkat daerah
-        // ======================================================================
         if ($user->hasRole('admin-perangkat-daerah') && $user->perangkatDaerah) {
             return redirect()->intended(route('perangkat.show', ['perangkatDaerah' => $user->perangkatDaerah->slug]));
         }
@@ -82,7 +66,6 @@ class LoginController extends Controller
             return redirect()->intended(route('kecamatan.show', ['kecamatan' => $user->kecamatan->slug]));
         }
 
-        // Jika ada kasus lain, arahkan ke home
         return redirect()->intended($this->redirectTo);
     }
 }

@@ -16,22 +16,18 @@ class StoreBudayaRequest extends FormRequest
         return [
             'nama' => ['required', 'string', 'max:255'],
             'deskripsi' => ['required', 'string'],
-            
-            // MODIFIKASI DIMULAI DI SINI
+
             'gambar' => [
-                'nullable', 
-                'image', 
-                'mimes:jpeg,png,jpg,webp', 
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,webp',
                 'max:2048',
-                'dimensions:ratio=4/3' // Aturan untuk rasio aspek 4:3
+                'dimensions:ratio=4/3'
             ],
-            // AKHIR MODIFIKASI
+
         ];
     }
 
-    /**
-     * Menambahkan pesan error kustom agar lebih ramah pengguna.
-     */
     public function messages(): array
     {
         return [

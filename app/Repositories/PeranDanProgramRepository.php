@@ -4,19 +4,16 @@ namespace App\Repositories;
 
 use App\Models\PeranDanProgram;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Eloquent\Collection;
 
 class PeranDanProgramRepository
 {
-    /**
-     * Durasi cache default dalam jam.
-     */
-    protected int $cacheDurationHours = 24; // Data ini jarang berubah
+
+    protected int $cacheDurationHours = 24;
 
     /**
-     * [MODIFIKASI]
      * Mengambil semua data Peran dan Program (dengan cache).
      *
      * @param Kecamatan|PerangkatDaerah|null $context
@@ -48,10 +45,6 @@ class PeranDanProgramRepository
         });
     }
 
-    /**
-     * Membersihkan semua cache.
-     * Metode ini akan dipanggil oleh PeranDanProgramObserver.
-     */
     public function clearCache(): void
     {
         Cache::flush();

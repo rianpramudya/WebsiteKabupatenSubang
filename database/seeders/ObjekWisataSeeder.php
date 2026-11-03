@@ -12,7 +12,7 @@ class ObjekWisataSeeder extends Seeder
 {
     public function run(): void
     {
-        // Data untuk Kabupaten
+
         ObjekWisata::create([
             'kecamatan_id' => null,
             'nama' => 'Pemandian Air Panas Sari Ater',
@@ -23,7 +23,6 @@ class ObjekWisataSeeder extends Seeder
             'is_unggulan' => true,
         ]);
 
-        // Data untuk Kecamatan Pagaden
         $kecamatanPagaden = Kecamatan::where('slug', 'pagaden')->first();
         if ($kecamatanPagaden) {
             ObjekWisata::create([

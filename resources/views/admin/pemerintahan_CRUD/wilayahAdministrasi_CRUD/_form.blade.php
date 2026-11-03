@@ -37,7 +37,7 @@
     </div>
 </div>
 <div class="flex justify-end mt-8">
-    {{-- [PERBAIKAN] Tombol Batal sekarang menggunakan variabel yang benar --}}
+
     <a href="{{ route($crudRoutePrefix . '.index', $routeParameters) }}"
         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2 transition-colors">Batal</a>
     <button type="submit"

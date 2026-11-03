@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP baru untuk menentukan judul halaman secara dinamis --}}
 @php
     $judulHalaman = 'Semua Agenda';
     $subJudul = 'Jadwal acara dan kegiatan terbaru.'; // Default subtitle
@@ -12,27 +11,23 @@
         $judulHalaman = 'Agenda Kecamatan ' . $currentKecamatan->name;
         $subJudul = 'Jadwal acara dan kegiatan di wilayah Kecamatan ' . $currentKecamatan->name;
     } else {
-        // Fallback untuk konteks Kabupaten
         $judulHalaman = 'Agenda Kabupaten Subang';
         $subJudul = 'Jadwal acara dan kegiatan di tingkat Kabupaten Subang.';
     }
 @endphp
 
-{{-- 2. Menggunakan variabel dinamis untuk judul tab browser --}}
 @section('title', $judulHalaman)
 
 @section('content')
 <div id="page-content" class="bg-gray-50">
     <div class="container mx-auto px-4 sm:px-6 py-12">
 
-        {{-- Header Halaman --}}
         <div class="text-center mb-12">
-            {{-- 3. Menggunakan variabel dinamis untuk judul dan subjudul halaman --}}
+
             <h1 class="text-3xl md:text-4xl font-extrabold text-[#1E4E7C] tracking-tight">{{ $judulHalaman }}</h1>
             <p class="mt-2 text-lg text-gray-600">{{ $subJudul }}</p>
         </div>
 
-        {{-- Cek jika tidak ada agenda sama sekali --}}
         @if($agendasHariIni->isEmpty() && $agendasMendatang->isEmpty() && $agendasLewat->isEmpty())
             <div class="bg-white rounded-lg shadow-md p-12 text-center text-gray-500">
                 <i class="fas fa-calendar-times text-4xl mb-4"></i>
@@ -40,7 +35,7 @@
                 <p>Saat ini belum ada agenda yang dijadwalkan.</p>
             </div>
         @else
-            {{-- Bagian Agenda Hari Ini --}}
+
             <div class="mb-12">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#1E4E7C]">Agenda Hari Ini</h2>
                 @forelse ($agendasHariIni as $agenda)
@@ -50,7 +45,6 @@
                 @endforelse
             </div>
 
-            {{-- Bagian Agenda Mendatang --}}
             <div class="mb-12">
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-200">Agenda Mendatang</h2>
                 @forelse ($agendasMendatang as $agenda)
@@ -60,7 +54,6 @@
                 @endforelse
             </div>
 
-            {{-- Bagian Agenda Telah Lewat --}}
             <div>
                 <h2 class="text-2xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-gray-200">Agenda Telah Lewat</h2>
                 @forelse ($agendasLewat as $agenda)
@@ -74,7 +67,6 @@
 </div>
 @endsection
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 @push('styles')
 <style>
     @keyframes fadeIn {
@@ -97,7 +89,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(form a)');
 
         links.forEach(link => {

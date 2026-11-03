@@ -1,12 +1,10 @@
 @php
-    // [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
     if ($tenant) {
         $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
         $baseRouteName = $isKecamatan ? 'admin.kecamatan.' : 'admin.perangkat-daerah.';
         $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
         $tenantName = $tenant->name;
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.';
         $routeParameters = []; // Rute kabupaten tidak butuh parameter
         $tenantName = 'Kabupaten';

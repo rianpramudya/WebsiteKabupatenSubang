@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Galeri;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
@@ -21,10 +21,6 @@ class GaleriRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil foto terbaru untuk halaman utama Perangkat Daerah (dengan cache).
-     */
     public function getLatestPhotosForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $count = 10): Collection
     {
         $cacheKey = "galeri.foto.perangkat_daerah.{$perangkatDaerah->id}.latest.{$count}";
@@ -41,10 +37,6 @@ class GaleriRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil video terbaru untuk halaman utama Perangkat Daerah (dengan cache).
-     */
     public function getLatestVideosForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $count = 5): Collection
     {
         $cacheKey = "galeri.video.perangkat_daerah.{$perangkatDaerah->id}.latest.{$count}";
@@ -62,10 +54,6 @@ class GaleriRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil galeri foto dengan paginasi untuk Perangkat Daerah tertentu (dengan cache).
-     */
     public function getPaginatedPhotosForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $perPage = 12): LengthAwarePaginator
     {
         $page = request('page', 1);
@@ -84,10 +72,6 @@ class GaleriRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil galeri video dengan paginasi untuk Perangkat Daerah tertentu (dengan cache).
-     */
     public function getPaginatedVideosForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, int $perPage = 12): LengthAwarePaginator
     {
         $page = request('page', 1);

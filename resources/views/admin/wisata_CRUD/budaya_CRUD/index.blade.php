@@ -1,5 +1,4 @@
 @php
-// [PERBAIKAN] Logika lengkap untuk menangani semua level peran
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.wisata.' : 'admin.perangkat-daerah.wisata.';
@@ -91,7 +90,6 @@ $parentRoute = $baseRouteName . 'index';
     </div>
 </div>
 
-{{-- Blok CSS dan JavaScript untuk animasi (Tidak diubah) --}}
 <style>
     @keyframes fadeIn {
         from {
@@ -127,12 +125,12 @@ $parentRoute = $baseRouteName . 'index';
 </style>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])');
         links.forEach(link => {
             link.addEventListener('click', (event) => {
                 if (link.closest('form[onsubmit]')) { return; }
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => { window.location.href = link.href; }, fadeOutDuration);
             });

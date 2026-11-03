@@ -49,8 +49,6 @@ class PerangkatDaerah extends Model
         return 'slug';
     }
 
-    // --- RELASI DATABASE ---
-
     public function sejarahs(): HasMany
     {
         return $this->hasMany(Sejarah::class, 'perangkat_daerah_id', 'id');
@@ -106,15 +104,11 @@ class PerangkatDaerah extends Model
         return $this->hasMany(LaporanKeuangan::class, 'perangkat_daerah_id');
     }
 
-
     public function peranPrograms(): HasMany
     {
         return $this->hasMany(PeranDanProgram::class, 'perangkat_daerah_id');
     }
 
-    // ======================================================
-
-    // --- ACCESSOR & MUTATOR ---
     public function getLogoUrlAttribute(): string
     {
         if ($this->logo && Str::startsWith($this->logo, ['http://', 'https://'])) {
@@ -151,7 +145,6 @@ class PerangkatDaerah extends Model
         return $matches[1] ?? null;
     }
 
-    // --- EVENTS ---
     protected static function booted(): void
     {
         static::creating(function (self $model) {

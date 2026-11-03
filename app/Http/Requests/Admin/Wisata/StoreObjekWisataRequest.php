@@ -9,7 +9,7 @@ class StoreObjekWisataRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Otorisasi ditangani oleh Policy di Controller
+        return true;
     }
 
     public function rules(): array
@@ -21,29 +21,25 @@ class StoreObjekWisataRequest extends FormRequest
             'lokasi_teks' => ['required', 'string', 'max:255'],
             'google_maps_url' => ['nullable', 'url'],
             'is_unggulan' => ['sometimes', 'boolean'],
-            
-            // MODIFIKASI DIMULAI DI SINI
+
             'gambar' => [
-                'nullable', 
-                'image', 
-                'mimes:jpeg,png,jpg,webp', 
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,webp',
                 'max:2048',
-                'dimensions:ratio=16/9' // Aturan untuk rasio aspek 16:9
+                'dimensions:ratio=16/9'
             ],
-            // AKHIR MODIFIKASI
+
         ];
     }
 
-    /**
-     * Menambahkan pesan error kustom agar lebih ramah pengguna.
-     */
     public function messages(): array
     {
         return [
             'gambar.dimensions' => 'Ukuran gambar tidak valid. Harap gunakan gambar dengan rasio aspek 16:9.',
         ];
     }
-    
+
     protected function prepareForValidation()
     {
         $this->merge([

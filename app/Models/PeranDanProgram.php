@@ -12,7 +12,7 @@ class PeranDanProgram extends Model
 
     protected $fillable = [
         'kecamatan_id',
-        'perangkat_daerah_id', // <-- TAMBAHKAN INI
+        'perangkat_daerah_id',
         'judul',
         'deskripsi',
         'urutan',

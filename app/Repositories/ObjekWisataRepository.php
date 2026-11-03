@@ -14,10 +14,9 @@ class ObjekWisataRepository
 {
     protected int $cacheDurationHours = 1;
 
-    // MODIFIKASI FINAL: Menggunakan nama kolom yang benar dari migrasi
     protected array $selectedColumns = [
-        'id', 'nama', 'gambar', 'kategori', 'lokasi_teks', 
-        'is_unggulan', 'deskripsi_singkat as deskripsi', 'google_maps_url as url_google_maps', 
+        'id', 'nama', 'gambar', 'kategori', 'lokasi_teks',
+        'is_unggulan', 'deskripsi_singkat as deskripsi', 'google_maps_url as url_google_maps',
         'kecamatan_id', 'perangkat_daerah_id'
     ];
 

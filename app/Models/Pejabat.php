@@ -22,9 +22,9 @@ class Pejabat extends Model
         'nama',
         'jabatan',
         'urutan',
-        'foto', // Kolom untuk foto
-        'kecamatan_id', // Foreign key untuk relasi
-        'tenant_id',    // Foreign key untuk TenantScope
+        'foto',
+        'kecamatan_id',
+        'tenant_id',
         'perangkat_daerah_id'
     ];
 
@@ -39,20 +39,14 @@ class Pejabat extends Model
         static::addGlobalScope(new TenantScope);
     }
 
-    /**
-     * Definisikan relasi ke Kecamatan.
-     */
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class);
     }
 
-    /**
-     * Relasi ke PerangkatDaerah (jika berita ini milik perangkat daerah).
-     */
     public function perangkatDaerah()
     {
         return $this->belongsTo(PerangkatDaerah::class);
     }
-    // --------------------------------
+
 }

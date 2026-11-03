@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('galeris', function (Blueprint $table) {
             $table->id();
 
-            // [PERBAIKAN] Tambahkan perangkat_daerah_id dan buat keduanya nullable
             $table->foreignId('perangkat_daerah_id')->nullable()->constrained('perangkat_daerahs')->onDelete('cascade');
             $table->foreignId('kecamatan_id')->nullable()->constrained('kecamatans')->onDelete('cascade');
 

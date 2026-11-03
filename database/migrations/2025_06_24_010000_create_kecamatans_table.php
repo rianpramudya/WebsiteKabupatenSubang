@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('kecamatans', function (Blueprint $table) {
@@ -18,7 +16,7 @@ return new class extends Migration
 
             $table->string('logo')->nullable();
             $table->string('banner_type')->nullable();
-            $table->string('banner_url')->nullable(); 
+            $table->string('banner_url')->nullable();
             $table->text('sejarah')->nullable();
             $table->text('arti_lambang')->nullable();
 
@@ -35,7 +33,6 @@ return new class extends Migration
             $table->text('demografi')->nullable();
             $table->text('topografi')->nullable();
 
-            // [KOLOM BARU DITAMBAHKAN DI SINI]
             $table->string('telepon')->nullable();
             $table->string('email')->nullable();
             $table->text('alamat')->nullable();
@@ -48,9 +45,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('kecamatans');

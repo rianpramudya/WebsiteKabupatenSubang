@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk judul dinamis --}}
 @php
     $judulHalaman = 'Galeri Video';
     $subJudul = 'Kumpulan video dari Kabupaten Subang'; // Default
@@ -20,14 +19,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <style>
-        /* PERBAIKAN: Menambahkan style untuk kartu galeri yang lebih elegan */
+
         .gallery-card {
             background-color: white;
-            border-radius: 0.75rem; /* 12px */
+            border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            border: 1px solid #e5e7eb; /* border-gray-200 */
+            border: 1px solid #e5e7eb;
             transition: all 0.3s ease-in-out;
-            overflow: hidden; /* Penting agar konten tidak keluar dari border-radius */
+            overflow: hidden;
         }
         .gallery-card:hover {
             transform: translateY(-5px);
@@ -35,8 +34,8 @@
         }
         .gallery-card-image-wrapper {
             position: relative;
-            aspect-ratio: 16 / 9; /* Rasio standar video */
-            background-color: #f3f4f6; /* bg-gray-100 */
+            aspect-ratio: 16 / 9;
+            background-color: #f3f4f6;
         }
         .gallery-card-image-wrapper img,
         .gallery-card-image-wrapper video {
@@ -63,30 +62,30 @@
             justify-content: center;
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
-            pointer-events: none; /* Agar tidak mengganggu klik pada link */
+            pointer-events: none;
         }
         .group:hover .play-icon {
             opacity: 1;
         }
         .card-badge {
             position: absolute;
-            top: 0.75rem; /* 12px */
-            right: 0.75rem; /* 12px */
+            top: 0.75rem;
+            right: 0.75rem;
             padding: 0.25rem 0.6rem;
             border-radius: 9999px;
-            font-size: 0.75rem; /* 12px */
+            font-size: 0.75rem;
             font-weight: 600;
             color: white;
         }
         .card-content {
-            padding: 1rem; /* 16px */
+            padding: 1rem;
         }
         .card-title {
             font-weight: 600;
-            color: #1f2937; /* text-gray-800 */
+            color: #1f2937;
             line-height: 1.5;
         }
-        /* Style untuk iframe lightbox */
+
         .lb-video {
             width: 80vw;
             height: 80vh;
@@ -100,7 +99,6 @@
 <div class="bg-gray-50 py-12 min-h-screen">
     <div class="container mx-auto px-4 sm:px-6">
 
-        {{-- Judul Halaman --}}
         <div class="mb-8">
             <h1 class="text-3xl font-extrabold text-[#1E4E7C] tracking-tight">{{ $judulHalaman }}</h1>
             <p class="mt-1 text-gray-600">{{ $subJudul }}</p>
@@ -109,8 +107,7 @@
         @if ($videos->isNotEmpty())
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach ($videos as $video)
-                    
-                    {{-- PERBAIKAN: Struktur HTML untuk kartu video disatukan agar konsisten --}}
+
                     <div class="gallery-card group">
                         @if ($video->tipe === 'video_yt')
                             @php
@@ -122,7 +119,7 @@
                                 $embedUrl = $videoId ? "https://www.youtube.com/embed/" . $videoId : '#';
                                 $thumbnailUrl = $videoId ? "https://img.youtube.com/vi/{$videoId}/hqdefault.jpg" : 'https://placehold.co/640x360/e2e8f0/64748b?text=Invalid+URL';
                             @endphp
-                            
+
                             <a href="{{ $embedUrl }}" data-lightbox="youtube-video" data-title="{{ $video->judul }}">
                                 <div class="gallery-card-image-wrapper">
                                     <img src="{{ $thumbnailUrl }}" alt="Thumbnail: {{ $video->judul }}" onerror="this.src='https://placehold.co/640x360/e2e8f0/64748b?text=Video+Error';">
@@ -151,7 +148,7 @@
 
                 @endforeach
             </div>
-            
+
             <div class="mt-12">
                 {{ $videos->links() }}
             </div>
@@ -162,7 +159,7 @@
                 <p class="text-gray-400">Saat ini belum ada video yang dapat ditampilkan.</p>
             </div>
         @endif
-        
+
     </div>
 </div>
 @endsection
@@ -172,7 +169,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
     <script>
         $(document).ready(function() {
-            
+
             lightbox.option({
               'resizeDuration': 200,
               'wrapAround': true,
@@ -184,7 +181,7 @@
                 const videoUrl = $(this).attr('href');
                 const videoTitle = $(this).data('title');
                 const iframeContent = `<iframe class="lb-video" src="${videoUrl}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
-                
+
                 lightbox.start(
                     $(this),
                     [{'href': videoUrl, 'title': videoTitle, 'html': iframeContent}],

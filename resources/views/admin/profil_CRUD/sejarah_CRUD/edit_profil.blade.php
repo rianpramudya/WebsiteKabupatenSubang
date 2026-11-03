@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-    // Logika routing multi-tenant
     if ($tenant instanceof \App\Models\Kecamatan && $tenant->slug !== 'kabupaten-subang') {
         $baseRouteName = 'admin.kecamatan.';
         $routeParameters = ['kecamatan' => $tenant->slug];
@@ -16,9 +15,6 @@
 
 @section('title', 'Edit Sejarah & Lambang - ' . $tenant->name)
 
-{{-- ================================================================= --}}
-{{-- Menambahkan Aset Trix (CSS) dan Custom Style --}}
-{{-- ================================================================= --}}
 @push('styles')
     <link rel="stylesheet" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
@@ -80,20 +76,18 @@
                     </ul>
                 </div>
             @endif
-            {{-- ==== FORM UTAMA ==== --}}
+
             <form action="{{ route($baseRouteName . 'profil.sejarah.updateProfil', $routeParameters) }}" method="POST"
                 enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
 
-                {{-- Sejarah Awal --}}
                 <div class="form-section">
                     <label for="sejarah" class="block mb-2">Deskripsi Sejarah Awal</label>
                     <input id="sejarah" type="hidden" name="sejarah" value="{{ old('sejarah', $tenant->sejarah) }}">
                     <trix-editor input="sejarah" class="trix-content"></trix-editor>
                 </div>
 
-                {{-- Arti Lambang --}}
                 <div class="form-section">
                     <label for="arti_lambang" class="block mb-2">Arti Lambang</label>
                     <input id="arti_lambang" type="hidden" name="arti_lambang"
@@ -101,7 +95,6 @@
                     <trix-editor input="arti_lambang" class="trix-content"></trix-editor>
                 </div>
 
-                {{-- Logo --}}
                 <div class="form-section">
                     <label for="logo" class="block mb-2">Ganti Lambang/Logo</label>
                     <p class="text-xs text-gray-500 mb-2">Rekomendasi ukuran: rasio 1:1 (persegi).</p>
@@ -121,7 +114,6 @@
                     @endif
                 </div>
 
-                {{-- Gambar Sejarah --}}
                 <div class="form-section">
                     <h3 class="text-xl font-semibold text-gray-800 mb-2">Gambar-gambar Sejarah</h3>
                     <p class="text-sm text-gray-500 mb-6">Kosongkan jika tidak ingin mengubah gambar.</p>
@@ -151,7 +143,6 @@
                     </div>
                 </div>
 
-                {{-- Tombol Aksi --}}
                 <div class="flex items-center justify-end pt-6 border-t border-gray-200 space-x-4">
                     <a href="{{ route($baseRouteName . 'profil.sejarah.index', $routeParameters) }}"
                         class="btn bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg">
@@ -164,7 +155,6 @@
                 </div>
             </form>
 
-            {{-- ==== FORM-FORM HAPUS ==== --}}
             @if($tenant->logo)
                 <form id="delete-logo-form"
                     action="{{ route($baseRouteName . 'profil.sejarah.destroyImage', $routeParameters) }}" method="POST"
@@ -188,9 +178,6 @@
     </div>
 @endsection
 
-{{-- ================================================================= --}}
-{{-- Aset Trix (JS) --}}
-{{-- ================================================================= --}}
 @push('scripts')
     <script src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
 @endpush

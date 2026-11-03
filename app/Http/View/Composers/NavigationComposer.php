@@ -17,22 +17,19 @@ class NavigationComposer
         $isSuperAdmin = Auth::check() && Auth::user()->hasRole('super-admin');
         $currentRoute = request()->route();
 
-        // [PERBAIKAN] Logika penentuan konteks tenant disempurnakan
         if ($currentRoute) {
             $kecamatanParam = $currentRoute->parameter('kecamatan');
             $perangkatDaerahParam = $currentRoute->parameter('perangkatDaerah');
 
-            // Cek Perangkat Daerah terlebih dahulu
             if ($perangkatDaerahParam instanceof PerangkatDaerah) {
                 $activePerangkatDaerah = $perangkatDaerahParam;
             }
-            // Cek Kecamatan, TAPI pastikan BUKAN slug 'kabupaten-subang'
+
             elseif ($kecamatanParam instanceof Kecamatan && $kecamatanParam->slug !== 'kabupaten-subang') {
                 $activeKecamatan = $kecamatanParam;
             }
         }
 
-        // Cek fallback dari data view, juga dengan pengecualian untuk 'kabupaten-subang'
         if (!$activeKecamatan && isset($view->currentKecamatan) && $view->currentKecamatan instanceof Kecamatan && $view->currentKecamatan->slug !== 'kabupaten-subang') {
             $activeKecamatan = $view->currentKecamatan;
         }
@@ -47,7 +44,6 @@ class NavigationComposer
         $perangkatDaerahSlug = $activePerangkatDaerah ? $activePerangkatDaerah->slug : null;
         $logoHomeUrl = $isSuperAdmin ? route('dashboard') : route('home');
 
-        // Logika URL Beranda (sudah diperbaiki sebelumnya dan tetap dipertahankan)
         $publicHomeUrl = route('home');
         if ($isKecamatanContext) {
             $publicHomeUrl = route('kecamatan.show', ['kecamatan' => $kecamatanSlug]);
@@ -57,10 +53,8 @@ class NavigationComposer
             $publicHomeUrl = route('dashboard');
         }
 
-        // Statistik (placeholder)
         $visitorStats = ['online' => 0, 'today' => 0, 'total' => 0];
 
-        // Ambil data kontak Kabupaten Subang (sudah benar)
         $kontakKabupaten = Cache::remember('kontak_kabupaten', now()->addHours(24), function () {
             return Kecamatan::where('slug', 'kabupaten-subang')->first();
         });

@@ -12,35 +12,26 @@ use Carbon\Carbon;
 
 class PortalController extends Controller
 {
-    /**
-     * Halaman utama portal (level kabupaten).
-     */
+
     public function index(): View
     {
-        // --- Bagian Data untuk Halaman Utama Kabupaten ---
+
         $kecamatans = Kecamatan::where('slug', '!=', 'kabupaten-subang')->orderBy('name')->get();
         $beritaTerkini = Berita::with('kategori')->latest('published_at')->take(6)->get();
 
-        // --- Bagian Data untuk Fitur Baru: Perangkat Daerah ---
         $perangkatDaerahs = PerangkatDaerah::orderBy('name')->get();
 
-        // [DIPERBAIKI] Ambil data spesifik untuk Kabupaten (termasuk banner-nya)
         $kabupaten = Kecamatan::where('slug', 'kabupaten-subang')->first();
 
-        // Mengirim semua data yang dibutuhkan ke view 'portal'.
         return view('portal', [
             'kecamatans'       => $kecamatans,
             'beritaTerkini'    => $beritaTerkini,
             'perangkatDaerahs' => $perangkatDaerahs,
-            'kabupaten'        => $kabupaten, // <--- VARIABEL INI YANG DIBUTUHKAN VIEW
+            'kabupaten'        => $kabupaten,
             'currentKecamatan' => null,
         ]);
     }
 
-    /**
-     * [MODIFIKASI] Menampilkan halaman agenda kegiatan.
-     * Method ini sekarang menangani rute untuk level Kabupaten, Kecamatan, dan Perangkat Daerah.
-     */
     public function agenda(Request $request): View
     {
         $perangkatDaerah = $request->route('perangkatDaerah');
@@ -59,13 +50,13 @@ class PortalController extends Controller
         $query = Agenda::query();
 
         if ($context instanceof PerangkatDaerah) {
-            // Jika konteks adalah Perangkat Daerah, filter berdasarkan perangkat_daerah_id
+
             $query->where('perangkat_daerah_id', $context->id);
         } elseif ($context instanceof Kecamatan) {
-            // Jika konteks adalah Kecamatan, filter berdasarkan kecamatan_id
+
             $query->where('kecamatan_id', $context->id);
         } else {
-            // Jika tidak ada konteks, tampilkan agenda level kabupaten
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
 

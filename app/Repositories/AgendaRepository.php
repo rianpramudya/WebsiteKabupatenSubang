@@ -12,9 +12,7 @@ use Carbon\Carbon;
 
 class AgendaRepository
 {
-    /**
-     * Durasi cache default dalam jam.
-     */
+
     protected int $cacheDurationHours = 1;
 
     /**
@@ -75,10 +73,6 @@ class AgendaRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil data agenda untuk halaman utama Perangkat Daerah (dengan cache).
-     */
     public function getHomepageAgendasForPerangkatDaerah(PerangkatDaerah $perangkatDaerah): Collection
     {
         $cacheKey = "agenda.perangkat_daerah.{$perangkatDaerah->id}.homepage";
@@ -94,11 +88,6 @@ class AgendaRepository
         });
     }
 
-
-    /**
-     * Membersihkan semua cache.
-     * Metode ini akan dipanggil oleh AgendaObserver.
-     */
     public function clearCache(): void
     {
         Cache::flush();

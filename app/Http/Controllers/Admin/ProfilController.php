@@ -88,8 +88,7 @@ class ProfilController extends Controller
             $tenant = Kecamatan::where('slug', 'kabupaten-subang')->firstOrFail();
         }
         $this->authorize('update', $tenant);
-        
-        // [PERBAIKAN] Menambahkan 'peta_url' ke dalam validasi
+
         $validated = $request->validate([
             'peta_url'        => 'nullable|url',
             'letak_geografis' => 'nullable|string',

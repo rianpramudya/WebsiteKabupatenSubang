@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk menentukan judul dan subjudul dinamis --}}
 @php
     $judulHalaman = 'Galeri Foto';
     $subJudul = 'Kumpulan foto dari Kabupaten Subang'; // Default
@@ -20,14 +19,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <style>
-        /* PERBAIKAN: Menggunakan style yang konsisten dengan galeri video */
+
         .gallery-card {
             background-color: white;
-            border-radius: 0.75rem; /* 12px */
+            border-radius: 0.75rem;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            border: 1px solid #e5e7eb; /* border-gray-200 */
+            border: 1px solid #e5e7eb;
             transition: all 0.3s ease-in-out;
-            overflow: hidden; /* Penting agar konten tidak keluar dari border-radius */
+            overflow: hidden;
         }
         .gallery-card:hover {
             transform: translateY(-5px);
@@ -35,8 +34,8 @@
         }
         .gallery-card-image-wrapper {
             position: relative;
-            aspect-ratio: 1 / 1; /* Membuat gambar menjadi persegi */
-            background-color: #f3f4f6; /* bg-gray-100 */
+            aspect-ratio: 1 / 1;
+            background-color: #f3f4f6;
         }
         .gallery-card-image-wrapper img {
             width: 100%;
@@ -48,11 +47,11 @@
             transform: scale(1.05);
         }
         .card-content {
-            padding: 1rem; /* 16px */
+            padding: 1rem;
         }
         .card-title {
             font-weight: 600;
-            color: #1f2937; /* text-gray-800 */
+            color: #1f2937;
             line-height: 1.5;
         }
     </style>
@@ -62,17 +61,15 @@
 <div class="bg-gray-100 py-12 min-h-screen">
     <div class="container mx-auto px-4 sm:px-6">
 
-        {{-- Judul Halaman --}}
         <div class="mb-8">
             <h1 class="text-3xl font-extrabold text-[#1E4E7C] tracking-tight">{{ $judulHalaman }}</h1>
             <p class="mt-1 text-gray-600">{{ $subJudul }}</p>
         </div>
 
-        {{-- Grid Foto dengan Desain Kartu Baru --}}
         @if ($fotos->isNotEmpty())
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 @foreach ($fotos as $foto)
-                    {{-- PERBAIKAN: Struktur HTML kartu disamakan dengan galeri video --}}
+
                     <div class="gallery-card group">
                         <a href="{{ asset('storage/' . $foto->file_url) }}" data-lightbox="galeri-foto" data-title="{{ $foto->judul }}">
                             <div class="gallery-card-image-wrapper">
@@ -85,8 +82,7 @@
                     </div>
                 @endforeach
             </div>
-            
-            {{-- Pagination --}}
+
             <div class="mt-12">
                 {{ $fotos->links() }}
             </div>

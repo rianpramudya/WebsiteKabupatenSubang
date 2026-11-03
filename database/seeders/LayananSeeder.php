@@ -5,27 +5,24 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Layanan;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // [PERBAIKAN] Tambahkan model PerangkatDaerah
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Facades\DB;
 
 class LayananSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
-        // Kosongkan tabel sebelum mengisi data baru
+
         DB::table('layanans')->delete();
 
-        // === Seeding untuk Kecamatan ===
         $binong = Kecamatan::where('name', 'Binong')->first();
         $blanakan = Kecamatan::where('name', 'Blanakan')->first();
 
         if ($binong) {
             Layanan::create([
                 'kecamatan_id' => $binong->id,
-                'perangkat_daerah_id' => null, // [PERBAIKAN] Pastikan kolom lain diisi null
+                'perangkat_daerah_id' => null,
                 'nama' => 'Layanan KTP & KK',
                 'deskripsi' => 'Pengurusan Kartu Tanda Penduduk (KTP) dan Kartu Keluarga (KK) untuk warga Kecamatan Binong.',
                 'icon' => 'fas fa-id-card',
@@ -54,15 +51,14 @@ class LayananSeeder extends Seeder
                 'urutan' => 1
             ]);
         }
-        
-        // === [BARU] Seeding untuk Perangkat Daerah ===
+
         $ardapus = PerangkatDaerah::where('name', 'Ardapus')->first();
         $disdukcapil = PerangkatDaerah::where('name', 'Disdukcapil')->first();
 
         if ($ardapus) {
             Layanan::create([
                 'perangkat_daerah_id' => $ardapus->id,
-                'kecamatan_id' => null, // [PERBAIKAN] Pastikan kolom lain diisi null
+                'kecamatan_id' => null,
                 'nama' => 'Peminjaman Arsip',
                 'deskripsi' => 'Layanan peminjaman arsip statis dan dinamis untuk keperluan penelitian dan pemerintahan.',
                 'icon' => 'fas fa-archive',

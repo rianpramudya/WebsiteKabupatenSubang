@@ -1,16 +1,16 @@
 @push('styles')
-    {{-- Aset yang diperlukan untuk Trix Editor dan styling kustom --}}
+
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
     <style>
-        /* Styling agar Trix Editor menyatu dengan form Anda */
+
         trix-toolbar [data-trix-button-group="file-tools"] {
             display: none;
-            /* Sembunyikan tombol upload file */
+
         }
 
         .trix-content {
             min-height: 120px;
-            /* Tinggi default untuk editor */
+
             border-color: #d1d5db;
             border-radius: 0.375rem;
             background-color: white;
@@ -19,23 +19,22 @@
 
         .trix-content.description {
             min-height: 200px;
-            /* Tinggi khusus untuk deskripsi */
+
         }
 
         .trix-content:focus {
             border-color: #4f46e5;
-            /* Warna focus indigo */
+
             box-shadow: 0 0 0 1px #4f46e5;
         }
     </style>
 @endpush
 
 @push('scripts')
-    {{-- Aset JavaScript yang diperlukan untuk Trix Editor dan AlpineJS --}}
+
     <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
 @endpush
-
 
 @csrf
 @if ($errors->any())
@@ -67,7 +66,6 @@
             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
     </div>
 
-    {{-- [DIUBAH] Trix Editor untuk Alamat Lengkap --}}
     <div class="md:col-span-2">
         <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat Lengkap <span
                 class="text-red-500">*</span></label>
@@ -75,7 +73,6 @@
         <trix-editor input="alamat" class="mt-1 trix-content"></trix-editor>
     </div>
 
-    {{-- [DIUBAH] Trix Editor untuk Deskripsi --}}
     <div class="md:col-span-2">
         <label for="deskripsi" class="block text-sm font-medium text-gray-700">Deskripsi <span
                 class="text-red-500">*</span></label>
@@ -84,7 +81,6 @@
         <trix-editor input="deskripsi" class="mt-1 trix-content description"></trix-editor>
     </div>
 
-    {{-- [DIUBAH] Input gambar dengan preview interaktif --}}
     <div class="md:col-span-2" x-data="{
         previewUrl: '{{ isset($rumahMakan) && $rumahMakan->gambar ? asset('storage/' . $rumahMakan->gambar) : '' }}',
         fileName: '{{ isset($rumahMakan) && $rumahMakan->gambar ? basename($rumahMakan->gambar) : '' }}',
@@ -133,7 +129,7 @@
     </div>
 </div>
 <div class="flex justify-end mt-8">
-    {{-- [PERBAIKAN] Tautan Batal sekarang menggunakan variabel yang benar --}}
+
     <a href="{{ route($crudRoutePrefix . '.index', $routeParameters) }}"
         class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg mr-2 transition-colors">Batal</a>
     <button type="submit"

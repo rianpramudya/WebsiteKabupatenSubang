@@ -1,14 +1,11 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP baru untuk menentukan judul dan rute admin secara dinamis --}}
 @php
 $judulHalaman = 'Semua Berita'; // Default
 $targetRoute = route('admin.kabupaten.berita.index'); // Default route admin
 
 if (isset($currentPerangkatDaerah)) {
 $judulHalaman = 'Berita ' . $currentPerangkatDaerah->name;
-// Anda perlu membuat rute admin ini nanti
-// $targetRoute = route('admin.perangkat-daerah.berita.index', $currentPerangkatDaerah);
 } elseif (isset($currentKecamatan)) {
 $judulHalaman = 'Berita Kecamatan ' . $currentKecamatan->name;
 $targetRoute = route('admin.kecamatan.berita.index', $currentKecamatan);
@@ -19,7 +16,7 @@ $targetRoute = route('admin.kecamatan.berita.index', $currentKecamatan);
 
 @push('styles')
 <style>
-    /* Animasi fade in up */
+
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -39,7 +36,7 @@ $targetRoute = route('admin.kecamatan.berita.index', $currentKecamatan);
 @endpush
 
 @section('content')
-{{-- Hero Section --}}
+
 <div class="bg-gray-100 py-16">
     <div class="container mx-auto px-6 text-center">
         <h1 class="text-4xl font-extrabold text-[#1E4E7C] fade-in-up">
@@ -49,20 +46,13 @@ $targetRoute = route('admin.kecamatan.berita.index', $currentKecamatan);
             Kumpulan informasi dan berita terkini.
         </p>
 
-        {{-- Tombol Kelola Berita dengan rute dinamis --}}
         @can('viewAny', \App\Models\Berita::class)
         @php
-        // Tentukan URL default ke dasbor admin tingkat Kabupaten.
-        // Ini akan digunakan jika halaman tidak memiliki konteks spesifik.
         $targetRoute = route('admin.kabupaten.berita.index');
 
-        // Cek jika variabel $currentKecamatan ada dan tidak kosong.
-        // Jika ya, ganti URL target ke dasbor admin Kecamatan.
         if (isset($currentKecamatan) && $currentKecamatan) {
         $targetRoute = route('admin.kecamatan.berita.index', ['kecamatan' => $currentKecamatan->slug]);
         }
-        // Jika tidak, cek apakah variabel $currentPerangkatDaerah ada dan tidak kosong.
-        // Jika ya, ganti URL target ke dasbor admin Perangkat Daerah.
         elseif (isset($currentPerangkatDaerah) && $currentPerangkatDaerah) {
         $targetRoute = route('admin.perangkat-daerah.berita.index', ['perangkatDaerah' =>
         $currentPerangkatDaerah->slug]);
@@ -70,7 +60,7 @@ $targetRoute = route('admin.kecamatan.berita.index', $currentKecamatan);
         @endphp
 
         <div class="mt-6 fade-in-up" style="animation-delay: 0.4s;">
-            {{-- Gunakan variabel $targetRoute yang sudah kita tentukan di atas --}}
+
             <a href="{{ $targetRoute }}"
                 class="inline-block bg-[#1E4E7C] text-white font-bold py-2 px-5 rounded-lg text-sm hover:brightness-90 transition">
                 <i class="fas fa-cog mr-2"></i> Kelola Berita
@@ -80,7 +70,6 @@ $targetRoute = route('admin.kecamatan.berita.index', $currentKecamatan);
     </div>
 </div>
 
-{{-- Daftar Berita --}}
 <div class="container mx-auto px-6 py-12">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse ($beritas as $berita)

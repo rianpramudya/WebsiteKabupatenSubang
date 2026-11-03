@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk judul dinamis --}}
 @php
 $namaKonteks = 'Kabupaten Subang'; // Default
 if (isset($currentPerangkatDaerah)) {
@@ -148,7 +147,7 @@ $namaKonteks = 'Kecamatan ' . $currentKecamatan->name;
         <div class="animate-fade-in-up">
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-2 text-[#FCE405] drop-shadow-lg">
                 Transparansi Keuangan</h1>
-            {{-- 2. Gunakan nama konteks dinamis --}}
+
             <p class="text-xl md:text-2xl font-light text-gray-200 drop-shadow-md">
                 {{ $namaKonteks }}
             </p>

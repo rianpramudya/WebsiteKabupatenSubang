@@ -10,7 +10,6 @@ class Sejarah extends Model
 {
     use HasFactory;
 
-    // Menentukan nama tabel secara eksplisit
     protected $table = 'sejarahs';
 
     protected $fillable = [
@@ -27,20 +26,14 @@ class Sejarah extends Model
         return $this->belongsTo(Kecamatan::class);
     }
 
-    /**
-     * Terapkan global scope Tenant untuk admin-kecamatan.
-     */
     protected static function booted(): void
     {
         static::addGlobalScope(new TenantScope);
     }
 
-    /**
-     * Relasi ke PerangkatDaerah (jika berita ini milik perangkat daerah).
-     */
     public function perangkatDaerah()
     {
         return $this->belongsTo(PerangkatDaerah::class);
     }
-    // --------------------------------
+
 }

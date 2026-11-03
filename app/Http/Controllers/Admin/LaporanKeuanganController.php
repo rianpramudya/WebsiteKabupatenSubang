@@ -35,7 +35,7 @@ class LaporanKeuanganController extends Controller
             return 'admin.perangkat-daerah.laporan-keuangan.' . $action;
         }
         if ($tenant instanceof Kecamatan) {
-            return 'admin.kecamatan.laporan-keuangan.' . $action; // <--- PERBAIKAN DI SINI
+            return 'admin.kecamatan.laporan-keuangan.' . $action;
         }
         return 'admin.kabupaten.laporan-keuangan.' . $action;
     }
@@ -91,20 +91,17 @@ class LaporanKeuanganController extends Controller
         $tenant = $this->getTenant($request);
         $laporanKeuanganId = $request->route('laporan_keuangan');
 
-        // Mulai query dasar
         $query = LaporanKeuangan::withoutGlobalScopes()->where('id', $laporanKeuanganId);
 
-        // [PERBAIKAN] Tambahkan kondisi untuk setiap jenis tenant
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
         } elseif ($tenant instanceof PerangkatDaerah) {
             $query->where('perangkat_daerah_id', $tenant->id);
         } else {
-            // Kondisi untuk level Kabupaten (saat $tenant adalah null)
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
 
-        // Eksekusi query
         $laporanKeuangan = $query->firstOrFail();
 
         $this->authorize('update', $laporanKeuangan);
@@ -116,20 +113,17 @@ class LaporanKeuanganController extends Controller
         $tenant = $this->getTenant($request);
         $laporanKeuanganId = $request->route('laporan_keuangan');
 
-        // Mulai query dasar
         $query = LaporanKeuangan::withoutGlobalScopes()->where('id', $laporanKeuanganId);
 
-        // [PERBAIKAN] Tambahkan kondisi untuk setiap jenis tenant
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
         } elseif ($tenant instanceof PerangkatDaerah) {
             $query->where('perangkat_daerah_id', $tenant->id);
         } else {
-            // Kondisi untuk level Kabupaten (saat $tenant adalah null)
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
 
-        // Eksekusi query
         $laporanKeuangan = $query->firstOrFail();
 
         $this->authorize('update', $laporanKeuangan);
@@ -153,20 +147,17 @@ class LaporanKeuanganController extends Controller
         $tenant = $this->getTenant($request);
         $laporanKeuanganId = $request->route('laporan_keuangan');
 
-        // Mulai query dasar
         $query = LaporanKeuangan::withoutGlobalScopes()->where('id', $laporanKeuanganId);
 
-        // [PERBAIKAN] Tambahkan kondisi untuk setiap jenis tenant
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
         } elseif ($tenant instanceof PerangkatDaerah) {
             $query->where('perangkat_daerah_id', $tenant->id);
         } else {
-            // Kondisi untuk level Kabupaten (saat $tenant adalah null)
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
 
-        // Eksekusi query
         $laporanKeuangan = $query->firstOrFail();
 
         $this->authorize('delete', $laporanKeuangan);

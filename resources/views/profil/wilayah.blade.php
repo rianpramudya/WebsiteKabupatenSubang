@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-    // [Disederhanakan] Penentuan nama konteks menjadi lebih ringkas
     $namaKonteks = 'Kabupaten Subang'; // Default
     if (isset($currentPerangkatDaerah)) {
         $namaKonteks = $currentPerangkatDaerah->name;
@@ -23,7 +22,7 @@
         opacity: 1;
         transform: translateY(0);
     }
-    /* Menambahkan transisi untuk max-height */
+
     .collapsible-content {
         transition: max-height 0.5s ease-in-out;
     }
@@ -64,7 +63,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-                {{-- [MODIFIKASI] Blok Letak Geografis dengan Tombol "Read More" --}}
+
                 <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h8a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.707 4.293l.536-.536a2 2 0 012.828 0l.536.536m-2.121 4.243l.536.536a2 2 0 002.828 0l.536-.536m-6.364 6.364l.536.536a2 2 0 012.828 0l.536-.536m-2.121-4.243l-.536.536a2 2 0 000 2.828l.536.536" /></svg>
@@ -82,7 +81,6 @@
                     </button>
                 </div>
 
-                {{-- [MODIFIKASI] Blok Iklim dengan Tombol "Read More" --}}
                 <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>
@@ -100,7 +98,6 @@
                     </button>
                 </div>
 
-                {{-- [MODIFIKASI] Blok Demografi dengan Tombol "Read More" --}}
                 <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
@@ -118,7 +115,6 @@
                     </button>
                 </div>
 
-                {{-- [MODIFIKASI] Blok Topografi dengan Tombol "Read More" --}}
                 <div x-data="{ expanded: false, isLong: false, checkHeight() { this.$nextTick(() => { this.isLong = this.$refs.content.scrollHeight > 96 }); } }" x-init="checkHeight()" @resize.window="checkHeight()" class="bg-white p-6 rounded-lg shadow-md flex flex-col transition-shadow duration-300 hover:shadow-xl animated-fade">
                     <h3 class="text-xl font-bold text-[#1E4E7C] mb-4 flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-[#1E4E7C]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
@@ -146,7 +142,7 @@
 @endsection
 
 @push('scripts')
-{{-- Menambahkan AlpineJS untuk fungsionalitas interaktif --}}
+
 <script src="//unpkg.com/alpinejs" defer></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {

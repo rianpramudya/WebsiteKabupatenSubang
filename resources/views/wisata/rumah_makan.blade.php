@@ -20,7 +20,7 @@
 
 <div class="w-full relative text-center bg-cover bg-center py-24 md:py-28"
     style="background-image: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1974&auto=format&fit=crop');">
-    {{-- WARNA DIUBAH --}}
+
     <h1 class="text-4xl md:text-5xl font-extrabold text-[#FCE405] drop-shadow-lg anim-fade-in-down" style="--anim-delay: 200ms;">Kuliner & Rumah Makan</h1>
     <p class="mt-3 text-lg md:text-xl text-gray-200 anim-fade-in-up" style="--anim-delay: 400ms;">
         {{ isset($currentKecamatan) ? 'Kecamatan ' . $currentKecamatan->name : 'Kabupaten Subang' }}
@@ -33,7 +33,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <form action="{{ url()->current() }}" method="GET" class="bg-white p-4 rounded-lg shadow-sm anim-fade-in-left" style="--anim-delay: 600ms;">
                     <div class="relative">
-                        {{-- WARNA DIUBAH --}}
+
                         <input type="text" name="search" placeholder="Cari Rumah Makan..." value="{{ request('search') }}"
                             class="w-full border-gray-300 rounded-md focus:ring-[#1E4E7C] focus:border-[#1E4E7C] pl-10">
                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -43,7 +43,7 @@
                 </form>
 
                 @forelse ($rumah_makans as $item)
-                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up cursor-pointer rumahmakan-card" 
+                <div class="block bg-white p-5 rounded-lg shadow-sm hover:shadow-xl transition-shadow duration-300 group anim-fade-in-up cursor-pointer rumahmakan-card"
                      @style(['--anim-delay' => (700 + ($loop->iteration * 150)) . 'ms'])
                      data-nama="{{ $item->nama }}"
                      data-gambar="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}"
@@ -56,7 +56,7 @@
                             <img src="{{ $item->gambar ? asset('storage/' . $item->gambar) : 'https://placehold.co/400x300/e2e8f0/64748b?text=Gambar' }}" alt="{{ $item->nama }}" class="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110">
                         </div>
                         <div class="flex-1">
-                            {{-- WARNA DIUBAH --}}
+
                             <p class="text-xs font-semibold text-[#1E4E7C] uppercase tracking-wider">{{ $item->jenis_kuliner ?? 'Kuliner' }}</p>
                             <h2 class="text-2xl font-bold text-gray-800 group-hover:text-[#FF3B00] transition-colors mt-1">{{ $item->nama }}</h2>
                             <p class="text-sm text-gray-500 mt-2 mb-3"><i class="fas fa-map-marker-alt mr-1"></i> {{ strip_tags($item->alamat) }}</p>
@@ -77,7 +77,7 @@
             </div>
 
             @include('partials.sidebar_berita_terkini')
-            
+
         </div>
     </div>
 </div>
@@ -122,15 +122,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     cards.forEach(card => {
         card.addEventListener('click', function () {
-            // Ambil data dari atribut data-* kartu yang diklik
             const nama = this.dataset.nama;
             const gambar = this.dataset.gambar;
             const jenisKuliner = this.dataset.jeniskuliner;
             const alamat = this.dataset.alamat;
             const deskripsi = this.dataset.deskripsi;
             const telepon = this.dataset.telepon;
-            
-            // Masukkan data ke dalam elemen-elemen di modal
+
             modalNama.textContent = nama;
             modalGambar.src = gambar;
             modalGambar.alt = "Gambar " + nama;
@@ -138,15 +136,13 @@ document.addEventListener('DOMContentLoaded', function () {
             modalAlamat.textContent = alamat;
             modalDeskripsi.textContent = deskripsi;
 
-            // Atur link Telepon
             if (telepon && telepon.trim() !== '') {
                 modalTelepon.href = 'tel:' + telepon;
                 modalTelepon.classList.remove('hidden');
             } else {
                 modalTelepon.classList.add('hidden');
             }
-            
-            // Tampilkan modal
+
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         });

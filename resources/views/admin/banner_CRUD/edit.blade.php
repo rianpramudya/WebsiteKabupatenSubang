@@ -1,5 +1,4 @@
 @php
-    // Tentukan tipe tenant untuk digunakan di seluruh view
     $tenantType = $tenant instanceof \App\Models\Kecamatan ? 'Kecamatan' : 'Perangkat Daerah';
     $updateRoute = $tenant instanceof \App\Models\Kecamatan
         ? route('admin.kecamatan.banner.update', $tenant->slug)
@@ -13,9 +12,7 @@
 @section('title', 'Kelola Banner ' . $tenantType . ' ' . $tenant->name)
 
 @section('content')
-{{-- ======================================================= --}}
-{{-- PERBAIKAN 1: x-data dipindahkan ke pembungkus utama --}}
-{{-- ======================================================= --}}
+
 <div class="bg-gray-50 min-h-screen" x-data="bannerData()">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div class="mb-8">
@@ -31,7 +28,6 @@
                 @csrf
                 @method('PUT')
 
-                {{-- Notifikasi --}}
                 @if(session('success'))
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)" class="mb-6 bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
                     <p>{{ session('success') }}</p>
@@ -48,11 +44,10 @@
                 @endif
 
                 <div class="space-y-8">
-                    {{-- File _form.blade.php sekarang tidak perlu x-data lagi --}}
+
                     @include('admin.banner_CRUD._form', ['tenant' => $tenant])
                 </div>
 
-                {{-- Modal untuk konfirmasi hapus --}}
                 @if($tenant->banner_url)
                 <div x-show="showDeleteModal" x-transition:enter="transition ease-out duration-300"
                     x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
@@ -60,7 +55,7 @@
                     x-transition:leave-end="opacity-0"
                     class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center bg-gray-900 bg-opacity-75"
                     aria-labelledby="modal-title" role="dialog" aria-modal="true" style="display: none;">
-                    
+
                     <div x-show="showDeleteModal" x-transition
                         class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
@@ -103,9 +98,7 @@
 @endsection
 
 @push('scripts-footer')
-{{-- ======================================================= --}}
-{{-- PERBAIKAN 2: Kode JavaScript yang lengkap dan berfungsi --}}
-{{-- ======================================================= --}}
+
 <script>
     function bannerData() {
         return {
@@ -139,7 +132,7 @@
                 }
                 this.newImagePreview = null;
                 this.newVideoPreview = null;
-                
+
                 const targetAspectRatio = 3 / 1;
                 const tolerance = 0.05;
                 const fileInput = document.getElementById('banner_file');
@@ -153,7 +146,7 @@
                             this.newImagePreview = null;
                             fileInput.value = null;
                         } else {
-                            this.validationError = ''; 
+                            this.validationError = '';
                             this.newImagePreview = img.src;
                         }
                     };

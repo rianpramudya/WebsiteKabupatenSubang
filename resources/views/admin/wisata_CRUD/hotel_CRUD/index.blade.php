@@ -1,5 +1,4 @@
 @php
-// [PERBAIKAN] Logika lengkap untuk menangani semua level peran
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.wisata.' : 'admin.perangkat-daerah.wisata.';
@@ -10,7 +9,6 @@ $baseRouteName = 'admin.kabupaten.wisata.';
 $routeParameters = [];
 $tenantName = 'Kabupaten';
 }
-// Variabel spesifik untuk CRUD Hotel
 $crudRoutePrefix = $baseRouteName . 'hotel';
 $parentRoute = $baseRouteName . 'index';
 @endphp
@@ -88,7 +86,6 @@ $parentRoute = $baseRouteName . 'index';
     </div>
 </div>
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 <style>
     @keyframes fadeIn {
         from {

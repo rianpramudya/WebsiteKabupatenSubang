@@ -18,7 +18,6 @@ class PeranProgramController extends Controller
 
     private function getRouteParameters(?Model $tenant, array $additionalParams = []): array
     {
-        // [PERBAIKAN] Dibuat aman dari null
         if ($tenant instanceof Kecamatan) {
             $tenantParam = ['kecamatan' => $tenant->slug];
         } elseif ($tenant instanceof PerangkatDaerah) {
@@ -31,14 +30,13 @@ class PeranProgramController extends Controller
 
     private function getRouteName(?Model $tenant, string $action): string
     {
-        // [PERBAIKAN] Logika ini sekarang menangani 3 kasus
         if ($tenant instanceof PerangkatDaerah) {
             return 'admin.perangkat-daerah.pemerintahan.peran-program.' . $action;
         }
         if ($tenant instanceof Kecamatan) {
             return 'admin.kecamatan.pemerintahan.peran-program.' . $action;
         }
-        // Fallback untuk Kabupaten
+
         return 'admin.kabupaten.pemerintahan.peran-program.' . $action;
     }
 
@@ -48,13 +46,12 @@ class PeranProgramController extends Controller
         $tenant = $this->getTenant($request);
 
         $query = PeranDanProgram::query();
-        // [PERBAIKAN] Logika query disempurnakan
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
         } elseif ($tenant instanceof PerangkatDaerah) {
             $query->where('perangkat_daerah_id', $tenant->id);
         } else {
-            // Untuk level Kabupaten
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
 
@@ -80,13 +77,11 @@ class PeranProgramController extends Controller
             'urutan' => 'required|integer|min:0',
         ]);
 
-        // [PERBAIKAN] Logika penyimpanan sekarang menangani kasus null
         if ($tenant instanceof Kecamatan) {
             $validated['kecamatan_id'] = $tenant->id;
         } elseif ($tenant instanceof PerangkatDaerah) {
             $validated['perangkat_daerah_id'] = $tenant->id;
         }
-        // Jika $tenant null, tidak ada ID yang ditambahkan, sehingga tersimpan sebagai data Kabupaten
 
         PeranDanProgram::create($validated);
 
@@ -99,7 +94,6 @@ class PeranProgramController extends Controller
         $tenant = $this->getTenant($request);
         $peranProgramId = $request->route('peranProgram');
 
-        // [PERBAIKAN] Logika query disempurnakan
         $query = PeranDanProgram::withoutGlobalScopes()->where('id', $peranProgramId);
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
@@ -119,7 +113,6 @@ class PeranProgramController extends Controller
         $tenant = $this->getTenant($request);
         $peranProgramId = $request->route('peranProgram');
 
-        // [PERBAIKAN] Logika query disempurnakan
         $query = PeranDanProgram::withoutGlobalScopes()->where('id', $peranProgramId);
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
@@ -148,7 +141,6 @@ class PeranProgramController extends Controller
         $tenant = $this->getTenant($request);
         $peranProgramId = $request->route('peranProgram');
 
-        // [PERBAIKAN] Logika query disempurnakan
         $query = PeranDanProgram::withoutGlobalScopes()->where('id', $peranProgramId);
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);

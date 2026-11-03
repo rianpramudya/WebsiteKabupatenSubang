@@ -12,17 +12,13 @@ class KecamatanSeeder extends Seeder
     {
         Kecamatan::query()->delete();
 
-        // Data Profil Lengkap untuk Kabupaten Subang
         Kecamatan::create([
             'name' => 'Kabupaten Subang',
             'slug' => 'kabupaten-subang',
             'logo' => 'logos/logo-subang.png',
-            
-            // TAMBAHKAN BANNER - pilih salah satu contoh di bawah:
-            'banner_url' => 'banners/kabupaten-subang-banner.jpg', // Untuk gambar
-            // 'banner_url' => 'banners/kabupaten-subang-video.mp4', // Untuk video
-            // 'banner_url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Untuk YouTube
-            
+
+            'banner_url' => 'banners/kabupaten-subang-banner.jpg',
+
             'sejarah_img_1' => 'sejarah_images/contoh-kabupaten-1.jpg',
             'sejarah_img_2' => 'sejarah_images/contoh-kabupaten-2.jpg',
             'sejarah_img_3' => 'sejarah_images/contoh-kabupaten-3.jpg',
@@ -57,7 +53,7 @@ class KecamatanSeeder extends Seeder
             if ($slug === 'binong') {
                 $data = array_merge($data, [
                     'logo' => 'logos/logo-binong.png',
-                    'banner_url' => 'banners/binong-banner.jpg', // TAMBAHKAN BANNER UNTUK BINONG JUGA
+                    'banner_url' => 'banners/binong-banner.jpg',
                     'sejarah_img_1' => 'sejarah_images/contoh-binong-1.jpg',
                     'sejarah_img_2' => 'sejarah_images/contoh-binong-2.jpg',
                     'sejarah_img_3' => 'sejarah_images/contoh-binong-3.jpg',

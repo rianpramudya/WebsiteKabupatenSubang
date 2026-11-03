@@ -1,12 +1,10 @@
 @php
-// [PERBAIKAN] Blok ini dipindahkan ke baris paling atas dan disempurnakan
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.' : 'admin.perangkat-daerah.';
 $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
 $tenantName = $tenant->name;
 } else {
-// Ini untuk level Kabupaten
 $baseRouteName = 'admin.kabupaten.';
 $routeParameters = []; // Rute kabupaten tidak butuh parameter
 $tenantName = 'Kabupaten';
@@ -15,12 +13,11 @@ $tenantName = 'Kabupaten';
 
 @extends('layouts.app')
 
-{{-- Sekarang menggunakan $tenantName yang sudah pasti ada --}}
 @section('title', 'Tambah Penghargaan Baru - ' . $tenantName)
 
 @section('content')
 <div id="page-content" class="container mx-auto px-4 py-8">
-    {{-- [FIXED] Judul sekarang menggunakan $tenantName --}}
+
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Tambah Penghargaan Baru untuk {{ $tenantName }}</h1>
     <div class="bg-white p-8 rounded-lg shadow-md">
         <form action="{{ route($baseRouteName . 'profil.penghargaan.store', $routeParameters) }}" method="POST">

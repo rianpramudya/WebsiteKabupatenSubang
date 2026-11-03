@@ -1,11 +1,9 @@
 @php
-    // Persiapan variabel untuk rute batal yang dinamis
     $homeRoute = $tenant instanceof \App\Models\Kecamatan
         ? route('kecamatan.show', $tenant->slug)
         : route('perangkat.show', $tenant->slug);
 @endphp
 
-{{-- 1. PRATINJAU BANNER SAAT INI --}}
 <div>
     <label class="block text-sm font-medium text-gray-700 mb-2">Pratinjau Banner Saat Ini</label>
     <div class="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg text-center bg-gray-50 min-h-[250px] flex items-center justify-center">
@@ -47,7 +45,6 @@
     </div>
 </div>
 
-{{-- 2. PILIHAN TIPE BANNER --}}
 <div>
     <label class="block text-sm font-medium text-gray-700">Pilih Tipe Banner Baru</label>
     <div class="mt-2 flex rounded-md shadow-sm">
@@ -63,7 +60,6 @@
     <input type="hidden" name="banner_type" x-model="bannerType">
 </div>
 
-{{-- 3. AREA UPLOAD FILE --}}
 <div x-show="bannerType === 'upload'" x-transition style="display: none;">
     <label for="banner_file" class="block text-sm font-medium text-gray-700">Upload Banner Baru</label>
     <div @dragover.prevent @drop.prevent="handleDrop"
@@ -99,7 +95,6 @@
     </div>
 </div>
 
-{{-- 4. AREA INPUT YOUTUBE --}}
 <div x-show="bannerType === 'youtube'" x-transition style="display: none;">
     <label for="banner_url" class="block text-sm font-medium text-gray-700">URL Video YouTube</label>
     <div class="mt-2">
@@ -110,7 +105,6 @@
     </div>
 </div>
 
-{{-- 5. TOMBOL AKSI --}}
 <div class="mt-8 pt-6 border-t border-gray-200 flex flex-col-reverse sm:flex-row justify-between items-center gap-4">
     @if($tenant->banner_url)
         <button @click.prevent="showDeleteModal = true" type="button"
@@ -128,7 +122,7 @@
     <div class="flex justify-end space-x-3 w-full sm:w-auto">
         <a href="{{ $homeRoute }}"
             class="w-full sm:w-auto bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1E4E7C] transition-colors flex items-center justify-center">Batal</a>
-        
+
         <button type="submit"
             :disabled="bannerType === 'upload' && validationError.length > 0"
             :class="{ 'opacity-50 cursor-not-allowed': bannerType === 'upload' && validationError.length > 0 }"

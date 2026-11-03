@@ -2,10 +2,9 @@
 @section('title', 'Kelola Layanan Publik')
 
 @section('content')
-{{-- Menambahkan ID unik untuk target animasi --}}
+
 <div id="page-content" class="container mx-auto px-4 py-10">
     @php
-    // [PERBAIKAN] Membuat judul halaman dan link 'Tambah' menjadi dinamis
     $pageTitle = 'Kelola Layanan Publik';
     $createUrl = '#';
     $tenantContext = $kecamatan ?? $perangkatDaerah ?? null;
@@ -23,7 +22,7 @@
 
     <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
         <h1 class="text-3xl font-bold text-[#1E4E7C]">{{ $pageTitle }}</h1>
-        {{-- Tombol ini sekarang menggunakan URL yang dinamis --}}
+
         <a href="{{ $createUrl }}"
             class="bg-[#1E4E7C] hover:brightness-90 text-white font-bold py-2 px-4 rounded-lg flex items-center mt-4 sm:mt-0">
             <i class="fas fa-plus mr-2"></i> Tambah Layanan
@@ -45,7 +44,7 @@
                             Urutan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama
                             Layanan</th>
-                        {{-- [PERBAIKAN] Kolom pemilik untuk Super Admin --}}
+
                         @if(auth()->user()->hasRole('super-admin'))
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Pemilik</th>
@@ -66,7 +65,7 @@
                             <div class="text-sm text-gray-500">{{
                                 Str::limit(strip_tags(html_entity_decode($layanan->deskripsi)), 80) }}</div>
                         </td>
-                        {{-- [PERBAIKAN] Menampilkan nama pemilik yang benar --}}
+
                         @if(auth()->user()->hasRole('super-admin'))
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $layanan->kecamatan->name ??
                             $layanan->perangkatDaerah->name ?? 'N/A' }}</td>
@@ -83,7 +82,7 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right">
                             <div class="flex items-center justify-end space-x-4">
-                                {{-- [PERBAIKAN BESAR] Membuat link Aksi menjadi dinamis --}}
+
                                 @php
                                 $layananTenant = $layanan->kecamatan ?? $layanan->perangkatDaerah;
                                 $editUrl = '#';
@@ -131,9 +130,8 @@
     </div>
 </div>
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 <style>
-    /* Keyframes untuk animasi fade-in dan fade-out */
+
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -158,12 +156,10 @@
         }
     }
 
-    /* Terapkan animasi fade-in saat halaman dimuat */
     #page-content {
         animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Terapkan animasi fade-out saat body memiliki kelas 'fading-out' */
     body.fading-out #page-content {
         animation: fadeOut 0.5s ease-out forwards;
     }
@@ -171,7 +167,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])');
 
         links.forEach(link => {
@@ -179,7 +175,7 @@
                 if (link.closest('form[onsubmit]')) {
                     return;
                 }
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => {
                     window.location.href = link.href;

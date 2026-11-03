@@ -1,35 +1,31 @@
 @php
-// [PERBAIKAN] Blok ini dipindahkan ke baris paling atas dan disempurnakan
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $baseRouteName = $isKecamatan ? 'admin.kecamatan.pemerintahan.' : 'admin.perangkat-daerah.pemerintahan.';
 $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
 $tenantName = $tenant->name;
 } else {
-// Ini untuk level Kabupaten
 $baseRouteName = 'admin.kabupaten.pemerintahan.';
 $routeParameters = [];
 $tenantName = 'Kabupaten';
 }
-// Variabel spesifik untuk CRUD Pejabats
 $crudRoutePrefix = $baseRouteName . 'pejabats';
 @endphp
 
 @extends('layouts.app')
 
-{{-- [FIXED] Sekarang menggunakan $tenantName yang sudah pasti ada --}}
 @section('title', 'Edit Pejabat - ' . $tenantName)
 
 @section('content')
 <div id="page-content" class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-2xl font-bold text-gray-800 mb-6">Edit Data: {{ $pejabat->nama }}</h1>
     <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md">
-        {{-- [FIXED] Rute update sekarang menggunakan variabel yang aman dan menyertakan ID pejabat --}}
+
         <form
             action="{{ route($crudRoutePrefix . '.update', array_merge($routeParameters, ['pejabat' => $pejabat->id])) }}"
             method="POST" enctype="multipart/form-data">
             @method('PUT')
-            {{-- [FIXED] Mengirim variabel yang dibutuhkan ke form partial --}}
+
             @include('admin.pemerintahan_CRUD.stukturPemerintahan_CRUD._form', [
             'pejabat' => $pejabat,
             'tenant' => $tenant,
@@ -40,9 +36,8 @@ $crudRoutePrefix = $baseRouteName . 'pejabats';
     </div>
 </div>
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 <style>
-    /* Keyframes untuk animasi fade-in dan fade-out */
+
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -67,12 +62,10 @@ $crudRoutePrefix = $baseRouteName . 'pejabats';
         }
     }
 
-    /* Terapkan animasi fade-in saat halaman dimuat */
     #page-content {
         animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Terapkan animasi fade-out saat body memiliki kelas 'fading-out' */
     body.fading-out #page-content {
         animation: fadeOut 0.5s ease-out forwards;
     }
@@ -80,12 +73,12 @@ $crudRoutePrefix = $baseRouteName . 'pejabats';
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(form a)');
 
         links.forEach(link => {
             link.addEventListener('click', (event) => {
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => {
                     window.location.href = link.href;

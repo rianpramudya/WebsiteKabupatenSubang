@@ -95,7 +95,7 @@ class BeritaController extends Controller
                 $data['kecamatan_id'] = $request->kecamatan_id;
                 $data['perangkat_daerah_id'] = null;
                 $redirectTenant = Kecamatan::find($data['kecamatan_id']);
-            } else { // Termasuk Kabupaten
+            } else {
                 $data['kecamatan_id'] = null;
                 $data['perangkat_daerah_id'] = null;
                 $redirectTenant = null;
@@ -120,28 +120,24 @@ class BeritaController extends Controller
 
     public function show(Request $request)
     {
-        // 1. Dapatkan tenant (atau null jika level Kabupaten)
+
         $tenant = $this->getTenant($request);
         $beritaId = $request->route('berita');
 
-        // 2. Buat query yang fleksibel untuk mencari berita
         $query = Berita::withoutGlobalScopes()->where('id', $beritaId);
         if ($tenant) {
             $query->where($tenant instanceof Kecamatan ? 'kecamatan_id' : 'perangkat_daerah_id', $tenant->id);
         } else {
-            // Kondisi untuk level Kabupaten
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
         $berita = $query->firstOrFail();
 
-        // 3. Otorisasi (pastikan user boleh melihat berita ini)
         $this->authorize('view', $berita);
 
-        // 4. Siapkan variabel untuk view
         $kecamatan = ($tenant instanceof Kecamatan) ? $tenant : null;
         $perangkatDaerah = ($tenant instanceof PerangkatDaerah) ? $tenant : null;
 
-        // 5. Tampilkan view
         return view('admin.berita_CRUD.show', compact('berita', 'tenant', 'kecamatan', 'perangkatDaerah'));
     }
 

@@ -35,9 +35,8 @@ $backRouteUrl = route($routePrefix . '.index', $routeParameters);
     </form>
 </div>
 
-{{-- [DITAMBAHKAN] Blok CSS dan JavaScript untuk animasi --}}
 <style>
-    /* Keyframes untuk animasi fade-in dan fade-out */
+
     @keyframes fadeIn {
         from {
             opacity: 0;
@@ -62,12 +61,10 @@ $backRouteUrl = route($routePrefix . '.index', $routeParameters);
         }
     }
 
-    /* Terapkan animasi fade-in saat halaman dimuat */
     #page-content {
         animation: fadeIn 0.5s ease-out forwards;
     }
 
-    /* Terapkan animasi fade-out saat body memiliki kelas 'fading-out' */
     body.fading-out #page-content {
         animation: fadeOut 0.5s ease-out forwards;
     }
@@ -75,30 +72,23 @@ $backRouteUrl = route($routePrefix . '.index', $routeParameters);
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Durasi harus sama dengan durasi animasi di CSS
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
 
-        // Pilih semua link navigasi, kecuali yang membuka tab baru atau link internal halaman (#)
-        // Juga kecualikan link di dalam form, karena akan ditangani oleh submit form
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"]):not(form a)');
 
         links.forEach(link => {
             link.addEventListener('click', (event) => {
                 event.preventDefault(); // Hentikan navigasi standar
-                
-                // Tambahkan kelas ke body untuk memicu animasi fade-out
+
                 document.body.classList.add('fading-out');
-                
-                // Tunggu animasi selesai, lalu pindah halaman
+
                 setTimeout(() => {
                     window.location.href = link.href;
                 }, fadeOutDuration);
             });
         });
 
-        // Menangani tombol back/forward browser agar animasi tidak 'macet'
         window.addEventListener('pageshow', (event) => {
-            // event.persisted bernilai true jika halaman dimuat dari cache (bfcache)
             if (event.persisted) {
                 document.body.classList.remove('fading-out');
             }

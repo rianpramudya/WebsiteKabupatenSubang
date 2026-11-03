@@ -5,13 +5,12 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Sejarah;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // [1] Import model PerangkatDaerah
+use App\Models\PerangkatDaerah;
 
 class SejarahSeeder extends Seeder
 {
     public function run(): void
     {
-        // === BAGIAN 1: MENGISI DATA UTAMA KECAMATAN (TERMASUK GAMBAR UTAMA) ===
 
         $kabupaten = Kecamatan::where('slug', 'kabupaten-subang')->first();
         if ($kabupaten) {
@@ -41,8 +40,6 @@ class SejarahSeeder extends Seeder
             ]);
         }
 
-        // === BAGIAN 2: TIMELINE SEJARAH UNTUK KABUPATEN (kecamatan_id & perangkat_daerah_id = NULL) ===
-
         Sejarah::updateOrCreate(
             ['tahun' => '1968', 'kecamatan_id' => null, 'perangkat_daerah_id' => null],
             [
@@ -60,8 +57,6 @@ class SejarahSeeder extends Seeder
                 'urutan' => 2,
             ]
         );
-
-        // === BAGIAN 3: TIMELINE UNTUK KECAMATAN BINONG ===
 
         if ($kecamatanBinong) {
             Sejarah::updateOrCreate(
@@ -82,8 +77,6 @@ class SejarahSeeder extends Seeder
                 ]
             );
         }
-
-        // === [4] BAGIAN BARU: TIMELINE UNTUK PERANGKAT DAERAH (ARDAPUS) ===
 
         $ardapus = PerangkatDaerah::where('slug', 'ardapus')->first();
         if ($ardapus) {

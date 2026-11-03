@@ -20,12 +20,12 @@
             margin-bottom: 8px;
             font-weight: 700;
         }
-        /* Border kuning sudah sesuai dengan palet warna, tidak perlu diubah */
+
         .meta-info {
             font-size: 12px;
             color: #718096;
             margin-bottom: 24px;
-            border-left: 4px solid #FCE405; 
+            border-left: 4px solid #FCE405;
             padding-left: 12px;
         }
         .cover-image {

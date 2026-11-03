@@ -6,7 +6,6 @@ use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 class Hotel extends Model
 {
     use HasFactory;
@@ -35,20 +34,14 @@ class Hotel extends Model
         return $this->belongsTo(Kecamatan::class);
     }
 
-    /**
-     * Terapkan global scope Tenant untuk admin-kecamatan.
-     */
     protected static function booted(): void
     {
         static::addGlobalScope(new TenantScope);
     }
 
-    /**
-     * Relasi ke PerangkatDaerah (jika berita ini milik perangkat daerah).
-     */
     public function perangkatDaerah()
     {
         return $this->belongsTo(PerangkatDaerah::class);
     }
-    // --------------------------------
+
 }

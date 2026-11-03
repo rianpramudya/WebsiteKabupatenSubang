@@ -8,15 +8,12 @@ use Illuminate\Support\Str;
 
 class PerangkatDaerahSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
-        // Kosongkan tabel untuk awal yang bersih
+
         PerangkatDaerah::query()->delete();
 
-        // Daftar lengkap Perangkat Daerah dari kode lama Anda
         $perangkatDaerahList = [
             ['name' => 'Sekretariat Daerah', 'singkatan' => 'setda', 'alamat' => 'Jl. Dewi Sartika No. 2, Subang'],
             ['name' => 'Sekretariat DPRD', 'singkatan' => 'setwan', 'alamat' => 'Jl. Panglejar No. 1, Subang'],
@@ -53,8 +50,7 @@ class PerangkatDaerahSeeder extends Seeder
         foreach ($perangkatDaerahList as $data) {
             $singkatan = $data['singkatan'];
             $namaLengkap = $data['name'];
-            
-            // Logika penamaan dari kode lama Anda
+
             $namaBaru = ucfirst($singkatan);
             $uppercaseAcronyms = ['pupr', 'dkupp', 'dpmptsp', 'dp2kbp3a', 'bkpsdm', 'bkad', 'bp4d', 'bapenda', 'bpbd'];
             if (in_array($singkatan, $uppercaseAcronyms)) {
@@ -65,7 +61,6 @@ class PerangkatDaerahSeeder extends Seeder
             }
             $slugBaru = Str::slug($namaBaru);
 
-            // Data dasar untuk semua Perangkat Daerah
             $pd_data = [
                 'name' => $namaBaru,
                 'slug' => $slugBaru,
@@ -77,10 +72,9 @@ class PerangkatDaerahSeeder extends Seeder
                 'misi' => 'Misi untuk ' . $namaLengkap . ' sedang dalam penyusunan.',
             ];
 
-            // Tambahkan data profil lengkap HANYA untuk Ardapus
             if ($singkatan === 'ardapus') {
                 $pd_data = array_merge($pd_data, [
-                    'name' => 'Dinas Kearsipan dan Perpustakaan', // Gunakan nama lengkap untuk Ardapus
+                    'name' => 'Dinas Kearsipan dan Perpustakaan',
                     'slug' => 'ardapus',
                     'sejarah_img_1' => 'sejarah_images/contoh-ardapus-1.jpg',
                     'sejarah_img_2' => 'sejarah_images/contoh-ardapus-2.jpg',
@@ -96,8 +90,7 @@ class PerangkatDaerahSeeder extends Seeder
                     'link_instagram' => 'https://instagram.com/ardapussubang',
                 ]);
             }
-            
-            // Buat record di database
+
             PerangkatDaerah::create($pd_data);
         }
     }

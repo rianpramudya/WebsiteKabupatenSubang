@@ -11,7 +11,6 @@
 </div>
 @endif
 
-
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div class="md:col-span-2 space-y-4">
         <div>
@@ -34,8 +33,6 @@
             <img id="foto-preview" src="{{ isset($pejabat) && $pejabat->foto ? asset('storage/' . $pejabat->foto) : 'https://placehold.co/400x400/e2e8f0/64748b?text=Preview' }}" alt="Foto preview" class="h-48 w-48 rounded-full object-cover mb-4">
             <p class="text-xs text-gray-500 mb-2">Rekomendasi ukuran: rasio 1:1 (persegi).</p>
             <input type="file" name="foto" id="foto" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" onchange="previewImage(event)">
-            
-            {{-- Pesan error spesifik di bawah input telah dihapus sesuai permintaan --}}
 
             <p class="text-xs text-gray-500 mt-2">Opsional. Max: 2MB.</p>
         </div>

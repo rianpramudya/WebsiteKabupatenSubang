@@ -45,18 +45,11 @@ class KecamatanController extends Controller
         $this->beritaRepository = $beritaRepository;
     }
 
-    /**
-     * Halaman beranda publik sebuah kecamatan.
-     */
-    /**
-     * Halaman beranda publik sebuah kecamatan.
-     */
     public function show(Kecamatan $kecamatan): View
     {
-        // Berita terkini via repository
+
         $beritaTerkini = $this->beritaRepository->getBeritaTerkiniForKecamatan($kecamatan, 5);
 
-        // Populer: gunakan cache singkat (5 menit)
         $beritaPopuler = Cache::remember("berita.kecamatan.{$kecamatan->id}.populer.5", 300, function () use ($kecamatan) {
             return Berita::query()
                 ->select(['id', 'judul', 'slug', 'views', 'published_at', 'kecamatan_id'])
@@ -68,16 +61,14 @@ class KecamatanController extends Controller
                 ->get();
         });
 
-        // 1. [OPTIMASI] Query agenda khusus untuk kalender
         $agendasForCalendar = Agenda::query()
             ->select(['judul', 'tanggal_mulai', 'tanggal_selesai'])
             ->where('kecamatan_id', $kecamatan->id)
-            // Ambil data 1 tahun ke belakang dan 1 tahun ke depan untuk efisiensi
+
             ->whereBetween('tanggal_mulai', [now()->subYear(), now()->addYear()])
             ->orderBy('tanggal_mulai', 'asc')
             ->get();
 
-        // 2. [PRAKTIK TERBAIK] Siapkan data untuk JavaScript sebagai collection/array
         $agendaDataForJs = $agendasForCalendar->groupBy(function ($agenda) {
             return Carbon::parse($agenda->tanggal_mulai)->format('Y-m-d');
         })->map(function ($agendasOnDate) {
@@ -85,7 +76,6 @@ class KecamatanController extends Controller
                 $start = Carbon::parse($agenda->tanggal_mulai);
                 $end = Carbon::parse($agenda->tanggal_selesai);
 
-                // Buat format rentang waktu yang jelas
                 $timeRange = $start->isoFormat('D MMM YYYY');
                 if ($start->notEqualTo($end)) {
                     $timeRange .= ' - ' . $end->isoFormat('D MMM YYYY');
@@ -98,7 +88,6 @@ class KecamatanController extends Controller
             })->values();
         });
 
-        // Ambil 3 agenda terdekat untuk ditampilkan di list "Acara Mendatang"
         $agendasForDisplay = Agenda::query()
             ->select(['id', 'kecamatan_id', 'judul', 'tanggal_mulai', 'tanggal_selesai'])
             ->where('kecamatan_id', $kecamatan->id)
@@ -107,7 +96,6 @@ class KecamatanController extends Controller
             ->limit(3)
             ->get();
 
-        // Ambil data-data lain yang dibutuhkan halaman
         $galeriFoto     = $this->galeriRepository->getLatestPhotosForKecamatan($kecamatan, 10);
         $galeriVideo    = $this->galeriRepository->getLatestVideosForKecamatan($kecamatan, 5);
         $budayaTerbaru  = $this->budayaRepository->getLatestForKecamatan($kecamatan, 3);
@@ -115,13 +103,12 @@ class KecamatanController extends Controller
         $layanans       = $this->layananRepository->getLayanansForKecamatan($kecamatan);
         $pejabats       = $this->strukturPemerintahanRepository->getAllPejabat($kecamatan);
 
-        // 3. [PRAKTIK TERBAIK] Kirim semua data ke view
         return view('kecamatan.show', [
             'currentKecamatan' => $kecamatan,
             'beritaTerkini'    => $beritaTerkini,
             'beritaPopuler'    => $beritaPopuler,
             'agendas'          => $agendasForDisplay,
-            'agendaDataForJs'  => $agendaDataForJs, // Kirim sebagai array/collection
+            'agendaDataForJs'  => $agendaDataForJs,
             'galeriFoto'       => $galeriFoto,
             'galeriVideo'      => $galeriVideo,
             'layanans'         => $layanans,
@@ -131,9 +118,6 @@ class KecamatanController extends Controller
         ]);
     }
 
-    /**
-     * Halaman daftar agenda terpisah (hari ini, mendatang, lewat).
-     */
     public function semuaAgenda(Kecamatan $kecamatan): View
     {
         $today = now()->startOfDay();

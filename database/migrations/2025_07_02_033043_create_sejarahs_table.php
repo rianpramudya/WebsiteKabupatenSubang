@@ -16,8 +16,6 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->integer('urutan')->default(0);
 
-            // [REMOVED] Kolom gambar dihapus dari tabel timeline sejarah
-            
             $table->timestamps();
         });
     }

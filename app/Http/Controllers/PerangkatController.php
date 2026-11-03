@@ -17,7 +17,7 @@ use Illuminate\View\View;
 
 class PerangkatController extends Controller
 {
-    // ... (properti dan constructor tetap sama) ...
+
     protected GaleriRepository $galeriRepository;
     protected AgendaRepository $agendaRepository;
     protected LayananRepository $layananRepository;
@@ -38,27 +38,17 @@ class PerangkatController extends Controller
         $this->beritaRepository = $beritaRepository;
     }
 
-
-    /**
-     * Halaman beranda publik sebuah Perangkat Daerah.
-     */
     public function show(PerangkatDaerah $perangkatDaerah): View
     {
-        // ======================================================================
-        // === PERBAIKAN UTAMA ADA DI SINI ======================================
-        // ======================================================================
-        // Ambil berita terkini dan populer melalui Repository agar cache berfungsi.
         $beritaTerkini = $this->beritaRepository->getBeritaTerkiniForPerangkatDaerah($perangkatDaerah, 5);
         $beritaPopuler = $this->beritaRepository->getBeritaPopulerForPerangkatDaerah($perangkatDaerah, 5);
 
-        // Query agenda khusus untuk kalender
         $agendasForCalendar = Agenda::query()
             ->where('perangkat_daerah_id', $perangkatDaerah->id)
             ->whereBetween('tanggal_mulai', [now()->subYear(), now()->addYear()])
             ->orderBy('tanggal_mulai', 'asc')
             ->get();
 
-        // Siapkan data untuk JavaScript
         $agendaDataForJs = $agendasForCalendar->groupBy(function ($agenda) {
             return Carbon::parse($agenda->tanggal_mulai)->format('Y-m-d');
         })->map(function ($agendasOnDate) {
@@ -73,7 +63,6 @@ class PerangkatController extends Controller
             })->values();
         });
 
-        // Ambil 3 agenda terdekat
         $agendasForDisplay = Agenda::query()
             ->where('perangkat_daerah_id', $perangkatDaerah->id)
             ->whereDate('tanggal_mulai', '>=', today())
@@ -81,17 +70,14 @@ class PerangkatController extends Controller
             ->limit(3)
             ->get();
 
-        // Ganti semua placeholder dengan query atau repository call yang benar
         $galeriFoto     = $this->galeriRepository->getLatestPhotosForPerangkatDaerah($perangkatDaerah, 10);
         $galeriVideo    = $this->galeriRepository->getLatestVideosForPerangkatDaerah($perangkatDaerah, 5);
         $layanans       = $this->layananRepository->getLayanansForPerangkatDaerah($perangkatDaerah);
         $pejabats       = $this->strukturPemerintahanRepository->getAllPejabat($perangkatDaerah);
 
-        // Budaya & Wisata kemungkinan tidak relevan untuk Perangkat Daerah, jadi biarkan kosong
         $budayaTerbaru  = collect();
         $wisataUnggulan = collect();
 
-        // Kirim semua data ke view 'perangkat.show'
         return view('perangkat.show', [
             'currentPerangkatDaerah' => $perangkatDaerah,
             'beritaTerkini'          => $beritaTerkini,
@@ -107,7 +93,6 @@ class PerangkatController extends Controller
         ]);
     }
 
-    // ... (metode lainnya tetap sama) ...
     public function galeriVideo(PerangkatDaerah $perangkatDaerah): View
     {
         $videos = Galeri::where('perangkat_daerah_id', $perangkatDaerah->id)

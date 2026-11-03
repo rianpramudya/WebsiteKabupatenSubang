@@ -12,7 +12,7 @@ class RumahMakanSeeder extends Seeder
 {
     public function run(): void
     {
-        // Data untuk Kabupaten
+
         RumahMakan::create([
             'kecamatan_id' => null,
             'nama' => 'RM Ibu Hj. Ciganea',
@@ -23,7 +23,6 @@ class RumahMakanSeeder extends Seeder
             'published_at' => now(),
         ]);
 
-        // Data untuk Kecamatan Cibogo
         $kecamatanCibogo = Kecamatan::where('slug', 'cibogo')->first();
         if ($kecamatanCibogo) {
             RumahMakan::create([

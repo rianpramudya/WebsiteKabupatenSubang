@@ -3,9 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
-// ==============================
-// Import Controller Umum (Publik)
-// ==============================
 use App\Http\Controllers\{
     PortalController,
     KecamatanController,
@@ -18,14 +15,8 @@ use App\Http\Controllers\{
     PublicLayananController
 };
 
-// ==============================
-// Import Auth Controller
-// ==============================
 use App\Http\Controllers\Auth\LoginController;
 
-// ==============================
-// Import Admin Controllers
-// ==============================
 use App\Http\Controllers\Admin\{
     ProfilController as AdminProfilController,
     BeritaController as AdminBeritaController,
@@ -49,28 +40,14 @@ use App\Http\Controllers\Admin\{
     Wisata\RumahMakanController as AdminRumahMakanController
 };
 
-// ==============================
-// Import Model
-// ==============================
 use App\Models\{Berita, Kecamatan, PerangkatDaerah};
-
-/*
-|--------------------------------------------------------------------------
-| RUTE WEBSITE UTAMA (KABUPATEN)
-|--------------------------------------------------------------------------
-|
-| Rute-rute ini akan aktif ketika website diakses melalui domain utama,
-| misalnya 'subang.go.id'.
-|
-*/
 
 Route::domain(env('APP_DOMAIN', 'subang.go.id'))->group(function () {
 
     Route::middleware('clear.tenant.context')->group(function () {
-        // HOME (Portal Kabupaten)
+
         Route::get('/', [PortalController::class, 'index'])->name('home');
 
-        // RUTE PUBLIK KABUPATEN
         Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
         Route::get('/berita/{berita:slug}', [BeritaController::class, 'show'])->name('berita.show');
         Route::get('/berita/{berita:slug}/download', [BeritaController::class, 'downloadPDF'])->name('berita.download');
@@ -97,25 +74,14 @@ Route::domain(env('APP_DOMAIN', 'subang.go.id'))->group(function () {
         Route::get('/kebijakan-privasi', fn() => view('pages.kebijakan_privasi'))->name('privacy.policy');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | AUTENTIKASI & DASHBOARD (di domain utama)
-    |--------------------------------------------------------------------------
-    */
     Route::get(env('ADMIN_LOGIN_URL', 'login'), [LoginController::class, 'showLoginForm'])->name('login');
     Route::post(env('ADMIN_LOGIN_URL', 'login'), [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    // Dashboard utama, hanya untuk super-admin
     Route::middleware(['auth', 'role:super-admin'])
         ->get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | RUTE ADMIN KABUPATEN (di domain utama)
-    |--------------------------------------------------------------------------
-    */
     Route::middleware(['auth', 'role:super-admin', 'clear.tenant.context'])
         ->prefix('admin/kabupaten')
         ->name('admin.kabupaten.')
@@ -165,16 +131,10 @@ Route::domain(env('APP_DOMAIN', 'subang.go.id'))->group(function () {
         });
 });
 
-/*
-|--------------------------------------------------------------------------
-| RUTE SUBDOMAIN KECAMATAN
-|--------------------------------------------------------------------------
-*/
 Route::domain('{kecamatan}.' . env('APP_DOMAIN', 'subang.go.id'))
     ->whereIn('kecamatan', Kecamatan::pluck('slug')->all())
     ->group(function () {
 
-        // --- RUTE PUBLIK KECAMATAN ---
         Route::middleware('set.tenant.context:kecamatan', 'block.kabupaten.slug')
             ->group(function () {
                 Route::get('/', [KecamatanController::class, 'show'])->name('kecamatan.show');
@@ -204,7 +164,6 @@ Route::domain('{kecamatan}.' . env('APP_DOMAIN', 'subang.go.id'))
                 Route::get('/statistik', [PortalController::class, 'statistik'])->name('statistik.kecamatan');
             });
 
-        // --- RUTE ADMIN KECAMATAN ---
         Route::middleware(['auth', 'set.tenant.context:kecamatan', 'block.kabupaten.slug', 'auth.kecamatan'])
             ->prefix('admin')->name('admin.kecamatan.')->group(function () {
                 Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil.index');
@@ -250,12 +209,6 @@ Route::domain('{kecamatan}.' . env('APP_DOMAIN', 'subang.go.id'))
             });
     });
 
-
-/*
-|--------------------------------------------------------------------------
-| FALLBACK 404
-|--------------------------------------------------------------------------
-*/
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);
 });

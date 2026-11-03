@@ -1,5 +1,4 @@
 @php
-// [PERBAIKAN] Logika lengkap untuk menangani semua level peran
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $routePrefix = $isKecamatan ? 'admin.kecamatan.berita' : 'admin.perangkat-daerah.berita';
@@ -63,7 +62,7 @@ $tenantName = 'Kabupaten';
                 @forelse ($beritas as $itemBerita)
                 <tr>
                     <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                        {{-- [PERBAIKAN] Judul sekarang menjadi link ke halaman detail --}}
+
                         <a href="{{ route($routePrefix . '.show', array_merge($routeParameters, ['berita' => $itemBerita])) }}"
                             class="text-gray-900 font-semibold whitespace-no-wrap hover:text-[#1E4E7C] transition-colors">
                             {{ $itemBerita->judul }}

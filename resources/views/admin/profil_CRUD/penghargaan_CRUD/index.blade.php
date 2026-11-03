@@ -1,12 +1,10 @@
 @php
-    // [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
     if ($tenant) {
         $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
         $baseRouteName = $isKecamatan ? 'admin.kecamatan.' : 'admin.perangkat-daerah.';
         $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
         $tenantName = $tenant->name;
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.';
         $routeParameters = []; // Rute kabupaten tidak butuh parameter
         $tenantName = 'Kabupaten';
@@ -20,7 +18,7 @@
     <div id="page-content" class="container mx-auto px-4 py-8">
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-3xl font-bold text-gray-800">Kelola Daftar Penghargaan</h1>
-            {{-- [FIX] Removed redundant 'rounded' class --}}
+
             <a href="{{ route($baseRouteName . 'profil.penghargaan.create', $routeParameters) }}"
                 class="bg-[#1E4E7C] hover:brightness-90 text-white rounded-lg font-bold py-2 px-4">
                 <i class="fas fa-plus mr-2"></i>Tambah Penghargaan</a>

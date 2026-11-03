@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-{{-- 1. Blok PHP untuk judul dinamis --}}
 @php
     $namaKonteks = 'Kabupaten Subang'; // Default
     if (isset($currentPerangkatDaerah)) {
@@ -14,28 +13,28 @@
 
 @push('styles')
 <style>
-    /* Tab Styling */
+
     .program-tabs .tab-item {
         display: flex; align-items: center; padding: 1rem; border-radius: 0.5rem;
         cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
         border: 1px solid transparent; margin-bottom: 0.5rem;
     }
     .program-tabs .tab-item:hover {
-        background-color: rgba(30, 78, 124, 0.1); /* blue-subang/10 */
+        background-color: rgba(30, 78, 124, 0.1);
         color: #1E4E7C;
     }
     .program-tabs .tab-item.active {
-        background-color: #1E4E7C; /* blue-subang */
+        background-color: #1E4E7C;
         color: white; font-weight: 600;
         box-shadow: 0 4px 14px 0 rgba(30, 78, 124, 0.39);
         transform: scale(1.02);
     }
     .program-tabs .tab-item.active .tab-icon { color: white; }
-    /* Content Panel Styling */
+
     .content-panel { display: none; animation: fadeIn 0.7s ease-in-out; }
     .content-panel.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    /* Animasi saat item muncul */
+
     .animated-item { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .animated-item.is-visible { opacity: 1; transform: translateY(0); }
 </style>
@@ -49,7 +48,7 @@
             <h1 class="text-4xl md:text-5xl font-extrabold text-[#1E4E7C] tracking-tight">
                 Peran dan Program
             </h1>
-            {{-- 2. Gunakan nama konteks dinamis --}}
+
             <p class="mt-4 text-xl text-gray-600 max-w-3xl mx-auto">
                 {{ $namaKonteks }}
             </p>
@@ -96,7 +95,6 @@
 @push('scripts')
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // Animasi scroll
         const observer = new IntersectionObserver(
             entries => {
                 entries.forEach(entry => {
@@ -111,18 +109,15 @@
         );
         document.querySelectorAll('.animated-item').forEach(el => observer.observe(el));
 
-        // Logika Tab
         const tabs = document.querySelectorAll('.tab-item');
         const contentPanels = document.querySelectorAll('.content-panel');
 
         function activateTab(tab) {
             const targetId = tab.dataset.target;
 
-            // Deactivate all tabs and panels
             tabs.forEach(t => t.classList.remove('active'));
             contentPanels.forEach(p => p.classList.remove('active'));
 
-            // Activate the clicked tab and corresponding panel
             tab.classList.add('active');
             const activePanel = document.getElementById(targetId);
             if (activePanel) {
@@ -136,7 +131,6 @@
             });
         });
 
-        // Activate the first tab by default
         if (tabs.length > 0) {
             activateTab(tabs[0]);
         }

@@ -3,13 +3,13 @@
 @section('title', 'Portal Digital Kabupaten Subang')
 
 @push('styles')
-{{-- Leaflet CSS untuk Peta Interaktif --}}
+
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-{{-- Swiper CSS untuk Slider --}}
+
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 <style>
-    /* Gaya untuk Hero Section dan Kartu Berita */
+
     .hero-bg {
         background-image: linear-gradient(to bottom, rgba(17, 24, 39, 0.8), rgba(17, 24, 39, 0.9)), url('https://images.unsplash.com/photo-1588392382834-a891154bca4d?q=80&w=2070&auto=format&fit=crop');
         background-size: cover;
@@ -21,7 +21,6 @@
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
 
-    /* Animasi */
     @keyframes fadeInUp {
         from {
             opacity: 0;
@@ -58,7 +57,6 @@
         animation-delay: var(--anim-delay, 0ms);
     }
 
-    /* Styling untuk Peta Interaktif - DIPERBAIKI */
     #map {
         height: 600px;
         width: 100%;
@@ -68,7 +66,6 @@
         position: relative;
     }
 
-    /* Fix untuk container peta */
     .map-container {
         position: relative;
         z-index: 1;
@@ -103,7 +100,6 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     }
 
-    /* Styling untuk daftar kecamatan */
     .kecamatan-list {
         background-color: #f9fafb;
         border: 1px solid #e5e7eb;
@@ -131,7 +127,6 @@
         border-bottom: none;
     }
 
-    /* Styling untuk input pencarian */
     .search-input {
         width: 100%;
         padding-left: 2.5rem;
@@ -155,9 +150,6 @@
 
 @section('content')
 
-{{-- ====================================================================== --}}
-{{-- Panel Kontrol Superadmin (Versi Final)
-{{-- ====================================================================== --}}
 @role('super-admin')
 <div class="bg-[#1e4e7c] text-white shadow-lg">
     <div
@@ -209,7 +201,6 @@
 </div>
 @endrole
 
-{{-- HERO SECTION --}}
 @php
 $banner = $kabupaten->banner_url ?? null;
 $banner_type = $kabupaten->banner_type ?? null;
@@ -219,7 +210,6 @@ $video_id = $kabupaten->youtube_video_id ?? null;
 <div
     class="relative w-full min-h-[60vh] md:min-h-[50vh] text-white flex items-center justify-center text-center py-32 md:py-40">
 
-    {{-- LAYER 1: Latar Belakang Dinamis (Paling Belakang) --}}
     <div class="absolute inset-0 w-full h-full bg-black z-0">
         @if ($banner_type === 'image_file' && $banner)
         <div class="absolute inset-0 w-full h-full bg-cover bg-center"
@@ -237,17 +227,15 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 frameborder="0" allow="autoplay; encrypted-media"></iframe>
         </div>
         @else
-        {{-- Tampilan Default jika tidak ada banner --}}
+
         <div class="absolute inset-0 w-full h-full bg-cover bg-center"
             style="background-image: url('https://images.unsplash.com/photo-1588392382834-a891154bca4d?q=80&w=2070&auto=format&fit=crop');">
         </div>
         @endif
     </div>
 
-    {{-- LAYER 2: Lapisan Overlay Gelap (Di Tengah) --}}
     <div class="absolute inset-0 bg-gray-900 bg-opacity-60 z-10"></div>
 
-    {{-- LAYER 3: Konten Teks (Paling Depan) --}}
     <div class="relative container mx-auto px-6 z-20">
         <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 anim-fade-in-down"
             style="--anim-delay: 200ms;">
@@ -266,11 +254,9 @@ $video_id = $kabupaten->youtube_video_id ?? null;
     </div>
 </div>
 
-{{-- BAGIAN KONTEN UTAMA --}}
 <div class="bg-gray-100">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 -mt-20 md:-mt-24 lg:-mt-32 relative z-10">
 
-        {{-- BAGIAN BERITA TERKINI --}}
         <div class="mb-20">
             <h2 class="text-3xl font-bold text-white/80 drop-shadow text-center mb-10 anim-fade-in-up" ...>
                 Berita Terkini
@@ -322,7 +308,6 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             @endif
         </div>
 
-        {{-- BAGIAN JELAJAHI KECAMATAN DENGAN PETA INTERAKTIF + PENCARIAN --}}
         <div id="jelajahi" x-data="mapSearch()" x-init="init()"
             class="bg-white text-gray-800 rounded-lg p-8 md:p-12 shadow-lg" style="z-index: 1;">
             <h2 class="text-3xl font-bold text-center mb-4">Jelajahi Wilayah Kecamatan</h2>
@@ -330,14 +315,13 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 daftar di samping untuk pencarian cepat.</p>
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                {{-- Peta (3/4 bagian) --}}
+
                 <div class="lg:col-span-3 order-2 lg:order-1">
                     <div class="map-container">
                         <div id="map"></div>
                     </div>
                 </div>
 
-                {{-- Daftar Kecamatan (1/4 bagian) --}}
                 <div class="lg:col-span-1 order-1 lg:order-2">
                     <div class="relative mb-4">
                         <input type="text" x-model="searchQuery" placeholder="Cari kecamatan..." class="search-input">
@@ -357,14 +341,12 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                                 x-text="kecamatan.name"></a>
                         </template>
 
-                        {{-- Pesan jika tidak ada hasil pencarian --}}
                         <div x-show="filteredKecamatans.length === 0 && searchQuery !== ''"
                             class="p-4 text-center text-gray-500">
                             <p>Tidak ada kecamatan yang ditemukan</p>
                         </div>
                     </div>
 
-                    {{-- Info jumlah kecamatan --}}
                     <div class="mt-4 text-sm text-gray-600 text-center">
                         <span x-text="filteredKecamatans.length"></span> dari <span
                             x-text="allKecamatans.length"></span> kecamatan
@@ -373,19 +355,16 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             </div>
         </div>
 
-        {{-- ====================================================== --}}
-        {{-- = [REDESIGN] BAGIAN JELAJAHI PERANGKAT DAERAH (GRID INTERAKTIF) = --}}
-        {{-- ====================================================== --}}
         <style>
-            /* CSS untuk desain kartu list-grid yang baru */
+
             .pd-list-card {
                 background-color: #ffffff;
                 border-radius: 0.5rem;
-                /* 8px */
+
                 padding: 1rem;
-                /* 16px */
+
                 border: 1px solid #e5e7eb;
-                /* border-gray-200 */
+
                 transition: all 0.2s ease-in-out;
                 display: flex;
                 align-items: center;
@@ -397,28 +376,28 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 transform: translateY(-4px);
                 box-shadow: 0 4px 6px -1px rgba(30, 78, 124, 0.1), 0 2px 4px -2px rgba(30, 78, 124, 0.07);
                 border-color: #93c5fd;
-                /* border-blue-300 */
+
                 background-color: #f7fafc;
-                /* bg-gray-50 */
+
             }
 
             .pd-list-card .icon-container {
                 width: 3rem;
-                /* 48px */
+
                 height: 3rem;
-                /* 48px */
+
                 flex-shrink: 0;
                 border-radius: 0.5rem;
-                /* 8px */
+
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 background-color: #f0f4f8;
-                /* Warna latar ikon yang lembut */
+
                 color: #1E4E7C;
-                /* Warna aksen utama */
+
                 margin-right: 1rem;
-                /* 16px */
+
                 transition: all 0.2s ease-in-out;
             }
 
@@ -429,9 +408,9 @@ $video_id = $kabupaten->youtube_video_id ?? null;
 
             .pd-list-card .pd-name {
                 font-weight: 600;
-                /* font-semibold */
+
                 color: #1f2937;
-                /* text-gray-800 */
+
                 line-height: 1.4;
                 text-align: left;
             }
@@ -439,7 +418,7 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             .pd-list-card .arrow-icon {
                 margin-left: auto;
                 color: #9ca3af;
-                /* text-gray-400 */
+
                 transition: all 0.2s ease-in-out;
                 opacity: 0;
                 transform: translateX(-5px);
@@ -451,20 +430,18 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 color: #1E4E7C;
             }
 
-            /* Style untuk wrapper/frame */
             .pd-wrapper {
                 background-color: #f9fafb;
-                /* bg-gray-50 */
+
                 border: 1px solid #e5e7eb;
-                /* border-gray-200 */
+
                 border-radius: 0.75rem;
-                /* 12px */
+
                 padding: 2rem;
-                /* 32px */
+
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             }
 
-            /* Style untuk search input */
             .pd-search-input {
                 width: 100%;
                 max-width: 320px;
@@ -474,7 +451,7 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 padding-bottom: 0.5rem;
                 border: 1px solid #d1d5db;
                 border-radius: 9999px;
-                /* rounded-full */
+
                 box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
                 transition: all 0.2s ease-in-out;
             }
@@ -482,15 +459,15 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             .pd-search-input:focus {
                 outline: none;
                 box-shadow: 0 0 0 2px #bfdbfe;
-                /* ring-2 ring-blue-200 */
+
                 border-color: #3b82f6;
-                /* border-blue-500 */
+
             }
         </style>
 
         <div class="my-20 anim-fade-in-up" style="--anim-delay: 400ms;" x-data="perangkatDaerahSearch()">
             <div class="pd-wrapper">
-                {{-- Header dengan Judul dan Search Bar --}}
+
                 <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                     <div class="text-center md:text-left">
                         <h2 class="text-2xl font-bold text-gray-800">Jelajahi Perangkat Daerah</h2>
@@ -508,9 +485,9 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 </div>
 
                 @if($perangkatDaerahs->isNotEmpty())
-                {{-- Grid yang lebih luas: 1 kolom di mobile, 2 di tablet, 3 di layar besar --}}
+
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {{-- Loop menggunakan Alpine.js untuk filtering dinamis --}}
+
                     <template x-for="perangkat in paginatedItems" :key="perangkat.slug">
                         <a :href="generateUrl(perangkat.slug)" class="pd-list-card">
                             <div class="icon-container">
@@ -524,12 +501,10 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                     </template>
                 </div>
 
-                {{-- Pesan jika pencarian tidak ditemukan --}}
                 <div x-show="filteredItems.length === 0 && search !== ''" class="text-center text-gray-500 py-10">
                     <p>Perangkat daerah tidak ditemukan.</p>
                 </div>
 
-                {{-- Tombol "Tampilkan Lebih Banyak" dan "Tampilkan Lebih Sedikit" --}}
                 <div class="flex justify-center items-center gap-4 mt-8">
                     <div x-show="limit < filteredItems.length">
                         <button @click="limit += 6"
@@ -538,9 +513,7 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                         </button>
                     </div>
                     <div x-show="limit > 6 && search === ''">
-                        {{-- ====================================================== --}}
-                        {{-- = PERBAIKAN LOGIKA ADA DI SINI ========================= --}}
-                        {{-- ====================================================== --}}
+
                         <button @click="limit -= 6"
                             class="bg-white hover:bg-gray-100 text-gray-600 font-semibold py-2 px-6 rounded-full transition border border-gray-300">
                             Tampilkan Lebih Sedikit
@@ -572,7 +545,6 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             },
 
             get paginatedItems() {
-                // Jika ada pencarian, tampilkan semua hasil tanpa batasan
                 if (this.search !== '') {
                     return this.filteredItems;
                 }
@@ -592,10 +564,6 @@ $video_id = $kabupaten->youtube_video_id ?? null;
         }
     }
         </script>
-        {{-- ====================================================== --}}
-        {{-- = AKHIR BAGIAN BARU = --}}
-        {{-- ====================================================== --}}
-
 
     </div>
 </div>
@@ -614,13 +582,13 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             markers: {},
             activeMarker: null,
             activeSlug: null,
-            
-            allKecamatans: @isset($kecamatans) 
+
+            allKecamatans: @isset($kecamatans)
                 @json($kecamatans->map(fn($kec) => ['name' => $kec->name, 'slug' => $kec->slug])->values())
-            @else 
-                [] 
+            @else
+                []
             @endisset,
-            
+
             coordinates: {
                 'binong': [-6.4021, 107.8015], 'blanakan': [-6.2458, 107.6581], 'ciasem': [-6.3353, 107.7024],
                 'ciater': [-6.7162, 107.6539], 'cibogo': [-6.4897, 107.7562], 'cijambe': [-6.5873, 107.8341],
@@ -633,7 +601,7 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                 'sagalaherang': [-6.7328, 107.7086], 'serangpanjang': [-6.6851, 107.6047], 'subang': [-6.5710, 107.7602],
                 'sukasari': [-6.3072, 107.8533], 'tambakdahan': [-6.3865, 107.9158], 'tanjungsiang': [-6.7839, 107.8152]
             },
-            
+
             get filteredKecamatans() {
                 if (this.searchQuery === '') return this.allKecamatans;
                 return this.allKecamatans.filter(k => k.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
@@ -655,16 +623,12 @@ $video_id = $kabupaten->youtube_video_id ?? null;
             init() {
                 this.$nextTick(() => this.initializeMap());
             },
-            
+
             initializeMap() {
                 if (document.getElementById('map') && !this.map) {
                     this.map = L.map('map').setView([-6.57, 107.76], 10);
                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap' }).addTo(this.map);
-                    
-                    // ======================================================================
-                    // === PERBAIKAN UTAMA ADA DI SINI ======================================
-                    // ======================================================================
-                    // 1. Kita buat sebuah 'template' URL menggunakan Blade, dengan placeholder.
+
                     const urlTemplate = "{{ route('kecamatan.show', ['kecamatan' => 'SLUG_PLACEHOLDER']) }}";
 
                     this.allKecamatans.forEach(kecamatan => {
@@ -673,10 +637,8 @@ $video_id = $kabupaten->youtube_video_id ?? null;
                             const marker = L.marker(coord, { title: kecamatan.name }).addTo(this.map);
                             marker.bindTooltip(kecamatan.name, { direction: 'top', className: 'kecamatan-tooltip', offset: [0, -10] });
 
-                            // 2. Ganti placeholder dengan slug kecamatan yang sebenarnya untuk setiap marker.
                             const finalUrl = urlTemplate.replace('SLUG_PLACEHOLDER', kecamatan.slug);
 
-                            // 3. Gunakan URL yang sudah benar di dalam popup.
                             marker.bindPopup(
                                 `<div class='text-center'><strong class='text-lg'>Kecamatan ${kecamatan.name}</strong><br>` +
                                 `<a href='${finalUrl}' class='mt-2 inline-block bg-[#1E4E7C] text-white px-3 py-1 rounded-full text-sm font-semibold'>Kunjungi Halaman</a></div>`
@@ -691,7 +653,6 @@ $video_id = $kabupaten->youtube_video_id ?? null;
         };
     }
 
-    // Inisialisasi Swiper untuk slider Perangkat Daerah
     document.addEventListener('DOMContentLoaded', function () {
     new Swiper('.perangkat-daerah-slider', {
         loop: false,

@@ -13,8 +13,7 @@ class StoreInfografisRequest extends FormRequest
 
     public function rules(): array
     {
-        // Aturan untuk file gambar: wajib ada saat membuat baru (store), opsional saat update.
-        // MODIFIKASI: Menambahkan aturan 'dimensions' di kedua skenario
+
         $gambarRules = 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048|dimensions:ratio=9/16';
 
         if ($this->isMethod('post')) {
@@ -30,9 +29,6 @@ class StoreInfografisRequest extends FormRequest
         ];
     }
 
-    /**
-     * [BARU] Menambahkan pesan error kustom untuk dimensi.
-     */
     public function messages(): array
     {
         return [

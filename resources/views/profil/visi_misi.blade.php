@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-    // [Disederhanakan] Penentuan nama konteks menjadi lebih ringkas
     $namaKonteks = 'Kabupaten Subang'; // Default
     if (isset($currentPerangkatDaerah)) {
         $namaKonteks = $currentPerangkatDaerah->name;
@@ -32,7 +31,7 @@
             style="background-image: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://anekatempatwisata.com/wp-content/uploads/2017/09/Kebun-Teh-Ciater-1597x600.jpg');">
             <h1 class="text-4xl md:text-5xl font-extrabold text-[#FCE405] tracking-tight"
                 style="text-shadow: 2px 2px 6px rgba(0,0,0,0.5);">Visi & Misi</h1>
-            {{-- 2. Gunakan nama konteks dinamis --}}
+
             <p class="mt-3 text-lg md:text-xl text-gray-200">
                 {{ $namaKonteks }}
             </p>
@@ -40,7 +39,7 @@
 
         <div class="max-w-6xl mx-auto px-4 sm:px-6 -mt-16 pb-20 space-y-12">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 animated-fade">
-                {{-- Visi --}}
+
                 <div class="lg:col-span-2">
                     <div class="bg-white p-8 rounded-2xl shadow-lg h-full transition duration-300 hover:shadow-xl">
                         <h2 class="text-3xl font-bold text-[#1E4E7C] mb-6 border-b-2 border-gray-100 pb-4">Visi</h2>
@@ -49,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-                {{-- Misi --}}
+
                 <div class="lg:col-span-3">
                     <div class="bg-white p-8 rounded-2xl shadow-lg h-full transition duration-300 hover:shadow-xl">
                         <h2 class="text-3xl font-bold text-[#1E4E7C] mb-6 border-b-2 border-gray-100 pb-4">Misi</h2>

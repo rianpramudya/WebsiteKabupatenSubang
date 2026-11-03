@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-// Import Models
 use App\Models\{
     Kecamatan,
     PerangkatDaerah,
@@ -23,7 +22,6 @@ use App\Models\{
     RumahMakan
 };
 
-// Import Policies
 use App\Policies\{
     KecamatanPolicy,
     BeritaPolicy,
@@ -75,9 +73,6 @@ class AuthServiceProvider extends ServiceProvider
         PerangkatDaerah::class => KontakPolicy::class,
     ];
 
-    /**
-     * Register any authentication / authorization services.
-     */
     public function boot(): void
     {
         $this->registerPolicies();

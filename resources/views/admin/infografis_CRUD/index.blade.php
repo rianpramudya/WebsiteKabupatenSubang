@@ -1,25 +1,14 @@
 @extends('layouts.app')
 
 @php
-// =================================================================
-// LOGIKA CERDAS UNTUK SEMUA PERAN
-// =================================================================
-// Logika ini sekarang bisa menangani 3 kondisi:
-// 1. Jika ada tenant dan merupakan Kecamatan
-// 2. Jika ada tenant dan merupakan Perangkat Daerah
-// 3. Jika tidak ada tenant (null), berarti ini adalah level Kabupaten
-// =================================================================
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
-// Tentukan awalan nama rute yang benar berdasarkan tenant
 $routePrefix = $isKecamatan ? 'admin.kecamatan.profil.infografis' : 'admin.perangkat-daerah.profil.infografis';
 } else {
-// Atur awalan rute untuk level Kabupaten
 $routePrefix = 'admin.kabupaten.infografis';
 }
 @endphp
 
-{{-- [DIPERBAIKI] Judul halaman sekarang aman dari error 'null' --}}
 @section('title', 'Kelola Infografis - ' . ($tenant ? $tenant->name : 'Kabupaten'))
 
 @section('content')
@@ -27,11 +16,10 @@ $routePrefix = 'admin.kabupaten.infografis';
     <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
         <div>
             <h1 class="text-3xl font-bold text-[#1E4E7C]">Kelola Infografis</h1>
-            {{-- [DIPERBAIKI] Teks 'Untuk:' sekarang aman dari error 'null' --}}
+
             <p class="text-gray-600 mt-1">Untuk: {{ $tenant ? $tenant->name : 'Kabupaten' }}</p>
         </div>
 
-        {{-- [DIPERBAIKI] Link 'Tambah' sekarang dinamis dan aman --}}
         <a href="{{ $tenant ? route($routePrefix . '.create', $tenant->slug) : route($routePrefix . '.create') }}"
             class="bg-[#1E4E7C] hover:brightness-90 text-white font-bold py-2 px-4 rounded-lg transition-colors flex items-center mt-4 sm:mt-0">
             <i class="fas fa-plus mr-2"></i> Tambah Infografis
@@ -78,11 +66,10 @@ $routePrefix = 'admin.kabupaten.infografis';
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                             <div class="flex items-center justify-end space-x-4">
-                                {{-- [DIPERBAIKI] Link 'Edit' dinamis dan aman --}}
+
                                 <a href="{{ $tenant ? route($routePrefix . '.edit', [$tenant->slug, $item->id]) : route($routePrefix . '.edit', $item->id) }}"
                                     class="font-semibold text-blue-600 hover:text-blue-800">Edit</a>
 
-                                {{-- [DIPERBAIKI] Form 'Hapus' dinamis dan aman --}}
                                 <form
                                     action="{{ $tenant ? route($routePrefix . '.destroy', [$tenant->slug, $item->id]) : route($routePrefix . '.destroy', $item->id) }}"
                                     method="POST"
@@ -114,7 +101,6 @@ $routePrefix = 'admin.kabupaten.infografis';
 </div>
 @endsection
 
-{{-- [DIPERBAIKI] Kode Style dan Script dimasukkan ke dalam @push agar sesuai standar Laravel --}}
 @push('styles')
 <style>
     @keyframes fadeIn {
@@ -154,13 +140,13 @@ $routePrefix = 'admin.kabupaten.infografis';
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const fadeOutDuration = 500; 
+        const fadeOutDuration = 500;
         const links = document.querySelectorAll('a:not([target="_blank"]):not([href^="#"])');
 
         links.forEach(link => {
             link.addEventListener('click', (event) => {
                 if (link.closest('form[onsubmit]')) { return; }
-                event.preventDefault(); 
+                event.preventDefault();
                 document.body.classList.add('fading-out');
                 setTimeout(() => { window.location.href = link.href; }, fadeOutDuration);
             });

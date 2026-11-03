@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Storage;
 
 class StrukturPemerintahanController extends Controller
 {
-    // =================================================================
-    //                HELPER METHOD UNTUK SEMUA PERAN
-    // =================================================================
+
     private function getTenant(Request $request): ?Model
     {
         return $request->route('kecamatan') ?? $request->route('perangkatDaerah');
@@ -40,13 +38,9 @@ class StrukturPemerintahanController extends Controller
         if ($tenant instanceof Kecamatan) {
             return 'admin.kecamatan.pemerintahan.pejabats.' . $action;
         }
-        // Fallback untuk Kabupaten
+
         return 'admin.kabupaten.pemerintahan.pejabats.' . $action;
     }
-
-    // =================================================================
-    //                  METHOD CRUD YANG SUDAH DIPERBAIKI
-    // =================================================================
 
     public function index(Request $request)
     {
@@ -59,7 +53,7 @@ class StrukturPemerintahanController extends Controller
         } elseif ($tenant instanceof PerangkatDaerah) {
             $query->where('perangkat_daerah_id', $tenant->id);
         } else {
-            // Untuk Superadmin di level Kabupaten (jika ada)
+
             $query->whereNull('kecamatan_id')->whereNull('perangkat_daerah_id');
         }
 
@@ -94,7 +88,6 @@ class StrukturPemerintahanController extends Controller
             $validated['foto'] = $request->file('foto')->store('pejabat', 'public');
         }
 
-        // Set kepemilikan berdasarkan tenant
         if ($tenant instanceof Kecamatan) {
             $validated['kecamatan_id'] = $tenant->id;
         } elseif ($tenant instanceof PerangkatDaerah) {
@@ -110,9 +103,8 @@ class StrukturPemerintahanController extends Controller
     public function show(Request $request)
     {
         $tenant = $this->getTenant($request);
-        $pejabat = $request->route('pejabat'); // Ini akan berisi model Pejabat yang sudah ditemukan
+        $pejabat = $request->route('pejabat');
 
-        // Alihkan langsung ke rute 'edit' yang sesuai
         return redirect()->route(
             $this->getRouteName($tenant, 'edit'),
             $this->getRouteParameters($tenant, ['pejabat' => $pejabat])
@@ -124,7 +116,6 @@ class StrukturPemerintahanController extends Controller
         $tenant = $this->getTenant($request);
         $pejabatId = $request->route('pejabat');
 
-        // [PERBAIKAN] Logika query baru yang menangani null
         $query = Pejabat::withoutGlobalScopes()->where('id', $pejabatId);
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);
@@ -179,7 +170,6 @@ class StrukturPemerintahanController extends Controller
         $tenant = $this->getTenant($request);
         $pejabatId = $request->route('pejabat');
 
-        // [PERBAIKAN] Logika query baru yang menangani null
         $query = Pejabat::withoutGlobalScopes()->where('id', $pejabatId);
         if ($tenant instanceof Kecamatan) {
             $query->where('kecamatan_id', $tenant->id);

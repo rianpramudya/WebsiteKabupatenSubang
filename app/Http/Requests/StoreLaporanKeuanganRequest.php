@@ -13,8 +13,7 @@ class StoreLaporanKeuanganRequest extends FormRequest
      */
     public function authorize()
     {
-        // Izinkan semua user yang terotentikasi untuk membuat request ini.
-        // Anda bisa menambahkan logic role di sini jika perlu.
+
         return true;
     }
 
@@ -25,17 +24,16 @@ class StoreLaporanKeuanganRequest extends FormRequest
      */
     public function rules()
     {
-        // Aturan validasi untuk setiap field di form
+
         $rules = [
             'tahun' => 'required|integer|digits:4|min:2000|max:' . (date('Y') + 1),
             'judul_laporan' => 'required|string|max:255',
             'jenis_laporan' => 'required|string|max:100',
             'deskripsi_singkat' => 'nullable|string|max:500',
-            // Aturan untuk file: wajib ada saat membuat baru, opsional saat update
-            'file_laporan' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx|max:10240', // Max 10MB
+
+            'file_laporan' => 'nullable|file|mimes:pdf,xls,xlsx,doc,docx|max:10240',
         ];
 
-        // Jika ini adalah request untuk 'store' (membuat baru), file menjadi wajib
         if ($this->isMethod('post')) {
             $rules['file_laporan'] = 'required|file|mimes:pdf,xls,xlsx,doc,docx|max:10240';
         }

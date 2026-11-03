@@ -1,17 +1,14 @@
 @php
-    // [PERBAIKAN] Logika ini sekarang menangani 3 konteks: Kecamatan, Perangkat Daerah, dan Kabupaten
     if ($tenant) {
         $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
         $baseRouteName = $isKecamatan ? 'admin.kecamatan.pemerintahan.' : 'admin.perangkat-daerah.pemerintahan.';
         $routeParameters = $isKecamatan ? ['kecamatan' => $tenant->slug] : ['perangkatDaerah' => $tenant->slug];
         $tenantName = $tenant->name;
     } else {
-        // Ini untuk level Kabupaten
         $baseRouteName = 'admin.kabupaten.pemerintahan.';
         $routeParameters = [];
         $tenantName = 'Kabupaten';
     }
-    // Variabel spesifik untuk CRUD Wilayah Administrasi
     $crudRoutePrefix = $baseRouteName . 'wilayah-administrasi';
 @endphp
 
@@ -53,7 +50,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->luas_wilayah ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->jumlah_penduduk ? number_format($item->jumlah_penduduk) . ' Jiwa' : '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            {{-- [PERBAIKAN] Tautan Edit dan Hapus sekarang menggunakan variabel yang benar --}}
+
                             <a href="{{ route($crudRoutePrefix . '.edit', array_merge($routeParameters, ['wilayah_administrasi' => $item->id])) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
                             <form action="{{ route($crudRoutePrefix . '.destroy', array_merge($routeParameters, ['wilayah_administrasi' => $item->id])) }}" method="POST" class="inline" onsubmit="return confirm('Yakin hapus data ini?');">
                                 @csrf

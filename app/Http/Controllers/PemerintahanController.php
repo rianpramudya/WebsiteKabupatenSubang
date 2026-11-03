@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class PemerintahanController extends Controller
 {
-    // ... (bagian __construct() Anda sudah benar, tidak perlu diubah) ...
+
     protected StrukturPemerintahanRepository $strukturPemerintahanRepository;
     protected PeranDanProgramRepository $peranDanProgramRepository;
     protected WilayahAdministrasiRepository $wilayahAdministrasiRepository;
@@ -27,9 +27,6 @@ class PemerintahanController extends Controller
         $this->wilayahAdministrasiRepository = $wilayahAdministrasiRepository;
     }
 
-    /**
-     * [DIPERBAIKI] Helper disederhanakan untuk mendapatkan konteks tenant.
-     */
     private function getContext(Request $request): Kecamatan|PerangkatDaerah|null
     {
         return $request->route('perangkatDaerah') ?? $request->route('kecamatan');
@@ -37,7 +34,7 @@ class PemerintahanController extends Controller
 
     public function struktur(Request $request): View
     {
-        // ... (method ini sudah benar) ...
+
         $context = $this->getContext($request);
         $semua_pejabat = $this->strukturPemerintahanRepository->getAllPejabat($context);
 
@@ -61,7 +58,7 @@ class PemerintahanController extends Controller
 
     public function peranDanProgram(Request $request): View
     {
-        // ... (method ini sudah benar) ...
+
         $context = $this->getContext($request);
         $peran_dan_program = $this->peranDanProgramRepository->getAllPeranDanProgram($context);
 
@@ -75,12 +72,11 @@ class PemerintahanController extends Controller
     public function wilayahAdministrasi(Request $request): View
     {
         $context = $this->getContext($request);
-        
-        // [PERBAIKAN] Langsung gunakan relasi dari model untuk konsistensi
+
         if ($context) {
             $list_data = $context->wilayahAdministrasi()->orderBy('nama_desa')->get();
         } else {
-            // Logika untuk Kabupaten (jika repository diperlukan)
+
             $list_data = $this->wilayahAdministrasiRepository->getWilayahAdministrasiData($context);
         }
 

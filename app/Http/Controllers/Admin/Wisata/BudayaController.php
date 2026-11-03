@@ -3,23 +3,22 @@
 namespace App\Http\Controllers\Admin\Wisata;
 
 use App\Http\Controllers\Controller;
-use App\Models\{Kecamatan, Budaya, PerangkatDaerah}; // Tambahkan PerangkatDaerah
+use App\Models\{Kecamatan, Budaya, PerangkatDaerah};
 use App\Http\Requests\Admin\Wisata\{StoreBudayaRequest, UpdateBudayaRequest};
-use Illuminate\Database\Eloquent\Model; // Tambahkan Model
-use Illuminate\Http\Request; // Tambahkan Request
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 
 class BudayaController extends Controller
 {
-    // Helper untuk mendapatkan tenant
+
     private function getTenant(Request $request): ?Model
     {
         return $request->route('kecamatan') ?? $request->route('perangkatDaerah');
     }
 
-    // Helper untuk mendapatkan parameter rute
     private function getRouteParameters(?Model $tenant, array $additionalParams = []): array
     {
         if ($tenant instanceof Kecamatan) {
@@ -32,7 +31,6 @@ class BudayaController extends Controller
         return array_merge($tenantParam, $additionalParams);
     }
 
-    // Helper untuk mendapatkan nama rute
     private function getRouteName(?Model $tenant, string $action): string
     {
         if ($tenant instanceof PerangkatDaerah) {
@@ -44,7 +42,6 @@ class BudayaController extends Controller
         return 'admin.kabupaten.wisata.budaya.' . $action;
     }
 
-    // Method CRUD yang sudah diperbaiki total
     public function index(Request $request)
     {
         $tenant = $this->getTenant($request);
@@ -59,7 +56,6 @@ class BudayaController extends Controller
         }
         $budayas = $query->orderBy('nama')->get();
 
-        // Variabel $kecamatan dibutuhkan oleh view, jadi kita definisikan
         $kecamatan = ($tenant instanceof Kecamatan) ? $tenant : null;
         return view('admin.wisata_CRUD.budaya_CRUD.index', compact('kecamatan', 'tenant', 'budayas'));
     }
@@ -83,7 +79,7 @@ class BudayaController extends Controller
 
         if ($tenant instanceof Kecamatan) {
             $validated['kecamatan_id'] = $tenant->id;
-        } // Jika $tenant null, ID akan otomatis null untuk Kabupaten
+        }
 
         Budaya::create($validated);
         return redirect()->route($this->getRouteName($tenant, 'index'), $this->getRouteParameters($tenant))

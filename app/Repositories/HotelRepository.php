@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Hotel;
 use App\Models\Kecamatan;
-use App\Models\PerangkatDaerah; // <-- Ditambahkan
+use App\Models\PerangkatDaerah;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -32,10 +32,6 @@ class HotelRepository
         });
     }
 
-    /**
-     * [METHOD BARU]
-     * Mengambil data hotel dengan paginasi untuk Perangkat Daerah tertentu (dengan cache).
-     */
     public function getPaginatedForPerangkatDaerah(PerangkatDaerah $perangkatDaerah, Request $request, int $perPage = 5): LengthAwarePaginator
     {
         $page = $request->get('page', 1);
@@ -43,7 +39,7 @@ class HotelRepository
         $cacheKey = "hotel.perangkat_daerah.{$perangkatDaerah->id}.paginated.page-{$page}.search-{$search}";
 
         return Cache::remember($cacheKey, now()->addHours($this->cacheDurationHours), function () use ($perangkatDaerah, $request, $perPage) {
-            $query = Hotel::where('perangkat_daerah_id', $perangkatDaerah->id) // <-- Filter by perangkat_daerah_id
+            $query = Hotel::where('perangkat_daerah_id', $perangkatDaerah->id)
                 ->whereNotNull('published_at')
                 ->latest('published_at');
 
@@ -62,7 +58,7 @@ class HotelRepository
         $cacheKey = "hotel.kabupaten.paginated.page-{$page}.search-{$search}";
 
         return Cache::remember($cacheKey, now()->addHours($this->cacheDurationHours), function () use ($request, $perPage) {
-            $query = Hotel::whereNull('kecamatan_id')->whereNull('perangkat_daerah_id') // <-- Ditambahkan
+            $query = Hotel::whereNull('kecamatan_id')->whereNull('perangkat_daerah_id')
                 ->whereNotNull('published_at')
                 ->latest('published_at');
 

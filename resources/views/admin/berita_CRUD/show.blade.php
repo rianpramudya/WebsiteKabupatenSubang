@@ -1,6 +1,4 @@
 @php
-// [PERBAIKAN] Logika lengkap untuk menangani semua level peran
-// Variabel $tenant dikirim dari controller (bisa null untuk kabupaten)
 if ($tenant) {
 $isKecamatan = $tenant instanceof \App\Models\Kecamatan;
 $routePrefix = $isKecamatan ? 'admin.kecamatan.berita' : 'admin.perangkat-daerah.berita';
@@ -10,7 +8,6 @@ $routePrefix = 'admin.kabupaten.berita';
 $routeParameters = [];
 }
 
-// Membuat URL yang benar secara dinamis
 $backRoute = route($routePrefix . '.index', $routeParameters);
 $editRoute = route($routePrefix . '.edit', array_merge($routeParameters, ['berita' => $berita]));
 @endphp
@@ -24,7 +21,7 @@ $editRoute = route($routePrefix . '.edit', array_merge($routeParameters, ['berit
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
         <h1 class="text-3xl font-bold text-[#1E4E7C] mb-4 sm:mb-0">Detail Berita</h1>
         <div>
-            {{-- Tautan "Kembali" dan "Edit" sekarang menggunakan variabel yang sudah benar --}}
+
             <a href="{{ $backRoute }}" class="text-sm text-gray-600 hover:text-gray-900 mr-4">&larr; Kembali ke
                 Daftar</a>
             <a href="{{ $editRoute }}"

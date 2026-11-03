@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-    // [Disederhanakan] Penentuan nama konteks menjadi lebih ringkas
     $namaKonteks = 'Kabupaten Subang'; // Default
     if (isset($currentPerangkatDaerah)) {
         $namaKonteks = $currentPerangkatDaerah->name;
@@ -22,7 +21,7 @@
     .timeline-item:nth-child(even) { left: 50%; }
     .timeline-item::after {
         content: ''; position: absolute; width: 24px; height: 24px; right: -12px;
-        background-color: white; border: 4px solid #1E4E7C; /* blue-subang */
+        background-color: white; border: 4px solid #1E4E7C;
         top: 35px; border-radius: 50%; z-index: 1;
     }
     .timeline-item:nth-child(even)::after { left: -12px; }
@@ -42,7 +41,7 @@
             <h1 class="text-4xl md:text-5xl font-extrabold text-[#1E4E7C] tracking-tight">
                 Galeri Penghargaan
             </h1>
-            {{-- 2. Gunakan nama konteks dinamis --}}
+
             <p class="mt-3 text-xl text-gray-500">
                 {{ $namaKonteks }}
             </p>
